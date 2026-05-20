@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox alignment="CENTER_LEFT" minHeight="76.0" spacing="18.0" styleClass="warehouse-topbar"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.common.ui.components.WarehouseTopBarController">
+    <stylesheets>
+        <URL value="@WarehouseComponents.css"/>
+    </stylesheets>
+    <padding>
+        <Insets bottom="12.0" left="24.0" right="24.0" top="12.0"/>
+    </padding>
+    <TextField fx:id="searchField" prefWidth="430.0" promptText="Tìm kiếm yêu cầu, mặt hàng..."
+               styleClass="global-search"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Button mnemonicParsing="false" onAction="#onLanguageClick" styleClass="top-icon-button" text="VI⌄"/>
+    <Button mnemonicParsing="false" onAction="#onNotificationClick" styleClass="notify-button" text="5"/>
+    <Button mnemonicParsing="false" onAction="#onUserMenuClick" styleClass="avatar-button" text="○"/>
+    <VBox spacing="2.0">
+        <Label fx:id="userNameLabel" styleClass="user-name" text="Nguyen Van A"/>
+        <Label fx:id="roleLabel" styleClass="user-role" text="Bo phan Quan ly Kho"/>
+    </VBox>
+    <Button mnemonicParsing="false" onAction="#onUserMenuClick" styleClass="top-icon-button" text="⌄"/>
+</HBox>
