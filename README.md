@@ -27,7 +27,7 @@ Trong đó:
 ```text
 com.importorder.system
 │
-├── app/                    # Khởi động ứng dụng
+├── Ioms/                    # Khởi động ứng dụng
 ├── common/                 # Thành phần dùng chung
 ├── database/               # Database subsystem
 ├── auth/                   # Authentication subsystem
