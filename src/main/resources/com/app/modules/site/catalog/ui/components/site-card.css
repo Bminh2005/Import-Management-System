@@ -1,0 +1,28 @@
+.site-card-code {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1F2937;
+}
+
+.site-card-name {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B7280;
+}
+
+.site-card-value {
+    -fx-font-size: 12px;
+    -fx-text-fill: #1F2937;
+}
+
+.site-card-inventory {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E4DB7;
+}
+
+.site-card-divider {
+    -fx-border-color: #D1D5DB;
+    -fx-border-width: 1 0 0 0;
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+}

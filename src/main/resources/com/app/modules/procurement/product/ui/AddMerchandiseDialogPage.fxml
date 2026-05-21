@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+fx:id="rootPane"
+           styleClass="modal-overlay"
+           alignment="CENTER"
+           onMouseClicked="#onOverlayClick">
+    <VBox styleClass="modal-card" spacing="0" onMouseClicked="#stopPropagation">
+        <HBox styleClass="modal-header" alignment="CENTER_LEFT">
+            <Label fx:id="titleLabel" styleClass="modal-title" HBox.hgrow="ALWAYS"/>
+            <Button text="✕" onAction="#onCancel" styleClass="modal-close-btn"/>
+        </HBox>
+        <GridPane styleClass="modal-body" hgap="16" vgap="16">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" spacing="4">
+                <HBox spacing="2"><Label text="Mã hàng" styleClass="form-label"/><Label text="*" styleClass="required"/></HBox>
+                <TextField fx:id="codeField" editable="false" styleClass="form-field-disabled"/>
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="4">
+                <HBox spacing="2"><Label text="Tên mặt hàng" styleClass="form-label"/><Label text="*" styleClass="required"/></HBox>
+                <TextField fx:id="nameField" promptText="Nhập tên mặt hàng..." styleClass="form-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="4">
+                <HBox spacing="2"><Label text="Đơn vị tính" styleClass="form-label"/><Label text="*" styleClass="required"/></HBox>
+                <TextField fx:id="unitField" promptText="VD: cái, chiếc, hộp..." styleClass="form-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="4">
+                <HBox spacing="2"><Label text="Danh mục" styleClass="form-label"/><Label text="*" styleClass="required"/></HBox>
+                <ComboBox fx:id="categoryCombo" promptText="Chọn danh mục" maxWidth="Infinity" styleClass="form-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2" spacing="4">
+                <Label text="Giá dự kiến" styleClass="form-label"/>
+                <TextField fx:id="priceField" promptText="VD: 15,000,000" styleClass="form-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" spacing="4">
+                <Label text="Nhà cung cấp" styleClass="form-label"/>
+                <TextField fx:id="supplierField" promptText="Tên nhà cung cấp..." styleClass="form-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2" spacing="4">
+                <Label text="Mô tả chi tiết" styleClass="form-label"/>
+                <TextArea fx:id="descriptionField" promptText="Nhập mô tả mặt hàng..." prefRowCount="3" wrapText="true" styleClass="form-field"/>
+            </VBox>
+        </GridPane>
+        <HBox styleClass="modal-footer" spacing="8" alignment="CENTER_RIGHT">
+            <Button text="Hủy" styleClass="btn-secondary" onAction="#onCancel"/>
+            <Button text="Lưu Mặt hàng" styleClass="btn-primary" onAction="#onSave"/>
+        </HBox>
+    </VBox>
+</fx:root>

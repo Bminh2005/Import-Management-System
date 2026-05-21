@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:id="root"
+spacing="16">
+    <HBox spacing="12" alignment="TOP_LEFT">
+        <Label fx:id="iconLabel" styleClass="site-info-icon"/>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label fx:id="fieldLabel" styleClass="info-label-upper"/>
+            <Label fx:id="primaryLabel"/>
+            <Label fx:id="secondaryLabel" styleClass="site-info-secondary"/>
+        </VBox>
+    </HBox>
+    <Separator fx:id="rowSeparator"/>
+</fx:root>

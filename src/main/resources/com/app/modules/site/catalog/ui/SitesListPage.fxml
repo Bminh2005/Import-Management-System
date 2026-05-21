@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="ScrollPane" fitToWidth="true" styleClass="page-scroll"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+fx:id="pageRoot">
+    <VBox styleClass="page-content" spacing="12">
+        <StackPane fx:id="headerPlaceholder"/>
+        <VBox styleClass="card card-padding" spacing="10">
+            <StackPane fx:id="searchPlaceholder"/>
+            <StackPane fx:id="statusChipsPlaceholder"/>
+        </VBox>
+        <FlowPane fx:id="sitesGrid" styleClass="sites-grid" hgap="12" vgap="12"/>
+        <VBox fx:id="emptyState" visible="false" managed="false"
+              styleClass="card card-padding empty-state" alignment="CENTER">
+            <Label fx:id="emptyLabel" styleClass="text-xs-secondary"/>
+        </VBox>
+    </VBox>
+</fx:root>

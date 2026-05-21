@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="ScrollPane" fitToWidth="true" styleClass="site-detail-scroll"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+>
+    <VBox styleClass="site-detail-page" spacing="24">
+        <HBox styleClass="site-detail-header" alignment="CENTER_LEFT" spacing="16">
+            <Button text="←" onAction="#onBack" styleClass="back-btn"/>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label fx:id="titleLabel" styleClass="site-detail-title"/>
+                <Label fx:id="subtitleLabel" styleClass="page-subtitle"/>
+            </VBox>
+            <Label fx:id="statusBadge" styleClass="badge-status-large"/>
+        </HBox>
+
+        <HBox spacing="24" alignment="TOP_LEFT">
+            <VBox spacing="24" HBox.hgrow="ALWAYS" styleClass="site-detail-main">
+                <VBox styleClass="section-card" spacing="16">
+                    <Label text="Thông tin Site" styleClass="section-title-lg"/>
+                    <VBox fx:id="siteInfoBox" spacing="0"/>
+                </VBox>
+                <VBox styleClass="section-card" spacing="16">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Danh sách Mặt hàng" styleClass="section-title-lg" HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="totalItemsLabel" styleClass="text-xs-secondary"/>
+                    </HBox>
+                    <VBox fx:id="itemsByCategoryBox" spacing="24"/>
+                </VBox>
+            </VBox>
+
+            <VBox spacing="24" styleClass="site-detail-sidebar">
+                <VBox styleClass="section-card" spacing="16">
+                    <Label text="Thông tin Vận chuyển" styleClass="sidebar-section-title"/>
+                    <VBox spacing="16">
+                        <HBox spacing="12" styleClass="sidebar-stat-row">
+                            <Label text="🚚" styleClass="sidebar-icon"/>
+                            <VBox spacing="4">
+                                <Label text="Phí vận chuyển" styleClass="text-xs-secondary"/>
+                                <Label fx:id="shippingCostLabel" styleClass="shipping-cost-value"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="12" styleClass="sidebar-stat-row">
+                            <Label text="📅" styleClass="sidebar-icon"/>
+                            <VBox spacing="4">
+                                <Label text="Thời gian giao hàng" styleClass="text-xs-secondary"/>
+                                <Label fx:id="deliveryLabel" styleClass="delivery-value"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <VBox styleClass="section-card" spacing="16">
+                    <Label text="Thống kê" styleClass="sidebar-section-title"/>
+                    <VBox spacing="16">
+                        <VBox spacing="4">
+                            <Label text="Đánh giá" styleClass="text-xs-secondary"/>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label fx:id="ratingLabel" styleClass="rating-value"/>
+                                <Label text="★★★★★" styleClass="rating-stars"/>
+                            </HBox>
+                        </VBox>
+                        <Separator/>
+                        <VBox spacing="4">
+                            <Label text="Tổng đơn hàng đã xử lý" styleClass="text-xs-secondary"/>
+                            <Label fx:id="totalOrdersLabel" styleClass="stat-value-lg"/>
+                        </VBox>
+                        <Separator/>
+                        <VBox spacing="4">
+                            <Label text="Tổng mặt hàng có sẵn" styleClass="text-xs-secondary"/>
+                            <Label fx:id="availableItemsLabel" styleClass="stat-value-blue"/>
+                        </VBox>
+                        <Separator/>
+                        <VBox spacing="4">
+                            <Label text="Tổng giá trị hàng tồn kho" styleClass="text-xs-secondary"/>
+                            <Label fx:id="inventoryValueLabel" styleClass="inventory-value"/>
+                        </VBox>
+                    </VBox>
+                </VBox>
+
+                <VBox styleClass="quick-actions-card" spacing="12">
+                    <Label text="THAO TÁC NHANH" styleClass="quick-actions-title"/>
+                    <Button fx:id="createOrderButton" text="Tạo đơn hàng mới" styleClass="btn-primary" maxWidth="Infinity"/>
+                    <Button fx:id="orderHistoryButton" text="Xem lịch sử đơn hàng" styleClass="btn-outline-blue" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+</fx:root>

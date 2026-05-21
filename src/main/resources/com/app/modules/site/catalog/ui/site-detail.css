@@ -1,0 +1,94 @@
+/* Màn Chi tiết Site */
+.site-detail-scroll {
+    -fx-background-color: #F5F5F5;
+}
+
+.site-detail-page {
+    -fx-padding: 32;
+    -fx-spacing: 24;
+    -fx-background-color: #F5F5F5;
+}
+
+.site-detail-header {
+    -fx-spacing: 16;
+}
+
+.back-btn {
+    -fx-background-color: transparent;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-padding: 8;
+}
+
+.site-detail-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1F2937;
+}
+
+.site-detail-main {
+    -fx-pref-width: 700;
+}
+
+.site-detail-sidebar {
+    -fx-pref-width: 320;
+    -fx-min-width: 280;
+}
+
+.sidebar-section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.sidebar-icon {
+    -fx-font-size: 18px;
+}
+
+.shipping-cost-value {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.delivery-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.rating-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #CA8A04;
+}
+
+.rating-stars {
+    -fx-text-fill: #EAB308;
+    -fx-font-size: 16px;
+}
+
+.stat-value-blue {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563EB;
+}
+
+.inventory-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #16A34A;
+}
+
+.btn-outline-blue {
+    -fx-background-color: white;
+    -fx-border-color: #93C5FD;
+    -fx-border-width: 1;
+    -fx-text-fill: #1D4ED8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.btn-outline-blue:hover {
+    -fx-background-color: #EFF6FF;
+}
