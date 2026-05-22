@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(ls \"C:/Users/ADMIN/OneDrive/Máy tính/Global-procurement-system/Follow provided file/src/imports/\" 2>&1)",
-      "Bash(./mvnw clean *)"
-    ]
-  }
-}
