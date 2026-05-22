@@ -1,16 +1,53 @@
 /* ============================================================
-   components.css — style nền tảng dùng cho mọi feature.
+   common.css — style nền tảng dùng cho mọi feature.
+   Chỉ chứa các style thực sự dùng chung: layout trang,
+   variables, card, section-title, info-label/value, button,
+   table chung, link-button.
    ============================================================ */
 
 .root {
-    -fx-font-family: "Segoe UI", "SF Pro Display", sans-serif;
+    -fx-font-family: "Inter", "Segoe UI", "SF Pro Display", sans-serif;
 
     -primary-color: #2563EB;
+    -primary-dark: #1E40AF;
+    -accent-color: #F59E0B;
+    -success-color: #10B981;
     -danger-color: #EF4444;
     -text-primary: #111827;
     -text-secondary: #6B7280;
     -border-color: #E5E7EB;
     -background: #F9FAFB;
+}
+
+/* ---------- Layout shell với sidebar + topbar ---------- */
+.page-shell {
+    -fx-background-color: -background;
+}
+
+/* ---------- Layout trang ---------- */
+.screen-scroll {
+    -fx-background-color: -background;
+    -fx-background: -background;
+    -fx-border-width: 0;
+}
+
+.screen-scroll > .viewport {
+    -fx-background-color: -background;
+}
+
+.main-content {
+    -fx-background-color: -background;
+}
+
+.page-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
 }
 
 /* ---------- Thẻ (card) ---------- */
@@ -32,7 +69,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 2);
 }
 
-/* ---------- Tiêu đề ---------- */
+/* ---------- Tiêu đề & nhãn ---------- */
 .section-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
@@ -57,7 +94,7 @@
     -fx-text-fill: -text-primary;
 }
 
-/* ---------- Bảng dữ liệu ---------- */
+/* ---------- Bảng dữ liệu chung ---------- */
 .data-table {
     -fx-background-color: transparent;
     -fx-border-width: 0;
@@ -98,40 +135,6 @@
     -fx-padding: 24 0 24 0;
 }
 
-/* ---------- Mặt hàng bị từ chối ---------- */
-.rejected-row {
-    -fx-background-color: #FEF2F2;
-    -fx-border-color: #FECACA;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-}
-
-.rejected-name {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #111827;
-}
-
-.rejected-sub {
-    -fx-font-size: 13px;
-    -fx-text-fill: #6B7280;
-}
-
-.rejected-reason-title {
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #374151;
-}
-
-.code-chip {
-    -fx-background-color: #E5E7EB;
-    -fx-text-fill: #374151;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-padding: 2 8;
-    -fx-background-radius: 6px;
-}
-
 /* ---------- Nút dạng link trong bảng ---------- */
 .link-button {
     -fx-background-color: #2563EB;
@@ -159,32 +162,6 @@
 
 .link-button-danger:hover {
     -fx-background-color: #FEF2F2;
-}
-
-/* ---------- Style chung cho trang ---------- */
-.screen-scroll {
-    -fx-background-color: -background;
-    -fx-background: -background;
-    -fx-border-width: 0;
-}
-
-.screen-scroll > .viewport {
-    -fx-background-color: -background;
-}
-
-.main-content {
-    -fx-background-color: -background;
-}
-
-.page-title {
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -text-primary;
-}
-
-.page-subtitle {
-    -fx-font-size: 14px;
-    -fx-text-fill: -text-secondary;
 }
 
 /* ---------- Nút cuối trang ---------- */

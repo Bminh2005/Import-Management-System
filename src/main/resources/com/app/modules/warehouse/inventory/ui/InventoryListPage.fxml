@@ -13,104 +13,107 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.app.modules.warehouse.inventory.ui.InventoryListController"
-            fitToWidth="true" styleClass="screen-scroll">
+<fx:root type="javafx.scene.layout.BorderPane" styleClass="page-shell"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
-        <URL value="@../../../../../common/ui/components/components.css"/>
-        <URL value="@inventory.css"/>
+        <URL value="@../../../../../common/ui/components/common.css"/>
+        <URL value="@InventoryListPage.css"/>
     </stylesheets>
 
-    <VBox styleClass="main-content" spacing="20">
-        <padding>
-            <Insets top="28" right="32" bottom="28" left="32"/>
-        </padding>
-
-        <!-- Tiêu đề trang -->
-        <VBox spacing="4">
-            <Label text="Mặt hàng Tồn kho" styleClass="page-title"/>
-            <Label text="Quản lý tồn kho mặt hàng tại các site"
-                   styleClass="page-subtitle"/>
-        </VBox>
-
-        <!-- Thẻ Tìm kiếm + Lọc danh mục -->
-        <VBox styleClass="card" spacing="14">
-            <padding>
-                <Insets top="18" right="20" bottom="18" left="20"/>
-            </padding>
-
-            <HBox styleClass="search-box" spacing="10" alignment="CENTER_LEFT">
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="screen-scroll">
+            <VBox styleClass="main-content" spacing="20">
                 <padding>
-                    <Insets left="14" right="14"/>
+                    <Insets top="28" right="32" bottom="32" left="32"/>
                 </padding>
-                <Label text="🔍" styleClass="search-icon-emoji"/>
-                <TextField fx:id="searchField"
-                           promptText="Tìm kiếm theo mã mặt hàng, tên..."
-                           styleClass="search-field-inner"
-                           HBox.hgrow="ALWAYS"/>
-            </HBox>
 
-            <HBox spacing="8">
-                <fx:define>
-                    <ToggleGroup fx:id="categoryGroup"/>
-                </fx:define>
-                <ToggleButton fx:id="chipAll" text="Tất cả" selected="true"
-                              styleClass="chip" toggleGroup="$categoryGroup"
-                              userData="Tất cả"/>
-                <ToggleButton text="Vải" styleClass="chip"
-                              toggleGroup="$categoryGroup" userData="Vải"/>
-                <ToggleButton text="Đá" styleClass="chip"
-                              toggleGroup="$categoryGroup" userData="Đá"/>
-                <ToggleButton text="Điện tử" styleClass="chip"
-                              toggleGroup="$categoryGroup" userData="Điện tử"/>
-            </HBox>
-        </VBox>
+                <!-- Tiêu đề trang -->
+                <VBox spacing="4">
+                    <Label text="Mặt hàng Tồn kho" styleClass="page-title"/>
+                    <Label text="Quản lý tồn kho mặt hàng tại các site"
+                           styleClass="page-subtitle"/>
+                </VBox>
 
-        <!-- Thẻ danh sách -->
-        <VBox styleClass="card" spacing="0">
-            <!-- Header bảng -->
-            <GridPane styleClass="list-header">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="13"/>
-                    <ColumnConstraints percentWidth="30"/>
-                    <ColumnConstraints percentWidth="13"/>
-                    <ColumnConstraints percentWidth="17"/>
-                    <ColumnConstraints percentWidth="10"/>
-                    <ColumnConstraints percentWidth="17"/>
-                </columnConstraints>
+                <!-- Thẻ Tìm kiếm + Lọc danh mục -->
+                <VBox styleClass="card" spacing="14">
+                    <padding>
+                        <Insets top="18" right="20" bottom="18" left="20"/>
+                    </padding>
 
-                <Label text="MÃ MẶT HÀNG" styleClass="col-header"
-                       GridPane.columnIndex="0"/>
-                <Label text="TÊN MẶT HÀNG" styleClass="col-header"
-                       GridPane.columnIndex="1"/>
-                <Label text="DANH MỤC" styleClass="col-header"
-                       GridPane.columnIndex="2"/>
-                <Label text="TỔNG TỒN KHO" styleClass="col-header"
-                       GridPane.columnIndex="3"/>
-                <Label text="SỐ SITE" styleClass="col-header"
-                       GridPane.columnIndex="4"/>
-                <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="5">
-                    <Label text="THAO TÁC" styleClass="col-header"/>
+                    <HBox styleClass="search-box" spacing="10" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets left="14" right="14"/>
+                        </padding>
+                        <Label text="🔍" styleClass="search-icon-emoji"/>
+                        <TextField fx:id="searchField"
+                                   promptText="Tìm kiếm theo mã mặt hàng, tên..."
+                                   styleClass="search-field-inner"
+                                   HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <HBox spacing="8">
+                        <fx:define>
+                            <ToggleGroup fx:id="categoryGroup"/>
+                        </fx:define>
+                        <ToggleButton fx:id="chipAll" text="Tất cả" selected="true"
+                                      styleClass="chip" toggleGroup="$categoryGroup"
+                                      userData="Tất cả"/>
+                        <ToggleButton text="Vải" styleClass="chip"
+                                      toggleGroup="$categoryGroup" userData="Vải"/>
+                        <ToggleButton text="Đá" styleClass="chip"
+                                      toggleGroup="$categoryGroup" userData="Đá"/>
+                        <ToggleButton text="Điện tử" styleClass="chip"
+                                      toggleGroup="$categoryGroup" userData="Điện tử"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Thẻ danh sách -->
+                <VBox styleClass="card" spacing="0">
+                    <!-- Header bảng -->
+                    <GridPane styleClass="list-header">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="13"/>
+                            <ColumnConstraints percentWidth="30"/>
+                            <ColumnConstraints percentWidth="13"/>
+                            <ColumnConstraints percentWidth="17"/>
+                            <ColumnConstraints percentWidth="10"/>
+                            <ColumnConstraints percentWidth="17"/>
+                        </columnConstraints>
+
+                        <Label text="MÃ MẶT HÀNG" styleClass="col-header"
+                               GridPane.columnIndex="0"/>
+                        <Label text="TÊN MẶT HÀNG" styleClass="col-header"
+                               GridPane.columnIndex="1"/>
+                        <Label text="DANH MỤC" styleClass="col-header"
+                               GridPane.columnIndex="2"/>
+                        <Label text="TỔNG TỒN KHO" styleClass="col-header"
+                               GridPane.columnIndex="3"/>
+                        <Label text="SỐ SITE" styleClass="col-header"
+                               GridPane.columnIndex="4"/>
+                        <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="5">
+                            <Label text="THAO TÁC" styleClass="col-header"/>
+                        </HBox>
+                    </GridPane>
+
+                    <!-- Container chứa các dòng (build từ UI Class) -->
+                    <VBox fx:id="itemsList"/>
+
+                    <!-- Trạng thái rỗng -->
+                    <Pane fx:id="emptyContainer" managed="false" visible="false">
+                        <padding>
+                            <Insets top="32" right="16" bottom="32" left="16"/>
+                        </padding>
+                        <Label fx:id="emptyLabel"
+                               text="Không tìm thấy mặt hàng nào phù hợp với tiêu chí tìm kiếm"
+                               styleClass="empty-state"/>
+                    </Pane>
+                </VBox>
+
+                <!-- Đếm số mặt hàng (subtle, dưới cùng) -->
+                <HBox alignment="CENTER_LEFT">
+                    <Label fx:id="countLabel" text="(0 mặt hàng)" styleClass="info-label"/>
                 </HBox>
-            </GridPane>
-
-            <!-- Container chứa các dòng (build từ controller) -->
-            <VBox fx:id="itemsList"/>
-
-            <!-- Trạng thái rỗng -->
-            <Pane fx:id="emptyContainer" managed="false" visible="false">
-                <padding>
-                    <Insets top="32" right="16" bottom="32" left="16"/>
-                </padding>
-                <Label fx:id="emptyLabel"
-                       text="Không tìm thấy mặt hàng nào phù hợp với tiêu chí tìm kiếm"
-                       styleClass="empty-state"/>
-            </Pane>
-        </VBox>
-
-        <!-- Đếm số mặt hàng (subtle, dưới cùng) -->
-        <HBox alignment="CENTER_LEFT">
-            <Label fx:id="countLabel" text="(0 mặt hàng)" styleClass="info-label"/>
-        </HBox>
-    </VBox>
-</ScrollPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+</fx:root>

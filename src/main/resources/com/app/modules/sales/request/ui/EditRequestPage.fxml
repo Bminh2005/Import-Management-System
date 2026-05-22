@@ -13,121 +13,125 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.app.modules.sales.request.ui.EditRequestController"
-            fitToWidth="true" styleClass="screen-scroll">
+<fx:root type="javafx.scene.layout.BorderPane" styleClass="page-shell"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
-        <URL value="@../../../../common/ui/components/components.css"/>
+        <URL value="@../../../../../common/ui/components/common.css"/>
+        <URL value="@EditRequestPage.css"/>
     </stylesheets>
 
-    <VBox styleClass="main-content" spacing="24">
-        <padding>
-            <Insets top="32" right="32" bottom="32" left="32"/>
-        </padding>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="screen-scroll">
+            <VBox styleClass="main-content" spacing="24">
+                <padding>
+                    <Insets top="28" right="32" bottom="32" left="32"/>
+                </padding>
 
-        <!-- Tiêu đề trang -->
-        <VBox spacing="4">
-            <Label fx:id="titleLabel" text="Chỉnh sửa Yêu cầu"
-                   styleClass="page-title"/>
-            <Label text="Cập nhật thông tin yêu cầu nhập hàng"
-                   styleClass="page-subtitle"/>
-        </VBox>
-
-        <!-- Thẻ thông tin yêu cầu (chỉ đọc) -->
-        <VBox styleClass="card" spacing="16">
-            <padding>
-                <Insets top="20" right="24" bottom="20" left="24"/>
-            </padding>
-            <Label text="Thông tin Yêu cầu" styleClass="section-title"/>
-
-            <GridPane hgap="24" vgap="12">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="25"/>
-                    <ColumnConstraints percentWidth="25"/>
-                    <ColumnConstraints percentWidth="25"/>
-                    <ColumnConstraints percentWidth="25"/>
-                </columnConstraints>
-
-                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="MÃ YÊU CẦU" styleClass="info-label"/>
-                    <Label fx:id="codeLabel" text="-" styleClass="info-value"/>
+                <!-- Tiêu đề trang -->
+                <VBox spacing="4">
+                    <Label fx:id="titleLabel" text="Chỉnh sửa Yêu cầu"
+                           styleClass="page-title"/>
+                    <Label text="Cập nhật thông tin yêu cầu nhập hàng"
+                           styleClass="page-subtitle"/>
                 </VBox>
 
-                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label text="NGÀY TẠO" styleClass="info-label"/>
-                    <Label fx:id="createdDateLabel" text="-" styleClass="info-value"/>
+                <!-- Thẻ thông tin yêu cầu (chỉ đọc) -->
+                <VBox styleClass="card" spacing="16">
+                    <padding>
+                        <Insets top="20" right="24" bottom="20" left="24"/>
+                    </padding>
+                    <Label text="Thông tin Yêu cầu" styleClass="section-title"/>
+
+                    <GridPane hgap="24" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                        </columnConstraints>
+
+                        <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="MÃ YÊU CẦU" styleClass="info-label"/>
+                            <Label fx:id="codeLabel" text="-" styleClass="info-value"/>
+                        </VBox>
+
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="NGÀY TẠO" styleClass="info-label"/>
+                            <Label fx:id="createdDateLabel" text="-" styleClass="info-value"/>
+                        </VBox>
+
+                        <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Label text="TRẠNG THÁI" styleClass="info-label"/>
+                            <HBox>
+                                <Label fx:id="statusLabel" text="-"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="4" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                            <Label text="SỐ MẶT HÀNG" styleClass="info-label"/>
+                            <Label fx:id="itemCountLabel" text="-" styleClass="info-value"/>
+                        </VBox>
+                    </GridPane>
                 </VBox>
 
-                <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                    <Label text="TRẠNG THÁI" styleClass="info-label"/>
-                    <HBox>
-                        <Label fx:id="statusLabel" text="-"/>
+                <!-- Danh sách mặt hàng (sửa trực tiếp) -->
+                <VBox styleClass="card" spacing="16">
+                    <padding>
+                        <Insets top="20" right="24" bottom="20" left="24"/>
+                    </padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Danh sách Mặt hàng" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="+ Thêm mặt hàng" styleClass="btn-primary"
+                                onAction="#onAddItem"/>
                     </HBox>
+                    <TableView fx:id="itemsTable" styleClass="data-table" prefHeight="280"
+                               editable="true">
+                        <columns>
+                            <TableColumn fx:id="codeColumn" text="Mã hàng" prefWidth="90"/>
+                            <TableColumn fx:id="nameColumn" text="Tên mặt hàng" prefWidth="200"/>
+                            <TableColumn fx:id="quantityColumn" text="Số lượng" prefWidth="90"/>
+                            <TableColumn fx:id="unitColumn" text="Đơn vị" prefWidth="70"/>
+                            <TableColumn fx:id="deliveryDateColumn" text="Ngày nhận"
+                                         prefWidth="130"/>
+                            <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="100"/>
+                            <TableColumn fx:id="actionsColumn" text="Thao tác" prefWidth="90"/>
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        </columnResizePolicy>
+                    </TableView>
                 </VBox>
 
-                <VBox spacing="4" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                    <Label text="SỐ MẶT HÀNG" styleClass="info-label"/>
-                    <Label fx:id="itemCountLabel" text="-" styleClass="info-value"/>
+                <!-- Mặt hàng bị từ chối / hủy (chỉ đọc, giữ nguyên context cho người sửa) -->
+                <VBox styleClass="card-danger" spacing="16">
+                    <padding>
+                        <Insets top="20" right="24" bottom="20" left="24"/>
+                    </padding>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="Mặt hàng Bị từ chối / Hủy"
+                               styleClass="section-title-danger"/>
+                        <Label fx:id="rejectedCountLabel" text="(0 mặt hàng)"
+                               styleClass="info-label"/>
+                    </HBox>
+                    <VBox fx:id="rejectedList" spacing="12"/>
+                    <Label fx:id="rejectedEmptyLabel"
+                           text="Không có mặt hàng nào bị từ chối hoặc hủy"
+                           styleClass="empty-state" managed="false" visible="false"/>
                 </VBox>
-            </GridPane>
-        </VBox>
 
-        <!-- Danh sách mặt hàng (sửa trực tiếp) -->
-        <VBox styleClass="card" spacing="16">
-            <padding>
-                <Insets top="20" right="24" bottom="20" left="24"/>
-            </padding>
-            <HBox alignment="CENTER_LEFT">
-                <Label text="Danh sách Mặt hàng" styleClass="section-title"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="+ Thêm mặt hàng" styleClass="btn-primary"
-                        onAction="#onAddItem"/>
-            </HBox>
-            <TableView fx:id="itemsTable" styleClass="data-table" prefHeight="280"
-                       editable="true">
-                <columns>
-                    <TableColumn fx:id="codeColumn" text="Mã hàng" prefWidth="90"/>
-                    <TableColumn fx:id="nameColumn" text="Tên mặt hàng" prefWidth="200"/>
-                    <TableColumn fx:id="quantityColumn" text="Số lượng" prefWidth="90"/>
-                    <TableColumn fx:id="unitColumn" text="Đơn vị" prefWidth="70"/>
-                    <TableColumn fx:id="deliveryDateColumn" text="Ngày nhận"
-                                 prefWidth="130"/>
-                    <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="100"/>
-                    <TableColumn fx:id="actionsColumn" text="Thao tác" prefWidth="90"/>
-                </columns>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                </columnResizePolicy>
-            </TableView>
-        </VBox>
-
-        <!-- Mặt hàng bị từ chối / hủy (chỉ đọc, giữ nguyên context cho người sửa) -->
-        <VBox styleClass="card-danger" spacing="16">
-            <padding>
-                <Insets top="20" right="24" bottom="20" left="24"/>
-            </padding>
-            <HBox spacing="12" alignment="CENTER_LEFT">
-                <Label text="Mặt hàng Bị từ chối / Hủy"
-                       styleClass="section-title-danger"/>
-                <Label fx:id="rejectedCountLabel" text="(0 mặt hàng)"
-                       styleClass="info-label"/>
-            </HBox>
-            <VBox fx:id="rejectedList" spacing="12"/>
-            <Label fx:id="rejectedEmptyLabel"
-                   text="Không có mặt hàng nào bị từ chối hoặc hủy"
-                   styleClass="empty-state" managed="false" visible="false"/>
-        </VBox>
-
-        <!-- Nút thao tác cuối trang -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="8"/>
-            </padding>
-            <Button text="Hủy yêu cầu" styleClass="btn-danger"
-                    onAction="#onCancelRequest"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Quay lại" styleClass="btn-secondary" onAction="#onBack"/>
-            <Button text="Lưu thay đổi" styleClass="btn-primary" onAction="#onSave"/>
-        </HBox>
-    </VBox>
-</ScrollPane>
+                <!-- Nút thao tác cuối trang -->
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets top="8"/>
+                    </padding>
+                    <Button text="Hủy yêu cầu" styleClass="btn-danger"
+                            onAction="#onCancelRequest"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Quay lại" styleClass="btn-secondary" onAction="#onBack"/>
+                    <Button text="Lưu thay đổi" styleClass="btn-primary" onAction="#onSave"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</fx:root>

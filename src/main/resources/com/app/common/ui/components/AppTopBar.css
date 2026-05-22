@@ -1,0 +1,114 @@
+/* ============================================================
+   AppTopBar.css — thanh trên cùng (top bar) dùng chung:
+   tìm kiếm toàn cục, đổi ngôn ngữ, chuông thông báo, avatar user.
+   ============================================================ */
+
+.app-topbar {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.04), 6, 0, 0, 1);
+}
+
+/* ---------- Ô tìm kiếm toàn cục ---------- */
+.global-search-box {
+    -fx-background-color: #F3F4F6;
+    -fx-background-radius: 10;
+    -fx-padding: 8 14;
+    -fx-min-height: 42;
+    -fx-min-width: 360;
+    -fx-max-width: 480;
+}
+
+.search-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B7280;
+}
+
+.global-search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 13.5px;
+    -fx-padding: 0;
+    -fx-prompt-text-fill: #9CA3AF;
+}
+
+.global-search-field:focused {
+    -fx-background-color: transparent;
+}
+
+/* ---------- Nút trống (ghost) ---------- */
+.top-ghost-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 14;
+    -fx-text-fill: #374151;
+}
+
+.top-ghost-button:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+/* ---------- Nút thông báo ---------- */
+.notification-button {
+    -fx-background-color: #F3F4F6;
+    -fx-background-radius: 999;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-min-height: 40;
+    -fx-min-width: 40;
+    -fx-text-fill: #374151;
+}
+
+.notification-button:hover {
+    -fx-background-color: #E5E7EB;
+}
+
+/* ---------- Khối user ---------- */
+.user-chip {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 999;
+    -fx-padding: 4 12 4 4;
+}
+
+.avatar-button {
+    -fx-alignment: center;
+    -fx-background-color: #2563EB;
+    -fx-background-radius: 999;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-min-height: 36;
+    -fx-min-width: 36;
+    -fx-text-fill: white;
+}
+
+.avatar-button:hover {
+    -fx-background-color: #1E40AF;
+}
+
+.user-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B7280;
+}
+
+.caret-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-padding: 4 4;
+    -fx-text-fill: #6B7280;
+}
+
+.caret-button:hover {
+    -fx-text-fill: #111827;
+}
