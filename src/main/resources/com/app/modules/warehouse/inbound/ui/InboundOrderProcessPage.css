@@ -1,0 +1,96 @@
+.page-shell {
+    -fx-background-color: #f4f6f8;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.page-content {
+    -fx-background-color: #f4f6f8;
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111827;
+}
+
+.page-subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #6b7280;
+}
+
+.panel {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d7dde6;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.10), 8, 0, 0, 2);
+    -fx-min-width: 420;
+    -fx-padding: 24;
+}
+
+.section-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #1f2937;
+}
+
+.field-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #6b7280;
+}
+
+.field-value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #1f2937;
+}
+
+.field-value.strong {
+    -fx-font-weight: 800;
+    -fx-text-fill: #2f9b6e;
+}
+
+.status-chip {
+    -fx-background-color: #fff4e8;
+    -fx-background-radius: 999;
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
+    -fx-padding: 6 14;
+    -fx-text-fill: #b45309;
+}
+
+.form-input {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: #d7dde6;
+    -fx-border-radius: 8;
+    -fx-font-size: 15px;
+    -fx-padding: 10 12;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button {
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-padding: 10 16;
+}
+
+.primary-button {
+    -fx-background-color: #2f9b6e;
+    -fx-text-fill: white;
+}
+
+.secondary-button {
+    -fx-background-color: white;
+    -fx-border-color: #cfd6df;
+    -fx-border-radius: 8;
+    -fx-text-fill: #374151;
+}
+
+.danger-button {
+    -fx-background-color: #dc2626;
+    -fx-text-fill: white;
+}
