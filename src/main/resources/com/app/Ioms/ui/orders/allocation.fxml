@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="com.app.Ioms.ui.orders.AllocationView" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <HBox spacing="10">
+            <children>
+                <Label text="Phân bổ theo site" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <Label text="Đơn:"/>
+                <Label fx:id="lblOrderId"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnNext" text="Tiếp tục ➜"/>
+            </children>
+            <padding>
+                <Insets top="8" bottom="8" left="4" right="4"/>
+            </padding>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tblItems">
+            <columns>
+                <TableColumn fx:id="colSku" text="SKU" prefWidth="160"/>
+                <TableColumn fx:id="colName" text="Tên hàng" prefWidth="260"/>
+                <TableColumn fx:id="colQty" text="Số lượng" prefWidth="100"/>
+                <TableColumn fx:id="colSite" text="Chọn Site" prefWidth="240"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="com.app.Ioms.ui.orders.AllocationView" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <HBox spacing="10">
+            <children>
+                <Label text="Phân bổ theo site" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <Label text="Đơn:"/>
+                <Label fx:id="lblOrderId"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnNext" text="Tiếp tục ➜"/>
+            </children>
+            <padding>
+                <Insets top="8" bottom="8" left="4" right="4"/>
+            </padding>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tblItems">
+            <columns>
+                <TableColumn fx:id="colSku" text="SKU" prefWidth="160"/>
+                <TableColumn fx:id="colName" text="Tên hàng" prefWidth="260"/>
+                <TableColumn fx:id="colQty" text="Số lượng" prefWidth="100"/>
+                <TableColumn fx:id="colSite" text="Chọn Site" prefWidth="240"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

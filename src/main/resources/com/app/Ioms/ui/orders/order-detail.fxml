@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="com.app.Ioms.ui.orders.OrderDetailView" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox spacing="6">
+            <children>
+                <Label text="Chi tiết đơn hàng" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <HBox spacing="12">
+                    <children>
+                        <Label text="ID:"/>
+                        <Label fx:id="lblOrderId"/>
+                        <Label text="Khách hàng:"/>
+                        <Label fx:id="lblCustomer"/>
+                        <Label text="Trạng thái:"/>
+                        <Label fx:id="lblStatus"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnReprocess" text="Xử lý lại"/>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets top="8" bottom="8" left="4" right="4"/>
+            </padding>
+        </VBox>
+    </top>
+    <center>
+        <TableView fx:id="tblItems">
+            <columns>
+                <TableColumn fx:id="colSku" text="SKU" prefWidth="180"/>
+                <TableColumn fx:id="colName" text="Tên hàng" prefWidth="280"/>
+                <TableColumn fx:id="colQty" text="SL" prefWidth="80"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="com.app.Ioms.ui.orders.OrderDetailView" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox spacing="6">
+            <children>
+                <Label text="Chi tiết đơn hàng" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <HBox spacing="12">
+                    <children>
+                        <Label text="ID:"/>
+                        <Label fx:id="lblOrderId"/>
+                        <Label text="Khách hàng:"/>
+                        <Label fx:id="lblCustomer"/>
+                        <Label text="Trạng thái:"/>
+                        <Label fx:id="lblStatus"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnReprocess" text="Xử lý lại"/>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets top="8" bottom="8" left="4" right="4"/>
+            </padding>
+        </VBox>
+    </top>
+    <center>
+        <TableView fx:id="tblItems">
+            <columns>
+                <TableColumn fx:id="colSku" text="SKU" prefWidth="180"/>
+                <TableColumn fx:id="colName" text="Tên hàng" prefWidth="280"/>
+                <TableColumn fx:id="colQty" text="SL" prefWidth="80"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

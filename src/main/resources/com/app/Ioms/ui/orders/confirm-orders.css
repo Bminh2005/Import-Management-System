@@ -1,0 +1,16 @@
+.text-area {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e0e6ef;
+}
+.button {
+    -fx-background-radius: 8;
+}
+.text-area {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e0e6ef;
+}
+.button {
+    -fx-background-radius: 8;
+}
