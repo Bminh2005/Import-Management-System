@@ -1,8 +1,6 @@
 package com.app.modules.site.catalog.ui.components;
 
-import com.app.common.util.ActionLog;
 import com.app.common.util.FxmlUiHelper;
-import com.app.modules.site.catalog.dto.SiteCardDTO;
 import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,18 +27,24 @@ public class SiteCardUI extends VBox {
     viewDetailButton.setOnAction(e -> onViewDetailClick());
   }
 
-  public void bind(SiteCardDTO vm) {
-    siteId = vm.getSiteId();
-    codeLabel.setText(vm.getCode());
-    nameLabel.setText(vm.getName());
-    warehouseLabel.setText(vm.getWarehouse());
-    locationLabel.setText(vm.getLocation());
-    inventoryLabel.setText(vm.getInventoryText());
-    statusLabel.setText(vm.getStatusLabel());
+  public void bind(
+      String siteId,
+      String code,
+      String name,
+      String warehouse,
+      String location,
+      String inventoryText,
+      boolean active,
+      String statusLabelText) {
+    this.siteId = siteId;
+    codeLabel.setText(code);
+    nameLabel.setText(name);
+    warehouseLabel.setText(warehouse);
+    locationLabel.setText(location);
+    inventoryLabel.setText(inventoryText);
+    statusLabel.setText(statusLabelText);
     statusLabel.getStyleClass().removeAll("badge-site-active", "badge-site-inactive");
-    statusLabel
-        .getStyleClass()
-        .add(vm.isActive() ? "badge-site-active" : "badge-site-inactive");
+    statusLabel.getStyleClass().add(active ? "badge-site-active" : "badge-site-inactive");
   }
 
   public void setOnViewDetail(Consumer<String> onViewDetail) {
@@ -48,7 +52,6 @@ public class SiteCardUI extends VBox {
   }
 
   private void onViewDetailClick() {
-    ActionLog.stub("Danh sách Site: Xem chi tiết site " + siteId);
     if (onViewDetail != null) {
       onViewDetail.accept(siteId);
     }

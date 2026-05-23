@@ -1,7 +1,6 @@
 package com.app.modules.site.catalog.ui.components;
 
 import com.app.common.util.FxmlUiHelper;
-import com.app.modules.site.catalog.dto.SiteInfoRowDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -21,15 +20,21 @@ public class SiteInfoRowUI extends VBox {
     FxmlUiHelper.addStylesheet(this, "site-info-row.css");
   }
 
-  public void bind(SiteInfoRowDTO vm) {
-    iconLabel.setText(vm.getIcon());
-    fieldLabel.setText(vm.getLabel());
-    primaryLabel.setText(vm.getPrimaryText());
+  public void bind(
+      String icon,
+      String label,
+      String primary,
+      String secondary,
+      boolean linkStyle,
+      boolean showSeparator) {
+    iconLabel.setText(icon);
+    fieldLabel.setText(label);
+    primaryLabel.setText(primary);
     primaryLabel.getStyleClass().removeAll("info-value", "link-text");
-    primaryLabel.getStyleClass().add(vm.isLinkStyle() ? "link-text" : "info-value");
+    primaryLabel.getStyleClass().add(linkStyle ? "link-text" : "info-value");
 
-    if (vm.getSecondaryText() != null && !vm.getSecondaryText().isBlank()) {
-      secondaryLabel.setText(vm.getSecondaryText());
+    if (secondary != null && !secondary.isBlank()) {
+      secondaryLabel.setText(secondary);
       secondaryLabel.setVisible(true);
       secondaryLabel.setManaged(true);
     } else {
@@ -37,7 +42,7 @@ public class SiteInfoRowUI extends VBox {
       secondaryLabel.setManaged(false);
     }
 
-    rowSeparator.setVisible(vm.isShowSeparatorAfter());
-    rowSeparator.setManaged(vm.isShowSeparatorAfter());
+    rowSeparator.setVisible(showSeparator);
+    rowSeparator.setManaged(showSeparator);
   }
 }

@@ -5,7 +5,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/** Chạy thử riêng màn Quản lý Mặt hàng (procurement/product). */
+/** Chạy thử riêng màn Quản lý Mặt hàng (không sidebar). */
 public class ProcurementProductApp extends Application {
 
   @Override
@@ -16,7 +16,7 @@ public class ProcurementProductApp extends Application {
     scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());
     scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/components.css").toExternalForm());
 
-    stage.setTitle("Hệ thống Quản lý Nhập khẩu - Quản lý Mặt hàng");
+    stage.setTitle("Preview — Quản lý Mặt hàng");
     stage.setScene(scene);
     stage.setMinWidth(1100);
     stage.setMinHeight(700);

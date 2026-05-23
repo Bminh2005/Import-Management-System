@@ -1,6 +1,5 @@
 package com.app.common.ui.components;
 
-import com.app.common.util.ActionLog;
 import com.app.common.util.FxmlUiHelper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,15 +27,9 @@ public class PaginationBarUI extends HBox {
     summaryLabel.setText(text);
   }
 
-  private void onPrev() {
-    ActionLog.stub("Phân trang: Trang trước");
-  }
+  private void onPrev() {}
 
-  private void onNext() {
-    ActionLog.stub("Phân trang: Trang sau");
-  }
+  private void onNext() {}
 
-  private void onPage(int page) {
-    ActionLog.stub("Phân trang: Chuyển tới trang " + page);
-  }
+  private void onPage(int page) {}
 }

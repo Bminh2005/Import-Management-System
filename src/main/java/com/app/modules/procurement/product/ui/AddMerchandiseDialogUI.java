@@ -1,8 +1,8 @@
 package com.app.modules.procurement.product.ui;
 
-import com.app.modules.procurement.product.dto.AddMerchandiseDTO;
-import java.util.function.Consumer;
 import com.app.common.util.FxmlUiHelper;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -11,8 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
-/** UI popup Thêm mặt hàng — chỉ xử lý giao diện. */
+/** UI popup Thêm mặt hàng. */
 public class AddMerchandiseDialogUI extends StackPane {
+
   @FXML private Label titleLabel;
   @FXML private TextField codeField;
   @FXML private TextField nameField;
@@ -22,23 +23,17 @@ public class AddMerchandiseDialogUI extends StackPane {
   @FXML private TextField supplierField;
   @FXML private TextArea descriptionField;
 
-  private final AddMerchandiseDTO formDto = new AddMerchandiseDTO();
-  private Consumer<AddMerchandiseDTO> onSave;
   private Runnable onClose;
+  private Consumer<AddMerchandiseDialogUI> onSave;
 
   public AddMerchandiseDialogUI() {
     FxmlUiHelper.loadSelf(this, "AddMerchandiseDialogPage.fxml");
     FxmlUiHelper.addStylesheet(this, "add-merchandise-dialog.css");
-    formDto.setCategoryOptions(java.util.List.of("Điện tử", "Phụ kiện", "Nội thất"));
-    categoryCombo.getItems().setAll(formDto.getCategoryOptions());
-    applyFormDtoToView();
+    categoryCombo.getItems().setAll(List.of("Điện tử", "Phụ kiện", "Nội thất"));
+    resetForm("MH005");
   }
 
-  public AddMerchandiseDTO getFormDto() {
-    return formDto;
-  }
-
-  public void setOnSave(Consumer<AddMerchandiseDTO> onSave) {
+  public void setOnSave(Consumer<AddMerchandiseDialogUI> onSave) {
     this.onSave = onSave;
   }
 
@@ -47,38 +42,34 @@ public class AddMerchandiseDialogUI extends StackPane {
   }
 
   public void prepareForNewItem(String nextCodeHint) {
-    formDto.clearForm();
-    formDto.setCodeHint("Tự động tạo (VD: " + nextCodeHint + ")");
-    applyFormDtoToView();
+    resetForm(nextCodeHint);
   }
 
-  public void applyFormDtoToView() {
-    titleLabel.setText(formDto.getDialogTitle());
-    codeField.setText(formDto.getCodeHint());
-    nameField.setText(formDto.getName());
-    unitField.setText(formDto.getUnit());
-    priceField.setText(formDto.getPrice());
-    supplierField.setText(formDto.getSupplier());
-    descriptionField.setText(formDto.getDescription());
-    if (formDto.getCategory() != null && !formDto.getCategory().isBlank()) {
-      categoryCombo.setValue(formDto.getCategory());
-    } else {
-      categoryCombo.getSelectionModel().clearSelection();
-    }
+  public String getNameValue() {
+    return nameField.getText();
   }
 
-  private void readViewIntoFormDto() {
-    formDto.setName(nameField.getText());
-    formDto.setUnit(unitField.getText());
-    formDto.setCategory(categoryCombo.getValue());
-    formDto.setPrice(priceField.getText());
-    formDto.setSupplier(supplierField.getText());
-    formDto.setDescription(descriptionField.getText());
+  public String getUnitValue() {
+    return unitField.getText();
+  }
+
+  public String getCategoryValue() {
+    return categoryCombo.getValue();
+  }
+
+  private void resetForm(String codeHint) {
+    titleLabel.setText("Thêm Mặt hàng Mới");
+    codeField.setText("Tự động tạo (VD: " + codeHint + ")");
+    nameField.clear();
+    unitField.clear();
+    priceField.clear();
+    supplierField.clear();
+    descriptionField.clear();
+    categoryCombo.getSelectionModel().clearSelection();
   }
 
   @FXML
   private void onCancel() {
-    com.app.common.util.ActionLog.stub("Thêm mặt hàng: Hủy");
     if (onClose != null) {
       onClose.run();
     }
@@ -86,10 +77,8 @@ public class AddMerchandiseDialogUI extends StackPane {
 
   @FXML
   private void onSave() {
-    readViewIntoFormDto();
-    com.app.common.util.ActionLog.stub("Thêm mặt hàng: Lưu Mặt hàng");
     if (onSave != null) {
-      onSave.accept(formDto);
+      onSave.accept(this);
     }
   }
 

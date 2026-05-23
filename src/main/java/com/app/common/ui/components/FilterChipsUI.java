@@ -1,6 +1,5 @@
 package com.app.common.ui.components;
 
-import com.app.common.dto.FilterChipDTO;
 import com.app.common.util.FxmlUiHelper;
 import java.util.List;
 import java.util.function.Consumer;
@@ -10,6 +9,12 @@ import javafx.scene.layout.HBox;
 /** Nhóm chip lọc tái sử dụng. */
 public class FilterChipsUI extends HBox {
 
+  public record ChipOption(String value, String label, String count, boolean selected) {
+    public String displayText() {
+      return label + " (" + count + ")";
+    }
+  }
+
   private Consumer<String> onFilterSelected;
   private String selectedValue = "all";
 
@@ -17,17 +22,17 @@ public class FilterChipsUI extends HBox {
     FxmlUiHelper.loadSelf(this, "FilterChips.fxml");
   }
 
-  public void bindChips(List<FilterChipDTO> chips) {
+  public void bindChips(List<ChipOption> chips) {
     getChildren().clear();
-    for (FilterChipDTO chip : chips) {
-      Button btn = new Button(chip.getDisplayText());
-      applyChipStyle(btn, chip.isSelected());
-      if (chip.isSelected()) {
-        selectedValue = chip.getValue();
+    for (ChipOption chip : chips) {
+      Button btn = new Button(chip.displayText());
+      applyChipStyle(btn, chip.selected());
+      if (chip.selected()) {
+        selectedValue = chip.value();
       }
       btn.setOnAction(
           e -> {
-            selectedValue = chip.getValue();
+            selectedValue = chip.value();
             for (var node : getChildren()) {
               if (node instanceof Button b) {
                 applyChipStyle(b, b == btn);
