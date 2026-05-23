@@ -17,4 +17,5 @@ module com.app.Ioms {
     exports com.app.modules.warehouse.inbound.repository;
     exports com.app.modules.warehouse.inbound.service;
     exports com.app.modules.warehouse.inbound.ui;
+    exports com.app.vinh.test;
 }
