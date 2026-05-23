@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="ScrollPane" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fitToWidth="true"
+            styleClass="screen-scroll">
+
+    <stylesheets>
+        <URL value="@../../../../common/ui/components/components.css"/>
+        <URL value="@process-import-requests.css"/>
+    </stylesheets>
+
+    <VBox styleClass="main-content process-import-requests" spacing="22">
+        <padding>
+            <Insets top="28" right="32" bottom="28" left="32"/>
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="14">
+            <Button text="← Quay lại"
+                    styleClass="back-button"
+                    onAction="#onBack"/>
+
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Xử lý Yêu cầu nhập hàng"
+                       styleClass="page-title"/>
+                <Label text="Xem các yêu cầu đang chờ và phân bổ đơn hàng đến site phù hợp"
+                       styleClass="page-subtitle"/>
+            </VBox>
+        </HBox>
+
+        <!-- Summary cards -->
+        <GridPane hgap="18" vgap="18">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+            </columnConstraints>
+
+            <VBox styleClass="card summary-card" GridPane.columnIndex="0" spacing="8">
+                <Label text="Yêu cầu đang chờ" styleClass="summary-title"/>
+                <Label fx:id="pendingCountLabel" text="0" styleClass="summary-value"/>
+                <Label text="Cần phân bổ site" styleClass="summary-description"/>
+            </VBox>
+
+            <VBox styleClass="card summary-card" GridPane.columnIndex="1" spacing="8">
+                <Label text="Ưu tiên cao" styleClass="summary-title"/>
+                <Label fx:id="highPriorityCountLabel" text="0" styleClass="summary-value warning"/>
+                <Label text="Cần xử lý sớm" styleClass="summary-description"/>
+            </VBox>
+
+            <VBox styleClass="card summary-card" GridPane.columnIndex="2" spacing="8">
+                <Label text="Tổng mặt hàng" styleClass="summary-title"/>
+                <Label fx:id="totalItemsLabel" text="0" styleClass="summary-value"/>
+                <Label text="Trong các yêu cầu chờ" styleClass="summary-description"/>
+            </VBox>
+
+            <VBox styleClass="card summary-card" GridPane.columnIndex="3" spacing="8">
+                <Label text="Site khả dụng" styleClass="summary-title"/>
+                <Label fx:id="availableSitesLabel" text="0" styleClass="summary-value success"/>
+                <Label text="Có thể nhận đơn" styleClass="summary-description"/>
+            </VBox>
+        </GridPane>
+
+        <!-- Filter panel -->
+        <VBox styleClass="card filter-card" spacing="14">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="Tìm kiếm yêu cầu" styleClass="filter-label"/>
+                    <TextField fx:id="searchField"
+                               promptText="Nhập mã yêu cầu, tên khách hàng hoặc mặt hàng..."
+                               styleClass="search-field"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Mức ưu tiên" styleClass="filter-label"/>
+                    <ComboBox fx:id="priorityFilter"
+                              prefWidth="170"
+                              styleClass="filter-combo"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Sắp xếp" styleClass="filter-label"/>
+                    <ComboBox fx:id="sortFilter"
+                              prefWidth="190"
+                              styleClass="filter-combo"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Requests list -->
+        <VBox styleClass="card list-card" spacing="0">
+            <HBox alignment="CENTER_LEFT" styleClass="list-title-row">
+                <VBox spacing="4">
+                    <Label text="Danh sách yêu cầu chờ xử lý"
+                           styleClass="section-title"/>
+                    <Label fx:id="resultCountLabel"
+                           text="0 yêu cầu"
+                           styleClass="section-subtitle"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Làm mới"
+                        styleClass="outline-button"
+                        onAction="#onRefresh"/>
+            </HBox>
+
+            <GridPane styleClass="request-table-header">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="17"/>
+                    <ColumnConstraints percentWidth="16"/>
+                    <ColumnConstraints percentWidth="15"/>
+                    <ColumnConstraints percentWidth="13"/>
+                    <ColumnConstraints percentWidth="14"/>
+                    <ColumnConstraints percentWidth="13"/>
+                    <ColumnConstraints percentWidth="12"/>
+                </columnConstraints>
+
+                <Label text="MÃ YÊU CẦU"
+                       styleClass="table-header-label"
+                       GridPane.columnIndex="0"/>
+                <Label text="NGÀY TẠO"
+                       styleClass="table-header-label"
+                       GridPane.columnIndex="1"/>
+                <Label text="NGƯỜI TẠO"
+                       styleClass="table-header-label"
+                       GridPane.columnIndex="2"/>
+                <Label text="SỐ MẶT HÀNG"
+                       styleClass="table-header-label"
+                       GridPane.columnIndex="3"/>
+                <Label text="ƯU TIÊN"
+                       styleClass="table-header-label"
+                       GridPane.columnIndex="4"/>
+                <Label text="TRẠNG THÁI"
+                       styleClass="table-header-label"
+                       GridPane.columnIndex="5"/>
+                <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="6">
+                    <Label text="THAO TÁC"
+                           styleClass="table-header-label"/>
+                </HBox>
+            </GridPane>
+
+            <VBox fx:id="requestsList"/>
+
+            <VBox fx:id="emptyContainer"
+                  alignment="CENTER"
+                  spacing="10"
+                  styleClass="empty-container"
+                  visible="false"
+                  managed="false">
+                <Label text="Không có yêu cầu phù hợp"
+                       styleClass="empty-title"/>
+                <Label text="Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc ưu tiên"
+                       styleClass="empty-description"/>
+            </VBox>
+        </VBox>
+    </VBox>
+</fx:root>
