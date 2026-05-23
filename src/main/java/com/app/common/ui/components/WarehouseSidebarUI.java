@@ -2,9 +2,13 @@ package com.app.common.ui.components;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
-public class WarehouseSidebarController {
+import java.io.IOException;
+
+public class WarehouseSidebarUI extends VBox {
     @FXML
     private Button warehouseHomeButton;
 
@@ -12,6 +16,17 @@ public class WarehouseSidebarController {
     private Button inboundOrdersButton;
 
     private String activeMenu = "home";
+
+    public WarehouseSidebarUI() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseSidebar.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException exception) {
+            throw new IllegalStateException("Khong the tai WarehouseSidebar.fxml", exception);
+        }
+    }
 
     @FXML
     private void initialize() {

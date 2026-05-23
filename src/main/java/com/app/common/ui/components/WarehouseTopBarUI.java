@@ -1,10 +1,14 @@
 package com.app.common.ui.components;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
-public class WarehouseTopBarController {
+import java.io.IOException;
+
+public class WarehouseTopBarUI extends HBox {
     @FXML
     private TextField searchField;
 
@@ -16,6 +20,17 @@ public class WarehouseTopBarController {
 
     private String userName = "Nguyen Van A";
     private String role = "Bo phan Quan ly Kho";
+
+    public WarehouseTopBarUI() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseTopBar.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException exception) {
+            throw new IllegalStateException("Khong the tai WarehouseTopBar.fxml", exception);
+        }
+    }
 
     @FXML
     private void initialize() {

@@ -8,22 +8,23 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import com.app.common.ui.components.WarehouseSidebarUI?>
+<?import com.app.common.ui.components.WarehouseTopBarUI?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane styleClass="page-shell" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.app.modules.warehouse.inbound.ui.InboundOrderListController">
+<fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@InboundOrderListPage.css"/>
         <URL value="/com/app/common/ui/components/WarehouseComponents.css"/>
     </stylesheets>
     <left>
-        <fx:include fx:id="sidebar" source="/com/app/common/ui/components/WarehouseSidebar.fxml"/>
+        <WarehouseSidebarUI fx:id="sidebar"/>
     </left>
     <top>
-        <fx:include source="/com/app/common/ui/components/WarehouseTopBar.fxml"/>
+        <WarehouseTopBarUI/>
     </top>
     <center>
         <VBox spacing="22.0" styleClass="page-content">
@@ -69,4 +70,4 @@
             </VBox>
         </VBox>
     </center>
-</BorderPane>
+</fx:root>

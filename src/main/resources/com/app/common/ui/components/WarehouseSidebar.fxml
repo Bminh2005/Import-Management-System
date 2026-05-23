@@ -8,9 +8,8 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefWidth="280.0" styleClass="warehouse-sidebar" xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.app.common.ui.components.WarehouseSidebarController">
+<fx:root type="VBox" prefWidth="280.0" styleClass="warehouse-sidebar" xmlns="http://javafx.com/javafx/17"
+         xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@WarehouseComponents.css"/>
     </stylesheets>
@@ -43,4 +42,4 @@
 
     <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onCollapseClick"
             styleClass="collapse-button" text="‹  Thu Gọn"/>
-</VBox>
+</fx:root>

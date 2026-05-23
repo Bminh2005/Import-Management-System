@@ -9,9 +9,8 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="CENTER_LEFT" minHeight="76.0" spacing="18.0" styleClass="warehouse-topbar"
-      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.app.common.ui.components.WarehouseTopBarController">
+<fx:root type="HBox" alignment="CENTER_LEFT" minHeight="76.0" spacing="18.0" styleClass="warehouse-topbar"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@WarehouseComponents.css"/>
     </stylesheets>
@@ -29,4 +28,4 @@
         <Label fx:id="roleLabel" styleClass="user-role" text="Bo phan Quan ly Kho"/>
     </VBox>
     <Button mnemonicParsing="false" onAction="#onUserMenuClick" styleClass="top-icon-button" text="⌄"/>
-</HBox>
+</fx:root>

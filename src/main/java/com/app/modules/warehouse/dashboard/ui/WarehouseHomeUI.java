@@ -1,7 +1,7 @@
 package com.app.modules.warehouse.dashboard.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
-import com.app.common.ui.components.WarehouseSidebarController;
+import com.app.common.ui.components.WarehouseSidebarUI;
 import com.app.modules.warehouse.dashboard.dto.WarehouseDashboardSummary;
 import com.app.modules.warehouse.dashboard.service.WarehouseDashboardService;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
@@ -10,12 +10,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.BorderPane;
 
-public class WarehouseHomeController {
+import java.io.IOException;
+
+public class WarehouseHomeUI extends BorderPane {
     private final WarehouseDashboardService dashboardService = new WarehouseDashboardService();
     private final InboundOrderService inboundOrderService = new InboundOrderService();
 
@@ -50,14 +54,25 @@ public class WarehouseHomeController {
     private TableColumn<InboundOrderResponse, String> actionColumn;
 
     @FXML
-    private WarehouseSidebarController sidebarController;
+    private WarehouseSidebarUI sidebar;
 
     private WarehouseDashboardSummary dashboardSummary;
     private ObservableList<InboundOrderResponse> recentOrders = FXCollections.observableArrayList();
 
+    public WarehouseHomeUI() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseHomePage.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException exception) {
+            throw new IllegalStateException("Khong the tai WarehouseHomePage.fxml", exception);
+        }
+    }
+
     @FXML
     private void initialize() {
-        sidebarController.setActiveMenu("home");
+        sidebar.setActiveMenu("home");
         configureTable();
         setDashboardSummary(dashboardService.getDashboardSummary());
         setRecentOrders(FXCollections.observableArrayList(inboundOrderService.getRecentInboundOrders()));

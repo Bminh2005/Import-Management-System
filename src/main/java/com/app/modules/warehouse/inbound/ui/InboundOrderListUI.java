@@ -1,7 +1,7 @@
 package com.app.modules.warehouse.inbound.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
-import com.app.common.ui.components.WarehouseSidebarController;
+import com.app.common.ui.components.WarehouseSidebarUI;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -9,13 +9,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.BorderPane;
 
-public class InboundOrderListController {
+import java.io.IOException;
+
+public class InboundOrderListUI extends BorderPane {
     private final InboundOrderService inboundOrderService = new InboundOrderService();
 
     @FXML
@@ -49,13 +53,24 @@ public class InboundOrderListController {
     private TableColumn<InboundOrderResponse, String> actionColumn;
 
     @FXML
-    private WarehouseSidebarController sidebarController;
+    private WarehouseSidebarUI sidebar;
 
     private ObservableList<InboundOrderResponse> inboundOrders = FXCollections.observableArrayList();
 
+    public InboundOrderListUI() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("InboundOrderListPage.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException exception) {
+            throw new IllegalStateException("Khong the tai InboundOrderListPage.fxml", exception);
+        }
+    }
+
     @FXML
     private void initialize() {
-        sidebarController.setActiveMenu("inbound");
+        sidebar.setActiveMenu("inbound");
         statusFilter.setItems(FXCollections.observableArrayList(
                 "Tat ca", "Cho xu ly", "Dang xu ly", "Da nhap kho", "Co sai lech"
         ));
