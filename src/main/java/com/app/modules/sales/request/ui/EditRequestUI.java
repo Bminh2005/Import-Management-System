@@ -1,32 +1,27 @@
 package com.app.modules.sales.request.ui;
 
-import com.app.common.ui.components.AppSidebarUI;
-import com.app.common.ui.components.AppTopBarUI;
 import com.app.common.util.StatusStyle;
 import com.app.modules.sales.request.dto.RequestResponse;
 import com.app.modules.sales.request.dto.UpdateRequestDTO;
 import com.app.modules.sales.request.entity.RejectedItem;
 import com.app.modules.sales.request.entity.RequestItem;
 import com.app.modules.sales.request.service.RequestService;
-import com.app.modules.warehouse.inventory.ui.InventoryListUI;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.io.IOException;
@@ -34,14 +29,13 @@ import java.util.ArrayList;
 
 /**
  * UI Class cho màn hình "Chỉnh sửa Yêu cầu Nhập hàng".
- * Layout: BorderPane (sidebar bên trái + topbar bên trên + content ở giữa).
- *
+ * Màn này độc lập — thao tác vào đến từ danh sách yêu cầu nhập hàng.
  * Cho phép sửa số lượng / ngày nhận của từng mặt hàng ngay trên bảng,
  * thêm hoặc xóa mặt hàng, hủy yêu cầu, lưu thay đổi.
  *
  * Theo quy ước README: chỉ gọi service.
  */
-public class EditRequestUI extends BorderPane {
+public class EditRequestUI extends ScrollPane {
 
     @FXML private Label titleLabel;
 
@@ -79,31 +73,8 @@ public class EditRequestUI extends BorderPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        attachSidebarAndTopBar();
         itemsTable.setEditable(true);
         setupItemsTable();
-    }
-
-    private void attachSidebarAndTopBar() {
-        AppSidebarUI sidebar = new AppSidebarUI();
-        sidebar.setActive(AppSidebarUI.KEY_REQUEST);
-        sidebar.setBrandSubtitle("Bộ phận Bán hàng");
-        sidebar.setRole("Bộ phận Bán hàng");
-        sidebar.setOnInventory(() -> navigateTo(new InventoryListUI(),
-                "Hệ thống Quản lý Nhập khẩu - Mặt hàng Tồn kho"));
-        setLeft(sidebar);
-
-        AppTopBarUI topbar = new AppTopBarUI();
-        topbar.setUserName("Nguyễn Văn A");
-        topbar.setRole("Bộ phận Bán hàng");
-        setTop(topbar);
-    }
-
-    private void navigateTo(javafx.scene.Parent root, String title) {
-        Scene scene = getScene();
-        if (scene == null) return;
-        scene.setRoot(root);
-        ((Stage) scene.getWindow()).setTitle(title);
     }
 
     private void setupItemsTable() {
@@ -278,16 +249,6 @@ public class EditRequestUI extends BorderPane {
         service.updateRequest(dto);
         System.out.println("Nội dung chức năng: Lưu thay đổi yêu cầu "
                 + current.getCode());
-    }
-
-    @FXML
-    private void onBack() {
-        if (current == null) return;
-        System.out.println("Nội dung chức năng: Quay lại màn hình chi tiết yêu cầu "
-                + current.getCode());
-        RequestDetailUI detailUI = new RequestDetailUI();
-        detailUI.loadRequest(current.getCode());
-        navigateTo(detailUI, "Hệ thống Quản lý Nhập khẩu - Chi tiết Yêu cầu");
     }
 
     @FXML

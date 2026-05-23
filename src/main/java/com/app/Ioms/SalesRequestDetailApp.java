@@ -6,17 +6,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Điểm chạy thử feature sales/request: mở thẳng màn
- * "Chi tiết Yêu cầu Nhập hàng" với mã mẫu trong RequestRepository.
+ * App test cho màn "Chi tiết Yêu cầu Nhập hàng" (RequestDetailUI).
+ * Mở thẳng màn chi tiết với một mã yêu cầu mẫu trong RequestRepository.
+ * Màn này độc lập, thoát bằng nút "Đóng".
  *
- * Từ màn chi tiết bấm "Chỉnh sửa" sẽ sang EditRequestUI;
- * trên đó bấm "Quay lại" sẽ trở về màn chi tiết.
- *
- * Cách chạy:
- * - IDE: right-click {@link SalesRequestLauncher} → Run.
- * - Terminal: mvn javafx:run.
+ * Cách chạy: right-click {@link SalesRequestDetailLauncher} → Run.
  */
-public class SalesRequestApp extends Application {
+public class SalesRequestDetailApp extends Application {
 
     private static final String DEFAULT_REQUEST_CODE = "REQ-2024-001";
 

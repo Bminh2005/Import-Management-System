@@ -1,8 +1,8 @@
-package com.app.modules.warehouse.inventory.service;
+package com.app.modules.procurement.inventory.service;
 
-import com.app.modules.warehouse.inventory.dto.InventoryItemResponse;
-import com.app.modules.warehouse.inventory.entity.InventoryItem;
-import com.app.modules.warehouse.inventory.repository.InventoryRepository;
+import com.app.modules.procurement.inventory.dto.InventoryItemResponse;
+import com.app.modules.procurement.inventory.entity.InventoryItem;
+import com.app.modules.procurement.inventory.repository.InventoryRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

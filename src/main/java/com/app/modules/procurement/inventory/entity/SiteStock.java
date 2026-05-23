@@ -1,4 +1,4 @@
-package com.app.modules.warehouse.inventory.entity;
+package com.app.modules.procurement.inventory.entity;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -8,6 +8,9 @@ import javafx.beans.property.StringProperty;
 /**
  * Tồn kho của một mặt hàng tại một site.
  * Dùng làm dòng trong bảng "Tồn kho tại các site" của màn chi tiết.
+ *
+ * Thuộc Bộ phận Đặt hàng Quốc tế (procurement) — để xem tồn kho
+ * sẵn có ở các site phục vụ việc phân bổ đơn hàng.
  */
 public class SiteStock {
 

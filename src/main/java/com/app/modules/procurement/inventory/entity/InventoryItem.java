@@ -1,4 +1,4 @@
-package com.app.modules.warehouse.inventory.entity;
+package com.app.modules.procurement.inventory.entity;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -10,6 +10,9 @@ import javafx.collections.ObservableList;
 /**
  * Một mặt hàng tồn kho: tổng tồn + danh sách tồn theo site.
  * Tổng tồn hiển thị ở danh sách; danh sách site hiển thị ở chi tiết.
+ *
+ * Thuộc Bộ phận Đặt hàng Quốc tế (procurement) — để xem tồn kho
+ * sẵn có ở các site phục vụ việc phân bổ đơn hàng.
  */
 public class InventoryItem {
 

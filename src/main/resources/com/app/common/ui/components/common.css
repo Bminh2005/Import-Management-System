@@ -19,11 +19,6 @@
     -background: #F9FAFB;
 }
 
-/* ---------- Layout shell với sidebar + topbar ---------- */
-.page-shell {
-    -fx-background-color: -background;
-}
-
 /* ---------- Layout trang ---------- */
 .screen-scroll {
     -fx-background-color: -background;

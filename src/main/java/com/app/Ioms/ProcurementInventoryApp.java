@@ -1,18 +1,19 @@
 package com.app.Ioms;
 
-import com.app.modules.warehouse.inventory.ui.InventoryListUI;
+import com.app.modules.procurement.inventory.ui.InventoryListUI;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Điểm chạy thử feature warehouse/inventory: mở thẳng màn
- * "Mặt hàng Tồn kho" (danh sách) với dữ liệu mẫu trong InventoryRepository.
+ * Điểm chạy thử feature procurement/inventory: mở thẳng màn
+ * "Mặt hàng Tồn kho" của Bộ phận Đặt hàng Quốc tế với dữ liệu mẫu
+ * trong InventoryRepository.
  *
  * Cách chạy:
- * - IDE: right-click {@link WarehouseInventoryLauncher} → Run.
+ * - IDE: right-click {@link ProcurementInventoryLauncher} → Run.
  */
-public class WarehouseInventoryApp extends Application {
+public class ProcurementInventoryApp extends Application {
 
     @Override
     public void start(Stage stage) {

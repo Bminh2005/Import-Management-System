@@ -1,7 +1,7 @@
-package com.app.modules.warehouse.inventory.repository;
+package com.app.modules.procurement.inventory.repository;
 
-import com.app.modules.warehouse.inventory.entity.InventoryItem;
-import com.app.modules.warehouse.inventory.entity.SiteStock;
+import com.app.modules.procurement.inventory.entity.InventoryItem;
+import com.app.modules.procurement.inventory.entity.SiteStock;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

@@ -1,24 +1,20 @@
-package com.app.modules.warehouse.inventory.ui;
+package com.app.modules.procurement.inventory.ui;
 
-import com.app.common.ui.components.AppSidebarUI;
-import com.app.common.ui.components.AppTopBarUI;
-import com.app.modules.sales.request.ui.RequestDetailUI;
-import com.app.modules.warehouse.inventory.dto.InventoryItemResponse;
-import com.app.modules.warehouse.inventory.entity.SiteStock;
-import com.app.modules.warehouse.inventory.service.InventoryService;
+import com.app.modules.procurement.inventory.dto.InventoryItemResponse;
+import com.app.modules.procurement.inventory.entity.SiteStock;
+import com.app.modules.procurement.inventory.service.InventoryService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,15 +30,16 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * UI Class cho màn "Mặt hàng Tồn kho" (danh sách).
- * Layout: BorderPane (sidebar bên trái + topbar bên trên + content ở giữa).
+ * UI Class cho màn "Mặt hàng Tồn kho" (danh sách) của Bộ phận Đặt hàng Quốc tế.
+ * Hiển thị tồn kho của các mặt hàng tại các site quốc tế để phục vụ
+ * việc phân bổ đơn hàng.
  *
  * Mỗi dòng có nút "Xem chi tiết" để mở rộng inline hiển thị
  * các thẻ tồn kho theo từng site; click lại sẽ thu gọn.
  *
  * Theo README: chỉ gọi service, không chạm repository.
  */
-public class InventoryListUI extends BorderPane {
+public class InventoryListUI extends ScrollPane {
 
     @FXML private TextField searchField;
     @FXML private ToggleGroup categoryGroup;
@@ -67,35 +63,9 @@ public class InventoryListUI extends BorderPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        attachSidebarAndTopBar();
         loadData();
         setupFilters();
         renderList();
-    }
-
-    private void attachSidebarAndTopBar() {
-        AppSidebarUI sidebar = new AppSidebarUI();
-        sidebar.setActive(AppSidebarUI.KEY_INVENTORY);
-        sidebar.setBrandSubtitle("Bộ phận Quản lý Kho");
-        sidebar.setRole("Bộ phận Quản lý Kho");
-        sidebar.setOnRequest(() -> {
-            RequestDetailUI ui = new RequestDetailUI();
-            ui.loadRequest("REQ-2024-001");
-            navigateTo(ui, "Hệ thống Quản lý Nhập khẩu - Chi tiết Yêu cầu");
-        });
-        setLeft(sidebar);
-
-        AppTopBarUI topbar = new AppTopBarUI();
-        topbar.setUserName("Trần Thị B");
-        topbar.setRole("Bộ phận Quản lý Kho");
-        setTop(topbar);
-    }
-
-    private void navigateTo(javafx.scene.Parent root, String title) {
-        Scene scene = getScene();
-        if (scene == null) return;
-        scene.setRoot(root);
-        ((Stage) scene.getWindow()).setTitle(title);
     }
 
     private void loadData() {
