@@ -1,0 +1,253 @@
+/* ============================================================
+   process-import-requests.css
+   Style cho màn Xử lý Yêu cầu nhập hàng.
+   ============================================================ */
+
+.process-import-requests {
+    -fx-background-color: -background;
+}
+
+/* ---------- Header ---------- */
+
+.back-button {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 9 14;
+    -fx-cursor: hand;
+}
+
+.back-button:hover {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #CBD5E1;
+}
+
+/* ---------- Summary ---------- */
+
+.summary-card {
+    -fx-padding: 18;
+    -fx-min-height: 118px;
+}
+
+.summary-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-secondary;
+}
+
+.summary-value {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+.summary-value.warning {
+    -fx-text-fill: #EA580C;
+}
+
+.summary-value.success {
+    -fx-text-fill: #059669;
+}
+
+.summary-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-secondary;
+}
+
+/* ---------- Filters ---------- */
+
+.filter-card {
+    -fx-padding: 18;
+}
+
+.filter-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+
+.search-field {
+    -fx-pref-height: 40px;
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 12;
+    -fx-font-size: 13px;
+}
+
+.search-field:focused {
+    -fx-border-color: #4F46E5;
+    -fx-border-width: 2px;
+}
+
+.filter-combo {
+    -fx-pref-height: 40px;
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 13px;
+}
+
+/* ---------- List ---------- */
+
+.list-card {
+    -fx-padding: 0;
+}
+
+.list-title-row {
+    -fx-padding: 20;
+}
+
+.section-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-secondary;
+}
+
+.outline-button {
+    -fx-background-color: white;
+    -fx-border-color: #4F46E5;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #4F46E5;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+}
+
+.outline-button:hover {
+    -fx-background-color: #EEF2FF;
+}
+
+.request-table-header {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1 0 1 0;
+    -fx-padding: 12 20;
+}
+
+.table-header-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+
+/* ---------- Rows ---------- */
+
+.request-row {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 15 20;
+}
+
+.request-row:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.request-code {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4F46E5;
+}
+
+.request-date,
+.request-user,
+.request-items {
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-primary;
+}
+
+.request-muted {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-secondary;
+}
+
+/* ---------- Badges ---------- */
+
+.badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10;
+    -fx-background-radius: 999px;
+}
+
+.priority-high {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #991B1B;
+}
+
+.priority-medium {
+    -fx-background-color: #FEF3C7;
+    -fx-text-fill: #92400E;
+}
+
+.priority-low {
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1D4ED8;
+}
+
+.status-pending {
+    -fx-background-color: #FFEDD5;
+    -fx-text-fill: #9A3412;
+}
+
+.status-reviewing {
+    -fx-background-color: #E0E7FF;
+    -fx-text-fill: #3730A3;
+}
+
+/* ---------- Buttons ---------- */
+
+.process-button {
+    -fx-background-color: #4F46E5;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 12;
+    -fx-cursor: hand;
+}
+
+.process-button:hover {
+    -fx-background-color: #4338CA;
+}
+
+.detail-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4F46E5;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 0;
+    -fx-cursor: hand;
+}
+
+.detail-button:hover {
+    -fx-underline: true;
+}
+
+/* ---------- Empty ---------- */
+
+.empty-container {
+    -fx-padding: 48 20;
+}
+
+.empty-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+.empty-description {
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-secondary;
+}
