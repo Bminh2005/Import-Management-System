@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root type="HBox" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      alignment="CENTER_LEFT"
+      spacing="8"
+      styleClass="search-bar"
+      stylesheets="@search-bar.css">
+    <Label text="🔍" styleClass="search-bar-icon"/>
+    <TextField fx:id="searchField" HBox.hgrow="ALWAYS" styleClass="search-bar-field"/>
+</fx:root>

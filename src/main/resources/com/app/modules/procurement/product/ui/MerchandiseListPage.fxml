@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+fx:id="pageRoot">
+    <ScrollPane fitToWidth="true" styleClass="page-scroll">
+        <VBox styleClass="page-content" spacing="12">
+            <StackPane fx:id="headerPlaceholder"/>
+            <VBox styleClass="card card-padding" spacing="10">
+                <StackPane fx:id="searchPlaceholder"/>
+                <StackPane fx:id="categoryChipsPlaceholder"/>
+            </VBox>
+            <VBox styleClass="card table-card" spacing="0">
+                <TableView fx:id="merchandiseTable" styleClass="data-table" prefHeight="360">
+                    <columns>
+                        <TableColumn fx:id="expandColumn" prefWidth="32" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="codeColumn" text="MÃ HÀNG"/>
+                        <TableColumn fx:id="nameColumn" text="TÊN HÀNG"/>
+                        <TableColumn fx:id="unitColumn" text="ĐƠN VỊ"/>
+                        <TableColumn fx:id="categoryColumn" text="DANH MỤC"/>
+                        <TableColumn fx:id="statusColumn" text="TRẠNG THÁI"/>
+                        <TableColumn fx:id="actionsColumn" text="THAO TÁC" sortable="false" prefWidth="90"/>
+                    </columns>
+                </TableView>
+                <StackPane fx:id="paginationPlaceholder"/>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+    <StackPane fx:id="dialogOverlay" visible="false" managed="false" styleClass="dialog-overlay-host"/>
+</fx:root>

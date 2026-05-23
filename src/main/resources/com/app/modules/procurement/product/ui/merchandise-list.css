@@ -1,0 +1,47 @@
+/* Màn Quản lý Mặt hàng */
+.page-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.page-content {
+    -fx-background-color: #F5F5F5;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+}
+
+.table-card {
+    -fx-spacing: 0;
+}
+
+.dialog-overlay-host {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-alignment: center;
+}
+
+.expand-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 10px;
+}
+
+.actions-box {
+    -fx-alignment: center-right;
+}
+
+.detail-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: #374151;
+}
+
+.detail-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4B5563;
+}
+
+.text-xs-bold {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+}

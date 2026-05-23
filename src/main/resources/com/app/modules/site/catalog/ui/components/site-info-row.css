@@ -1,0 +1,8 @@
+.site-info-icon {
+    -fx-font-size: 18px;
+}
+
+.site-info-secondary {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4B5563;
+}

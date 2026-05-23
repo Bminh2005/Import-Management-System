@@ -1,0 +1,8 @@
+/* Màn Danh sách Site */
+.sites-grid {
+    -fx-padding: 0;
+}
+
+.empty-state {
+    -fx-alignment: center;
+}

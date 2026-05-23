@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+spacing="12"
+      styleClass="site-category-section">
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="📦"/>
+        <Label fx:id="categoryLabel" styleClass="site-category-title"/>
+        <Label fx:id="countLabel" styleClass="site-category-count"/>
+    </HBox>
+    <TableView fx:id="itemsTable" styleClass="category-table">
+        <columns>
+            <TableColumn fx:id="codeColumn" text="MÃ HÀNG"/>
+            <TableColumn fx:id="nameColumn" text="TÊN MẶT HÀNG"/>
+            <TableColumn fx:id="quantityColumn" text="TỒN KHO"/>
+            <TableColumn fx:id="priceColumn" text="ĐƠN GIÁ"/>
+            <TableColumn fx:id="updatedColumn" text="CẬP NHẬT"/>
+        </columns>
+    </TableView>
+</fx:root>

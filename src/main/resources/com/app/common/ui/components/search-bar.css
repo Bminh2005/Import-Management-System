@@ -1,0 +1,13 @@
+.search-bar .search-bar-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+}
+
+.search-bar-field {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12;
+}
