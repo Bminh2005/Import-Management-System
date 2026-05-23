@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="ScrollPane" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fitToWidth="true"
+            styleClass="screen-scroll">
+
+    <stylesheets>
+        <URL value="@../../../../common/ui/components/components.css"/>
+        <URL value="@procurement-dashboard.css"/>
+    </stylesheets>
+
+    <VBox styleClass="main-content procurement-dashboard" spacing="22">
+        <padding>
+            <Insets top="28" right="32" bottom="28" left="32"/>
+        </padding>
+
+        <!-- Header -->
+        <VBox spacing="6">
+            <Label text="Trang Chủ - Bộ phận Đặt hàng Quốc tế"
+                   styleClass="page-title"/>
+            <Label text="Tổng quan về hoạt động xử lý yêu cầu và phân bổ đơn hàng"
+                   styleClass="page-subtitle"/>
+        </VBox>
+
+        <!-- Metrics -->
+        <GridPane hgap="18" vgap="18">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+            </columnConstraints>
+
+            <VBox styleClass="card metric-card" GridPane.columnIndex="0" spacing="12">
+                <HBox alignment="TOP_LEFT" spacing="12">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Tổng Yêu cầu Nhận" styleClass="metric-title"/>
+                        <Label fx:id="totalRequestsLabel" text="156" styleClass="metric-value"/>
+                    </VBox>
+                    <Label text="📄" styleClass="metric-icon metric-icon-indigo"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="card metric-card" GridPane.columnIndex="1" spacing="12">
+                <HBox alignment="TOP_LEFT" spacing="12">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Chờ Phân bổ" styleClass="metric-title"/>
+                        <Label fx:id="pendingAllocationLabel" text="24" styleClass="metric-value"/>
+                    </VBox>
+                    <Label text="⏱" styleClass="metric-icon metric-icon-orange"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="card metric-card" GridPane.columnIndex="2" spacing="12">
+                <HBox alignment="TOP_LEFT" spacing="12">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Đã Phân bổ Tháng này" styleClass="metric-title"/>
+                        <Label fx:id="allocatedThisMonthLabel" text="132" styleClass="metric-value"/>
+                    </VBox>
+                    <Label text="📈" styleClass="metric-icon metric-icon-emerald"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="card metric-card" GridPane.columnIndex="3" spacing="12">
+                <HBox alignment="TOP_LEFT" spacing="12">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Sites Đang Hợp tác" styleClass="metric-title"/>
+                        <Label fx:id="activeSitesLabel" text="18" styleClass="metric-value"/>
+                    </VBox>
+                    <Label text="🌐" styleClass="metric-icon metric-icon-blue"/>
+                </HBox>
+            </VBox>
+        </GridPane>
+
+        <!-- Quick Actions -->
+        <VBox styleClass="card section-card" spacing="16">
+            <Label text="Thao tác Nhanh" styleClass="section-title"/>
+
+            <GridPane hgap="16" vgap="16">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <HBox styleClass="quick-action-card" spacing="14" alignment="CENTER_LEFT"
+                      onMouseClicked="#onProcessPendingRequests"
+                      GridPane.columnIndex="0">
+                    <Label text="📄" styleClass="quick-action-icon quick-action-indigo"/>
+                    <VBox spacing="4">
+                        <Label text="Xử lý Yêu cầu Đang chờ"
+                               styleClass="quick-action-title"/>
+                        <Label text="Phân bổ đơn hàng ngay"
+                               styleClass="quick-action-description"/>
+                    </VBox>
+                </HBox>
+
+                <HBox styleClass="quick-action-card" spacing="14" alignment="CENTER_LEFT"
+                      onMouseClicked="#onViewSites"
+                      GridPane.columnIndex="1">
+                    <Label text="🌐" styleClass="quick-action-icon quick-action-emerald"/>
+                    <VBox spacing="4">
+                        <Label text="Xem Danh sách Site"
+                               styleClass="quick-action-title"/>
+                        <Label text="Quản lý nhà cung cấp"
+                               styleClass="quick-action-description"/>
+                    </VBox>
+                </HBox>
+            </GridPane>
+        </VBox>
+
+        <!-- Recent Orders -->
+        <VBox styleClass="card recent-card" spacing="0">
+            <VBox spacing="16">
+                <padding>
+                    <Insets top="20" right="20" bottom="0" left="20"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Yêu cầu Gần đây" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Xem tất cả →"
+                            styleClass="text-link-button"
+                            onAction="#onViewAllRequests"/>
+                </HBox>
+            </VBox>
+
+            <GridPane styleClass="table-header">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="22"/>
+                    <ColumnConstraints percentWidth="18"/>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="15"/>
+                </columnConstraints>
+
+                <Label text="MÃ YÊU CẦU" styleClass="table-header-label"
+                       GridPane.columnIndex="0"/>
+                <Label text="NGÀY NHẬN" styleClass="table-header-label"
+                       GridPane.columnIndex="1"/>
+                <Label text="SITE PHÂN BỔ" styleClass="table-header-label"
+                       GridPane.columnIndex="2"/>
+                <Label text="TRẠNG THÁI" styleClass="table-header-label"
+                       GridPane.columnIndex="3"/>
+                <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="4">
+                    <Label text="THAO TÁC" styleClass="table-header-label"/>
+                </HBox>
+            </GridPane>
+
+            <VBox fx:id="recentRequestsList"/>
+        </VBox>
+    </VBox>
+</fx:root>

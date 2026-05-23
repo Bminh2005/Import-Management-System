@@ -1,0 +1,205 @@
+/* ============================================================
+   common.css — style nền tảng dùng cho mọi feature.
+   Chỉ chứa các style thực sự dùng chung: layout trang,
+   variables, card, section-title, info-label/value, button,
+   table chung, link-button.
+   ============================================================ */
+
+.root {
+    -fx-font-family: "Inter", "Segoe UI", "SF Pro Display", sans-serif;
+
+    -primary-color: #2563EB;
+    -primary-dark: #1E40AF;
+    -accent-color: #F59E0B;
+    -success-color: #10B981;
+    -danger-color: #EF4444;
+    -text-primary: #111827;
+    -text-secondary: #6B7280;
+    -border-color: #E5E7EB;
+    -background: #F9FAFB;
+}
+
+/* ---------- Layout trang ---------- */
+.screen-scroll {
+    -fx-background-color: -background;
+    -fx-background: -background;
+    -fx-border-width: 0;
+}
+
+.screen-scroll > .viewport {
+    -fx-background-color: -background;
+}
+
+.main-content {
+    -fx-background-color: -background;
+}
+
+.page-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+}
+
+/* ---------- Thẻ (card) ---------- */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 2);
+}
+
+.card-danger {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-color: #FECACA;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 2);
+}
+
+/* ---------- Tiêu đề & nhãn ---------- */
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+.section-title-danger {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B91C1C;
+}
+
+.info-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+
+.info-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+/* ---------- Bảng dữ liệu chung ---------- */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 10px 12px;
+}
+
+.data-table .column-header .label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+
+.data-table .table-cell {
+    -fx-padding: 10px 12px;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: #EFF6FF;
+}
+
+.data-table .table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+}
+
+/* ---------- Trạng thái rỗng ---------- */
+.empty-state {
+    -fx-text-fill: -text-secondary;
+    -fx-font-style: italic;
+    -fx-padding: 24 0 24 0;
+}
+
+/* ---------- Nút dạng link trong bảng ---------- */
+.link-button {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 6 12;
+    -fx-background-radius: 6px;
+}
+
+.link-button:hover {
+    -fx-background-color: #1E40AF;
+}
+
+.link-button-danger {
+    -fx-background-color: white;
+    -fx-text-fill: #DC2626;
+    -fx-border-color: #FCA5A5;
+    -fx-border-radius: 6px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 6 12;
+    -fx-background-radius: 6px;
+}
+
+.link-button-danger:hover {
+    -fx-background-color: #FEF2F2;
+}
+
+/* ---------- Nút cuối trang ---------- */
+.btn-primary {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10 24;
+    -fx-background-radius: 8px;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #1E40AF;
+}
+
+.btn-secondary {
+    -fx-background-color: white;
+    -fx-text-fill: -text-primary;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10 24;
+    -fx-background-radius: 8px;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.btn-danger {
+    -fx-background-color: -danger-color;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10 24;
+    -fx-background-radius: 8px;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #B91C1C;
+}
