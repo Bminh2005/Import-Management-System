@@ -1,0 +1,93 @@
+/* Phông chữ chủ đạo */
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Nền của cửa sổ */
+.root-container {
+    -fx-background-color: #f3f4f6;
+}
+
+/* Card đăng nhập (giống thẻ trắng ở giữa) */
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 15, 0, 0, 5);
+}
+
+/* Logo container */
+.logo-container {
+    -fx-background-color: #2563eb;
+    -fx-background-radius: 12px;
+}
+
+/* Tiêu đề */
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2937;
+}
+
+.subtitle-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7280;
+}
+
+/* Input field container */
+.input-container {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 5px;
+}
+
+/* Khi focus vào ô input */
+.input-container:focused-within {
+    -fx-border-color: #2563eb;
+    -fx-border-width: 2px;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+}
+
+/* Bỏ style mặc định của TextField/PasswordField để trông phẳng hơn */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+}
+
+/* Nút Đăng nhập */
+.login-button {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-padding: 10px;
+}
+
+.login-button:hover {
+    -fx-background-color: #1d4ed8;
+}
+
+/* Hyperlink */
+.register-link {
+    -fx-text-fill: #2563eb;
+    -fx-alignment: CENTER;
+    -fx-underline: true;
+}
+
+.combo-box {
+    -fx-font-size: 13px;
+    -fx-padding: 0;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 5px;
+}

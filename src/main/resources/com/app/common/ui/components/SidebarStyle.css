@@ -1,0 +1,228 @@
+/* Màu sắc chủ đạo */
+* {
+    -fx-primary-color: #2b509f; /* Xanh đậm sidebar */
+    -fx-active-color: #3b66d1; /* Xanh sáng khi chọn menu */
+    -fx-bg-color: #f7f9fc; /* Màu nền chính */
+    -fx-text-main: #1e293b;
+    -fx-text-muted: #64748b;
+}
+
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: -fx-bg-color;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    -fx-background-color: -fx-primary-color;
+}
+
+.sidebar-logo-text {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-alignment: center-left;
+    -fx-padding: 12 20 12 20;
+    -fx-cursor: hand;
+}
+
+.nav-item:hover {
+    -fx-background-color: derive(-fx-primary-color, 10%);
+}
+
+.nav-item.active {
+    -fx-background-color: -fx-active-color;
+}
+
+.nav-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.nav-shortcut {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+/* --- THẺ CHUNG (CARDS) --- */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+    -fx-padding: 20;
+}
+
+/* --- TOP HEADER --- */
+.header-bg {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 20 10 20;
+}
+
+.search-box {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 6;
+    -fx-padding: 0 10 0 10;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+/* --- DASHBOARD CONTENT --- */
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-main;
+}
+
+/* Kiểu cho tiêu đề */
+.stat-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #707070;
+}
+
+/* Kiểu cho con số */
+.stat-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+/* Kiểu cho nền icon */
+.icon-container {
+    -fx-background-color: #eef3ff; /* Màu xanh nhạt */
+    -fx-background-radius: 8px; /* Bo góc */
+    -fx-padding: 10px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+}
+
+/* --- BADGES (Trạng thái) --- */
+.badge {
+    -fx-padding: 4 12 4 12;
+    -fx-background-radius: 15;
+    -fx-font-size: 12px;
+}
+
+.badge-warning {
+    -fx-background-color: #fef08a;
+    -fx-text-fill: #854d0e;
+}
+
+.badge-primary {
+    -fx-background-color: #bfdbfe;
+    -fx-text-fill: #1e40af;
+}
+
+.badge-success {
+    -fx-background-color: #bbf7d0;
+    -fx-text-fill: #166534;
+}
+
+.data-table {
+    -fx-background-color: white;
+}
+
+/* Bỏ đường kẻ dọc mặc định của TableView */
+.data-table .column-header-background {
+    -fx-background-color: #f9fafb; /* Màu nền tiêu đề giống hình */
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6b7280;
+    -fx-font-weight: bold;
+}
+
+/* Tạo khoảng cách cho hàng */
+.data-table .table-row-cell {
+    -fx-fixed-cell-size: 50px;
+    -fx-border-color: #f3f4f6;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Tùy chỉnh ContextMenu */
+.context-menu {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e5e7eb; /* Thêm viền nhẹ để menu nổi bật trên nền trắng */
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
+}
+
+/* Tùy chỉnh từng mục menu */
+.menu-item {
+    -fx-padding: 10px 20px;
+    -fx-text-fill: #374151; /* Màu chữ xám đậm (dễ đọc) */
+    -fx-background-color: transparent;
+}
+
+/* Hiệu ứng HOVER: Nền xám rất nhạt + giữ nguyên chữ đậm */
+.menu-item:focused {
+    -fx-background-color: #f3f4f6; /* Màu xám rất nhạt (light gray) */
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: #111827; /* Chữ đậm hơn một chút khi hover */
+}
+
+/* Tùy chỉnh đường kẻ ngăn cách */
+.separator-menu-item {
+    -fx-padding: 5px 0px; /* Tạo khoảng cách trên dưới cho đường kẻ */
+}
+
+.separator-menu-item .separator {
+    -fx-border-color: #e5e7eb;
+}
+
+/* Tùy chỉnh font chữ cho thông báo */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Ẩn bớt thanh cuộn nếu không cần thiết hoặc cho nó nhỏ gọn */
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 8px;
+}
+
+/* Style cho nội dung thông báo */
+.label-notification {
+    -fx-font-size: 13px; /* Đã giảm kích thước font nhỏ lại */
+    -fx-text-fill: #1f2937;
+    -fx-padding: 5px;
+}
+
+/* --- HOVER CHO THAO TÁC NHANH (HBox) --- */
+.quick-action-box {
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-padding: 15;
+    -fx-background-color: white; /* Cần có màu nền để hover nhìn thấy được */
+    -fx-background-radius: 8;
+    -fx-transition: 0.3s;
+    /* Lưu ý: JavaFX không hỗ trợ thuộc tính này,
+                                nếu muốn mượt cần dùng setOnMouseEntered */
+    -fx-cursor: hand;
+}
+
+.quick-action-box:hover {
+    -fx-border-color: #3b82f6; /* Đổi màu viền khi hover */
+    -fx-background-color: #f8fafc; /* Đổi màu nền nhẹ */
+    -fx-effect: dropshadow(three-pass-box, rgba(59, 130, 246, 0.2), 10, 0, 0, 0);
+}
+
+/* --- HOVER CHO HÀNG TRONG TABLEVIEW --- */
+.data-table .table-row-cell:hover {
+    -fx-background-color: #f1f5f9; /* Màu nền khi di chuột vào hàng */
+}

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<fx:root type="ScrollPane" fitToWidth="true"
+
+         style="-fx-background-color: transparent;" stylesheets="@SalesDashboardStyles.css"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox spacing="20" style="-fx-padding: 20;">
+
+        <Label style="-fx-text-fill: #64748b; -fx-font-size: 14px;"
+               text="Tổng quan về hoạt động quản lý mặt hàng và yêu cầu nhập khẩu"/>
+
+        <!-- 1. HÀNG 4 THẺ THỐNG KÊ (Stat Cards) -->
+        <HBox spacing="20">
+            <!-- Thẻ 1 -->
+            <VBox prefWidth="250.0" styleClass="card" HBox.hgrow="ALWAYS">
+                <Label styleClass="stat-title" text="Tổng số Mặt hàng"/>
+                <HBox alignment="BOTTOM_LEFT">
+                    <Label maxWidth="Infinity" prefHeight="24.0" prefWidth="232.0" styleClass="stat-value" text="124"
+                           HBox.hgrow="ALWAYS"/>
+                    <SVGPath
+                            content="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18s-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18s.41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15l-6.36 3.58L12 11.31l6.36-3.58L12 4.15zM4 9.07l7 3.94v7.35l-7-3.94V9.07zm14 7.35l-7 3.94v-7.35l7-3.94v7.35z"
+                            fill="#2962ff" scaleX="2.0" scaleY="2.0"/>
+                </HBox>
+            </VBox>
+            <!-- Thẻ 2 -->
+            <VBox prefWidth="250.0" styleClass="card" HBox.hgrow="ALWAYS">
+                <Label styleClass="stat-title" text="Yêu cầu Chờ xử lý"/>
+                <HBox alignment="BOTTOM_LEFT" prefHeight="22.0" prefWidth="250.0">
+                    <Label maxWidth="Infinity" styleClass="stat-value" text="8" HBox.hgrow="ALWAYS"/>
+                    <SVGPath
+                            content="M12,24C5.383,24,0,18.617,0,12S5.383,0,12,0s12,5.383,12,12-5.383,12-12,12Zm0-21C7.038,3,3,7.037,3,12s4.038,9,9,9,9-4.037,9-9S16.963,3,12,3Zm1,14.5v-4.634l2.714-1.567c.718-.414,.963-1.331,.549-2.049s-1.333-.963-2.049-.549l-3.464,2c-.464,.268-.75,.763-.75,1.299v5.5c0,.828,.671,1.5,1.5,1.5s1.5-.672,1.5-1.5Z"
+                            fill="#d38b00" scaleX="2.0" scaleY="2.0"/>
+                </HBox>
+            </VBox>
+            <!-- Thẻ 3 & 4 làm tương tự (Tháng này, Đã phê duyệt)... -->
+            <VBox prefWidth="250.0" styleClass="card" HBox.hgrow="ALWAYS">
+                <Label styleClass="stat-title" text="Yêu cầu Tháng này"/>
+                <HBox alignment="BOTTOM_LEFT" prefHeight="22.0" prefWidth="250.0">
+
+                    <Label maxWidth="Infinity" styleClass="stat-value" text="8" HBox.hgrow="ALWAYS"/>
+                    <SVGPath
+                            content="M22.5,3.976H19.414a1,1,0,0,0-.707,1.707l1.086,1.086h0l-3.586,3.585a1.024,1.024,0,0,1-1.415,0l-.17-.171a3.071,3.071,0,0,0-4.243,0l-5.1,5.1A1,1,0,1,0,6.7,16.7l5.1-5.1a1.023,1.023,0,0,1,1.415,0l.17.171a3.073,3.073,0,0,0,4.243,0l3.586-3.586h0l1.086,1.086A1,1,0,0,0,24,8.562V5.476A1.5,1.5,0,0,0,22.5,3.976Z"
+                            fill="#2e7d32" scaleX="2.5" scaleY="2.5"/>
+
+                </HBox>
+            </VBox>
+            <VBox prefWidth="250.0" styleClass="card" HBox.hgrow="ALWAYS">
+                <Label styleClass="stat-title" text="Đã Phê duyệt"/>
+                <HBox alignment="BOTTOM_LEFT" prefHeight="22.0" prefWidth="250.0">
+
+                    <Label maxWidth="Infinity" styleClass="stat-value" text="24" HBox.hgrow="ALWAYS"/>
+                    <SVGPath
+                            content="M7.8,21.425A2.542,2.542,0,0,1,6,20.679L.439,15.121,2.561,13,7.8,18.239,21.439,4.6l2.122,2.121L9.6,20.679A2.542,2.542,0,0,1,7.8,21.425Z"
+                            fill="#2e7d32" scaleX="2" scaleY="2"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- 2. THAO TÁC NHANH (Quick Actions) -->
+        <VBox spacing="15" styleClass="card">
+            <Label styleClass="section-title" text="Thao tác Nhanh"/>
+            <HBox spacing="20">
+                <!-- Nút 1 -->
+                <HBox fx:id="createNewRequest" styleClass="quick-action-box" alignment="CENTER_LEFT" spacing="15"
+                      style="-fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 15; -fx-cursor: hand;"
+                      HBox.hgrow="ALWAYS">
+                    <Label style="-fx-font-size: 24px; -fx-background-color: #1e40af; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 8;"
+                           text="📄"/>
+                    <VBox>
+                        <Label style="-fx-font-weight: bold;" text="Tạo Yêu cầu Nhập hàng"/>
+                        <Label style="-fx-text-fill: #64748b;" text="Tạo yêu cầu mới"/>
+                    </VBox>
+                </HBox>
+                <!-- Nút 2 & 3 tương tự... -->
+                <HBox fx:id="addNewProduct" styleClass="quick-action-box" alignment="CENTER_LEFT" spacing="15"
+                      style="-fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+                    <Label style="-fx-font-size: 24px; -fx-background-color: #16a34a; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 8;"
+                           text="📦"/>
+                    <VBox>
+                        <Label style="-fx-font-weight: bold;" text="Thêm Mặt hàng Mới"/>
+                        <Label style="-fx-text-fill: #64748b;" text="Quản lý mặt hàng"/>
+                    </VBox>
+                </HBox>
+                <HBox fx:id="viewAllRequests" styleClass="quick-action-box" alignment="CENTER_LEFT" spacing="15"
+                      style="-fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+                    <Label style="-fx-font-size: 24px; -fx-background-color: #9333ea; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 8;"
+                           text="📋"/>
+                    <VBox>
+                        <Label style="-fx-font-weight: bold;" text="Xem Tất cả Yêu cầu"/>
+                        <Label style="-fx-text-fill: #64748b;" text="Danh sách đầy đủ"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+        </VBox>
+
+        <!-- 3. BẢNG DỮ LIỆU (Recent Requests) -->
+        <VBox spacing="15" styleClass="card" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT">
+                <Label maxWidth="Infinity" styleClass="section-title" text="Yêu cầu Nhập hàng Gần đây"
+                       HBox.hgrow="ALWAYS"/>
+                <Label fx:id="viewAllLabel" style="-fx-text-fill: #2563eb; -fx-cursor: hand;" text="Xem tất cả →"/>
+            </HBox>
+
+            <!-- TableView cho JavaFX -->
+            <TableView fx:id="requestTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+
+                <columns>
+                    <TableColumn text="MÃ YÊU CẦU" minWidth="120"/>
+                    <TableColumn text="NGÀY TẠO" minWidth="100"/>
+                    <TableColumn text="SỐ MẶT HÀNG" minWidth="100"/>
+                    <TableColumn text="TRẠNG THÁI" minWidth="150"/>
+                    <TableColumn text="THAO TÁC" minWidth="120"/>
+                </columns>
+                <!-- Dữ liệu sẽ được set từ Controller
+                (Ví dụ: Chờ xử lý -> xài CellFactory để render style class .badge-warning) -->
+
+            </TableView>
+        </VBox>
+
+    </VBox>
+</fx:root>
