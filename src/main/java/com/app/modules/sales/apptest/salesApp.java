@@ -22,13 +22,13 @@ public class salesApp extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    public static void main(String[] args) {
-        String url = "jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?user=postgres.lsrmwnisivtnpeqmpxcu&password=binhminh3000";
-
-        try (Connection conn = DriverManager.getConnection(url)) {
-            System.out.println("Connected!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        String url = "jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?user=postgres.lsrmwnisivtnpeqmpxcu&password=binhminh3000";
+//
+//        try (Connection conn = DriverManager.getConnection(url)) {
+//            System.out.println("Connected!");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
