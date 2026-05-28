@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+
+<fx:root type="javafx.scene.layout.VBox"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+         styleClass="select-dialog" spacing="0" prefWidth="640">
+    <stylesheets>
+        <URL value="@../../../../common/ui/components/common.css"/>
+        <URL value="@SelectProductDialogPage.css"/>
+    </stylesheets>
+
+    <!-- Header -->
+    <HBox styleClass="dialog-header" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="18" right="22" bottom="16" left="22"/>
+        </padding>
+        <Label text="Chọn mặt hàng" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="dialog-close-btn" onAction="#onClose"/>
+    </HBox>
+
+    <Region styleClass="dialog-divider"/>
+
+    <!-- Body: list -->
+    <ScrollPane fitToWidth="true" styleClass="select-scroll" prefHeight="480">
+        <VBox fx:id="productList" spacing="12" styleClass="select-body">
+            <padding>
+                <Insets top="18" right="22" bottom="18" left="22"/>
+            </padding>
+        </VBox>
+    </ScrollPane>
+
+    <Region styleClass="dialog-divider"/>
+
+    <!-- Footer -->
+    <HBox styleClass="dialog-footer" alignment="CENTER_RIGHT" spacing="10">
+        <padding>
+            <Insets top="14" right="22" bottom="16" left="22"/>
+        </padding>
+        <Button text="Đóng" styleClass="btn-secondary" onAction="#onClose"/>
+    </HBox>
+</fx:root>

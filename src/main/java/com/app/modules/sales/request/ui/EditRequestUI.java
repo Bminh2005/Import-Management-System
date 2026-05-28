@@ -1,39 +1,47 @@
 package com.app.modules.sales.request.ui;
 
+import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
 import com.app.modules.sales.request.dto.RequestResponse;
 import com.app.modules.sales.request.dto.UpdateRequestDTO;
 import com.app.modules.sales.request.entity.RejectedItem;
+import com.app.modules.sales.request.entity.RelatedOrder;
 import com.app.modules.sales.request.entity.RequestItem;
 import com.app.modules.sales.request.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.scene.shape.SVGPath;
 
-import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
- * UI Class cho màn hình "Chỉnh sửa Yêu cầu Nhập hàng".
- * Màn này độc lập — thao tác vào đến từ danh sách yêu cầu nhập hàng.
+ * UI Class cho màn "Chỉnh sửa Yêu cầu Nhập hàng".
  * Cho phép sửa số lượng / ngày nhận của từng mặt hàng ngay trên bảng,
- * thêm hoặc xóa mặt hàng, hủy yêu cầu, lưu thay đổi.
+ * thêm hoặc xóa mặt hàng, hủy yêu cầu, lưu thay đổi. Đồng thời hiển thị
+ * danh sách mặt hàng bị từ chối/hủy và đơn hàng liên quan (chỉ đọc).
  *
- * Theo quy ước README: chỉ gọi service.
+ * Caller đăng ký {@link #setOnBack(Runnable)} để xử lý thoát màn hình.
+ * Theo quy ước README: UI chỉ gọi service.
  */
 public class EditRequestUI extends ScrollPane {
 
@@ -49,9 +57,9 @@ public class EditRequestUI extends ScrollPane {
     @FXML private TableView<RequestItem> itemsTable;
     @FXML private TableColumn<RequestItem, String> codeColumn;
     @FXML private TableColumn<RequestItem, String> nameColumn;
-    @FXML private TableColumn<RequestItem, Integer> quantityColumn;
+    @FXML private TableColumn<RequestItem, RequestItem> quantityColumn;
     @FXML private TableColumn<RequestItem, String> unitColumn;
-    @FXML private TableColumn<RequestItem, String> deliveryDateColumn;
+    @FXML private TableColumn<RequestItem, RequestItem> deliveryDateColumn;
     @FXML private TableColumn<RequestItem, String> statusColumn;
     @FXML private TableColumn<RequestItem, Void> actionsColumn;
 
@@ -60,69 +68,61 @@ public class EditRequestUI extends ScrollPane {
     @FXML private Label rejectedCountLabel;
     @FXML private Label rejectedEmptyLabel;
 
-    private final RequestService service = new RequestService();
+    // --- Related orders ---
+    @FXML private TableView<RelatedOrder> ordersTable;
+    @FXML private TableColumn<RelatedOrder, String> orderCodeColumn;
+    @FXML private TableColumn<RelatedOrder, String> orderDateColumn;
+    @FXML private TableColumn<RelatedOrder, String> orderSiteColumn;
+    @FXML private TableColumn<RelatedOrder, Number> orderItemCountColumn;
+    @FXML private TableColumn<RelatedOrder, String> orderStatusColumn;
+    @FXML private TableColumn<RelatedOrder, Void> orderActionsColumn;
+    @FXML private Label orderCountLabel;
+    @FXML private Label orderEmptyLabel;
+
+    private final RequestService service;
     private RequestResponse current;
 
+    private Runnable onBack;
+    private Consumer<String> onSaved;
+
     public EditRequestUI() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "EditRequestPage.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        itemsTable.setEditable(true);
-        setupItemsTable();
+        this(new RequestService());
     }
+
+    public EditRequestUI(RequestService service) {
+        this.service = service;
+        FxmlUiHelper.loadSelf(this, "EditRequestPage.fxml");
+        itemsTable.setEditable(false);
+        setupItemsTable();
+        setupOrdersTable();
+    }
+
+    public void setOnBack(Runnable callback) { this.onBack = callback; }
+    public void setOnSaved(Consumer<String> callback) { this.onSaved = callback; }
 
     private void setupItemsTable() {
         codeColumn.setCellValueFactory(c -> c.getValue().codeProperty());
         nameColumn.setCellValueFactory(c -> c.getValue().nameProperty());
         unitColumn.setCellValueFactory(c -> c.getValue().unitProperty());
 
-        // Cột Số lượng: sửa trực tiếp
         quantityColumn.setCellValueFactory(c ->
-                c.getValue().quantityProperty().asObject());
-        quantityColumn.setCellFactory(
-                TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        quantityColumn.setOnEditCommit(e -> {
-            int value = e.getNewValue() == null ? 0 : e.getNewValue();
-            RequestItem row = e.getRowValue();
-            row.setQuantity(value);
-            if (current != null) {
-                service.updateItemQuantity(current.getCode(), row.getCode(), value);
-            }
-            System.out.println("Nội dung chức năng: Cập nhật số lượng "
-                    + row.getCode() + " = " + value);
-        });
+                new javafx.beans.property.SimpleObjectProperty<>(c.getValue()));
+        quantityColumn.setCellFactory(col -> new QuantityCell());
 
-        // Cột Ngày nhận: sửa trực tiếp
-        deliveryDateColumn.setCellValueFactory(c -> c.getValue().deliveryDateProperty());
-        deliveryDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        deliveryDateColumn.setOnEditCommit(e -> {
-            RequestItem row = e.getRowValue();
-            row.setDeliveryDate(e.getNewValue());
-            if (current != null) {
-                service.updateItemDeliveryDate(current.getCode(), row.getCode(),
-                        e.getNewValue());
-            }
-            System.out.println("Nội dung chức năng: Cập nhật ngày nhận "
-                    + row.getCode() + " = " + e.getNewValue());
-        });
+        deliveryDateColumn.setCellValueFactory(c ->
+                new javafx.beans.property.SimpleObjectProperty<>(c.getValue()));
+        deliveryDateColumn.setCellFactory(col -> new DeliveryDateCell());
 
         statusColumn.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getStatus()));
         statusColumn.setCellFactory(
                 StatusStyle.badgeCellFactory(StatusStyle::itemStatusLabel));
 
-        // Cột Thao tác: nút Xóa
         actionsColumn.setCellFactory(col -> new TableCell<RequestItem, Void>() {
-            private final Button deleteBtn = new Button("Xóa");
+            private final Button deleteBtn = createIconButton(trashPath(), "#DC2626");
 
             {
-                deleteBtn.getStyleClass().add("link-button-danger");
+                deleteBtn.getStyleClass().add("icon-delete");
                 deleteBtn.setOnAction(e -> {
                     RequestItem item = getTableView().getItems().get(getIndex());
                     onDeleteItem(item);
@@ -132,12 +132,168 @@ public class EditRequestUI extends ScrollPane {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : deleteBtn);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox box = new HBox(deleteBtn);
+                    box.setAlignment(Pos.CENTER);
+                    setGraphic(box);
+                }
             }
         });
     }
 
-    /** Nạp dữ liệu yêu cầu theo mã (gọi service). */
+    private void setupOrdersTable() {
+        orderCodeColumn.setCellValueFactory(c -> c.getValue().codeProperty());
+        orderDateColumn.setCellValueFactory(c -> c.getValue().orderDateProperty());
+        orderSiteColumn.setCellValueFactory(c -> c.getValue().siteProperty());
+        orderItemCountColumn.setCellValueFactory(c -> c.getValue().itemCountProperty());
+
+        orderStatusColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getStatus()));
+        orderStatusColumn.setCellFactory(
+                StatusStyle.badgeCellFactory(StatusStyle::requestStatusLabel));
+
+        orderActionsColumn.setCellFactory(col -> new TableCell<RelatedOrder, Void>() {
+            private final Button viewBtn = createIconButton(eyePath(), "#475569");
+            private final Button cancelBtn = createIconButton(crossPath(), "#DC2626");
+            private final HBox box = new HBox(4, viewBtn, cancelBtn);
+
+            {
+                viewBtn.getStyleClass().add("icon-btn");
+                cancelBtn.getStyleClass().addAll("icon-btn", "icon-btn-danger");
+                box.setAlignment(Pos.CENTER);
+                viewBtn.setOnAction(e -> {
+                    RelatedOrder order = getTableView().getItems().get(getIndex());
+                    System.out.println("Nội dung chức năng: Xem chi tiết đơn hàng "
+                            + order.getCode());
+                    OrderDetailDialogUI.show(
+                            getScene() != null ? getScene().getWindow() : null,
+                            order.getCode());
+                });
+                cancelBtn.setOnAction(e -> {
+                    RelatedOrder order = getTableView().getItems().get(getIndex());
+                    System.out.println("Nội dung chức năng: Hủy đơn hàng "
+                            + order.getCode());
+                    CancelOrderDialogUI.show(
+                            getScene() != null ? getScene().getWindow() : null,
+                            order,
+                            () -> {
+                                if (current != null) loadRequest(current.getCode());
+                            });
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : box);
+            }
+        });
+    }
+
+    private static Button createIconButton(String svg, String fill) {
+        SVGPath icon = new SVGPath();
+        icon.setContent(svg);
+        icon.setStyle("-fx-fill: " + fill + ";");
+        icon.setScaleX(0.85);
+        icon.setScaleY(0.85);
+        Button btn = new Button();
+        btn.setGraphic(icon);
+        return btn;
+    }
+
+    private static String trashPath() {
+        return "M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z";
+    }
+    private static String eyePath() {
+        return "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5"
+                + "C21.27 7.61 17 4.5 12 4.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z";
+    }
+    private static String crossPath() {
+        return "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59"
+                + " 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z";
+    }
+
+    /** Cell hiển thị TextField sửa số lượng trực tiếp. */
+    private class QuantityCell extends TableCell<RequestItem, RequestItem> {
+        private final TextField field = new TextField();
+
+        QuantityCell() {
+            field.getStyleClass().add("edit-cell-field");
+            field.setPrefWidth(80);
+            field.focusedProperty().addListener((obs, oldF, newF) -> {
+                if (!newF) commit();
+            });
+            field.setOnAction(e -> commit());
+        }
+
+        private void commit() {
+            RequestItem row = getItem();
+            if (row == null) return;
+            try {
+                int value = Integer.parseInt(field.getText().trim());
+                if (value < 0) value = 0;
+                if (value == row.getQuantity()) return;
+                row.setQuantity(value);
+                service.updateItemQuantity(current.getCode(), row.getCode(), value);
+            } catch (NumberFormatException e) {
+                field.setText(String.valueOf(row.getQuantity()));
+            }
+        }
+
+        @Override
+        protected void updateItem(RequestItem item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setGraphic(null);
+            } else {
+                field.setText(String.valueOf(item.getQuantity()));
+                setGraphic(field);
+            }
+        }
+    }
+
+    /** Cell hiển thị DatePicker sửa ngày nhận trực tiếp. */
+    private class DeliveryDateCell extends TableCell<RequestItem, RequestItem> {
+        private final DatePicker picker = new DatePicker();
+
+        DeliveryDateCell() {
+            picker.getStyleClass().add("edit-cell-field");
+            picker.setPrefWidth(140);
+            picker.valueProperty().addListener((obs, oldV, newV) -> {
+                RequestItem row = getItem();
+                if (row == null || newV == null) return;
+                String iso = newV.toString();
+                if (iso.equals(row.getDeliveryDate())) return;
+                row.setDeliveryDate(iso);
+                service.updateItemDeliveryDate(current.getCode(), row.getCode(), iso);
+            });
+        }
+
+        @Override
+        protected void updateItem(RequestItem item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setGraphic(null);
+            } else {
+                LocalDate value = parse(item.getDeliveryDate());
+                picker.setValue(value);
+                setGraphic(picker);
+            }
+        }
+
+        private LocalDate parse(String text) {
+            if (text == null || text.isBlank()) return null;
+            try {
+                return LocalDate.parse(text);
+            } catch (DateTimeParseException e) {
+                return null;
+            }
+        }
+    }
+
+    /** Nạp dữ liệu yêu cầu theo mã. */
     public void loadRequest(String code) {
         this.current = service.getRequestDetail(code);
         render();
@@ -155,8 +311,11 @@ public class EditRequestUI extends ScrollPane {
         statusLabel.setStyle(StatusStyle.badgeStyle(current.getStatus()));
 
         itemsTable.setItems(current.getItems());
+        current.getItems().addListener((javafx.collections.ListChangeListener<RequestItem>)
+                c -> itemCountLabel.setText(String.valueOf(current.getItems().size())));
 
         renderRejected(current.getRejectedItems());
+        renderOrders(current.getOrders());
     }
 
     private void renderRejected(ObservableList<RejectedItem> items) {
@@ -184,17 +343,16 @@ public class EditRequestUI extends ScrollPane {
         name.getStyleClass().add("rejected-name");
 
         HBox header = new HBox(10, name, codeChip);
+        header.setAlignment(Pos.CENTER_LEFT);
 
         Label qty = new Label("Số lượng: " + item.getQuantity() + " " + item.getUnit());
         qty.getStyleClass().add("rejected-sub");
 
+        boolean isOverseas = "overseas".equals(item.getRejectedBy());
         Label rejectedByBadge = new Label(
-                "overseas".equals(item.getRejectedBy())
-                        ? "Từ chối bởi Đặt hàng Quốc tế"
-                        : "Hủy bởi người dùng");
-        rejectedByBadge.setStyle("-fx-padding: 3 10; -fx-background-radius: 10; "
-                + "-fx-font-size: 11px; -fx-font-weight: bold; "
-                + "-fx-background-color: #FEF3C7; -fx-text-fill: #92400E;");
+                isOverseas ? "Từ chối bởi Đặt hàng Quốc tế" : "Hủy bởi người dùng");
+        rejectedByBadge.getStyleClass().add(
+                isOverseas ? "rejected-badge-overseas" : "rejected-badge-user");
 
         Label dateLabel = new Label(item.getRejectedDate());
         dateLabel.getStyleClass().add("rejected-sub");
@@ -202,7 +360,11 @@ public class EditRequestUI extends ScrollPane {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox topRow = new HBox(12, header, spacer, rejectedByBadge);
+        VBox rightBox = new VBox(4, rejectedByBadge, dateLabel);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+
+        HBox topRow = new HBox(12, header, spacer, rightBox);
+        topRow.setAlignment(Pos.CENTER_LEFT);
 
         Label reasonTitle = new Label("Lý do:");
         reasonTitle.getStyleClass().add("rejected-reason-title");
@@ -210,35 +372,51 @@ public class EditRequestUI extends ScrollPane {
         reason.getStyleClass().add("rejected-sub");
         reason.setWrapText(true);
 
-        Region spacer2 = new Region();
-        HBox.setHgrow(spacer2, Priority.ALWAYS);
-        HBox subRow = new HBox(12, qty, spacer2, dateLabel);
-
-        VBox row = new VBox(8, topRow, subRow, reasonTitle, reason);
+        VBox row = new VBox(8, topRow, qty, reasonTitle, reason);
         row.getStyleClass().add("rejected-row");
         row.setPadding(new Insets(14, 16, 14, 16));
         return row;
     }
 
+    private void renderOrders(ObservableList<RelatedOrder> orders) {
+        ordersTable.setItems(orders);
+        int size = orders == null ? 0 : orders.size();
+        orderCountLabel.setText("(" + size + " đơn)");
+
+        boolean hasOrders = size > 0;
+        ordersTable.setVisible(hasOrders);
+        ordersTable.setManaged(hasOrders);
+        orderEmptyLabel.setVisible(!hasOrders);
+        orderEmptyLabel.setManaged(!hasOrders);
+    }
+
     private void onDeleteItem(RequestItem item) {
         if (current == null) return;
-        service.removeItem(current.getCode(), item.getCode());
-        itemCountLabel.setText(String.valueOf(current.getItems().size()));
-        System.out.println("Nội dung chức năng: Xóa mặt hàng " + item.getCode());
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Bạn có chắc muốn xóa mặt hàng " + item.getCode() + " không?",
+                ButtonType.OK, ButtonType.CANCEL);
+        confirm.setHeaderText("Xác nhận xóa mặt hàng");
+        confirm.initOwner(getScene() != null ? getScene().getWindow() : null);
+        confirm.showAndWait()
+                .filter(b -> b == ButtonType.OK)
+                .ifPresent(b -> {
+                    service.removeItem(current.getCode(), item.getCode());
+                    current.getItems().remove(item);
+                    System.out.println("Nội dung chức năng: Xóa mặt hàng " + item.getCode());
+                });
     }
 
     @FXML
     private void onAddItem() {
         if (current == null) return;
-        // Tạm thời thêm 1 mặt hàng giả lập; popup chọn mặt hàng làm sau.
-        int next = current.getItems().size() + 1;
-        RequestItem newItem = new RequestItem(
-                String.format("MH-NEW-%02d", next),
-                "Mặt hàng mới #" + next, 1, "cái",
-                java.time.LocalDate.now().toString(), "pending");
-        service.addItem(current.getCode(), newItem);
-        itemCountLabel.setText(String.valueOf(current.getItems().size()));
-        System.out.println("Nội dung chức năng: Đã thêm mặt hàng " + newItem.getCode());
+        javafx.stage.Window owner = getScene() != null ? getScene().getWindow() : null;
+        SelectProductDialogUI.show(owner, current.getCode(), product ->
+                EnterItemInfoDialogUI.show(owner, product, newItem -> {
+                    service.addItem(current.getCode(), newItem);
+                    current.getItems().add(newItem);
+                    System.out.println("Nội dung chức năng: Đã thêm mặt hàng "
+                            + newItem.getCode());
+                }));
     }
 
     @FXML
@@ -247,15 +425,36 @@ public class EditRequestUI extends ScrollPane {
         UpdateRequestDTO dto = new UpdateRequestDTO(current.getCode(),
                 new ArrayList<>(current.getItems()));
         service.updateRequest(dto);
+        Alert info = new Alert(Alert.AlertType.INFORMATION,
+                "Đã lưu thay đổi yêu cầu " + current.getCode());
+        info.setHeaderText(null);
+        info.showAndWait();
         System.out.println("Nội dung chức năng: Lưu thay đổi yêu cầu "
                 + current.getCode());
+        if (onSaved != null) onSaved.accept(current.getCode());
     }
 
     @FXML
     private void onCancelRequest() {
         if (current == null) return;
-        // Popup hủy sẽ làm sau; tạm thời gọi thẳng service với lý do mặc định.
-        service.cancelRequest(current.getCode(), "Hủy thử nghiệm từ UI");
-        System.out.println("Nội dung chức năng: Đã hủy yêu cầu " + current.getCode());
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Bạn có chắc muốn hủy yêu cầu " + current.getCode()
+                        + "? Hành động này không thể hoàn tác.",
+                ButtonType.OK, ButtonType.CANCEL);
+        confirm.setHeaderText("Xác nhận hủy yêu cầu");
+        confirm.showAndWait()
+                .filter(b -> b == ButtonType.OK)
+                .ifPresent(b -> {
+                    service.cancelRequest(current.getCode(), "Hủy từ màn chỉnh sửa");
+                    loadRequest(current.getCode());
+                    System.out.println("Nội dung chức năng: Đã hủy yêu cầu " + current.getCode());
+                });
+    }
+
+    @FXML
+    private void onBack() {
+        System.out.println("Nội dung chức năng: Quay lại "
+                + (current != null ? current.getCode() : ""));
+        if (onBack != null) onBack.run();
     }
 }
