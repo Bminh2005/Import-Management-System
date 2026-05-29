@@ -18,7 +18,7 @@
     <center>
         <VBox BorderPane.alignment="CENTER">
             <fx:include source="./components/TopHeader.fxml"/>
-            <VBox fx:id="mainContent" VBox.vgrow="ALWAYS">
+            <VBox fx:id="mainContent">
             </VBox>
             <!--            <fx:include source="Dashboard.fxml" VBox.vgrow="ALWAYS"/>-->
         </VBox>

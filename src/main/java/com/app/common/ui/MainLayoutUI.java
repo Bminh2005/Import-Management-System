@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -39,7 +38,6 @@ public class MainLayoutUI extends BorderPane {
             mainContent.getChildren().remove(this.page);
         }
         this.page = page;
-        VBox.setVgrow(page, Priority.ALWAYS);
         mainContent.getChildren().add(page);
     }
 }
