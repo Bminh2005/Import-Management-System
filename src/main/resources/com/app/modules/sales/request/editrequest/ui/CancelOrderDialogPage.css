@@ -1,0 +1,115 @@
+/* ============================================================
+   CancelOrderDialogPage.css — popup "Hủy đơn hàng"
+   ============================================================ */
+
+.cancel-dialog {
+    -primary-color: #2563EB;
+    -border-color: #E5E7EB;
+    -text-primary: #111827;
+    -text-secondary: #6B7280;
+    -danger-color: #EF4444;
+
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 18, 0, 0, 4);
+}
+
+/* ---------- Header đỏ ---------- */
+.cancel-header {
+    -fx-background-color: #DC2626;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.cancel-icon-box {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-min-width: 44;
+    -fx-min-height: 44;
+    -fx-max-width: 44;
+    -fx-max-height: 44;
+}
+
+.cancel-icon-x {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.cancel-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.cancel-subtitle {
+    -fx-text-fill: #FECACA;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Body ---------- */
+.cancel-body {
+    -fx-background-color: white;
+}
+
+.warning-box {
+    -fx-background-color: #FEF2F2;
+    -fx-border-color: #DC2626;
+    -fx-border-width: 0 0 0 4;
+    -fx-background-radius: 6px;
+}
+
+.warning-text {
+    -fx-text-fill: #7F1D1D;
+    -fx-font-size: 13px;
+}
+
+.info-card {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+/* ---------- Form ---------- */
+.form-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.form-required {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.reason-field {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 13px;
+}
+
+.reason-field .content {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+}
+
+.reason-field:focused {
+    -fx-border-color: -danger-color;
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.18), 4, 0, 0, 0);
+}
+
+/* ---------- Footer ---------- */
+.dialog-divider {
+    -fx-pref-height: 1px;
+    -fx-min-height: 1px;
+    -fx-background-color: -border-color;
+}
+
+.cancel-footer {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 0 0 12 12;
+}

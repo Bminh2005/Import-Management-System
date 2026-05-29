@@ -1,13 +1,13 @@
-package com.app.modules.sales.request.ui;
+package com.app.modules.sales.request.editrequest.ui;
 
 import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
-import com.app.modules.sales.request.dto.RequestResponse;
-import com.app.modules.sales.request.dto.UpdateRequestDTO;
+import com.app.modules.sales.request.editrequest.dto.RequestResponse;
+import com.app.modules.sales.request.editrequest.dto.UpdateRequestDTO;
 import com.app.modules.sales.request.entity.RejectedItem;
 import com.app.modules.sales.request.entity.RelatedOrder;
 import com.app.modules.sales.request.entity.RequestItem;
-import com.app.modules.sales.request.service.RequestService;
+import com.app.modules.sales.request.editrequest.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

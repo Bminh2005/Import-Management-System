@@ -1,4 +1,4 @@
-package com.app.Ioms;
+package com.app.modules.sales.apptest;
 
 import com.app.modules.sales.request.ui.RequestDetailUI;
 import javafx.application.Application;
