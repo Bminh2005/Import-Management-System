@@ -13,13 +13,13 @@ import javafx.stage.Stage;
  * nhúng vào trong MainLayoutUI để có sidebar + header.
  *
  * Tham số dòng lệnh:
- *   (mặc định)  -> mở màn Chỉnh sửa REQ-2024-001
+ *   (mặc định)  -> mở màn Chỉnh sửa yêu cầu mã 1
  *   "view"      -> mở màn Xem chi tiết
  *   "view <ma>" / "edit <ma>" -> chỉ định mã yêu cầu khác
  */
 public class SalesRequestTestApplication extends Application {
 
-    private static final String DEFAULT_CODE = "REQ-2024-001";
+    private static final String DEFAULT_CODE = "4";
 
     private MainLayoutUI layout;
 

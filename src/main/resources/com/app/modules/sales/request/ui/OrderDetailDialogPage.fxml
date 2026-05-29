@@ -30,7 +30,6 @@
             <Label text="Thông tin chi tiết về đơn hàng và mặt hàng"
                    styleClass="dialog-subtitle"/>
         </VBox>
-        <Button text="✕" styleClass="dialog-close-btn" onAction="#onClose"/>
     </HBox>
 
     <Region styleClass="dialog-divider"/>

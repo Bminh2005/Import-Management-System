@@ -157,13 +157,10 @@
         </VBox>
 
         <!-- Nút thao tác cuối trang -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
+        <HBox spacing="12" alignment="CENTER_RIGHT">
             <padding>
                 <Insets top="8"/>
             </padding>
-            <Button text="Hủy yêu cầu" styleClass="btn-link-danger"
-                    onAction="#onCancelRequest"/>
-            <Region HBox.hgrow="ALWAYS"/>
             <Button text="Quay lại" styleClass="btn-secondary" onAction="#onBack"/>
             <Button text="💾  Lưu thay đổi" styleClass="btn-primary" onAction="#onSave"/>
         </HBox>

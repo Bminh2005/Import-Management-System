@@ -29,7 +29,6 @@
             <Label text="Thêm vào yêu cầu" styleClass="dialog-title"/>
             <Label fx:id="productNameLabel" text="-" styleClass="dialog-subtitle"/>
         </VBox>
-        <Button text="✕" styleClass="dialog-close-btn" onAction="#onCancel"/>
     </HBox>
 
     <Region styleClass="dialog-divider"/>

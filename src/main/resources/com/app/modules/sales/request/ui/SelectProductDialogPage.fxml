@@ -23,7 +23,6 @@
             <Insets top="18" right="22" bottom="16" left="22"/>
         </padding>
         <Label text="Chọn mặt hàng" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
-        <Button text="✕" styleClass="dialog-close-btn" onAction="#onClose"/>
     </HBox>
 
     <Region styleClass="dialog-divider"/>

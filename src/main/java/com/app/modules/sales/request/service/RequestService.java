@@ -61,6 +61,15 @@ public class RequestService {
             }
         }
 
+        // Ngày nhận lưu ở cấp yêu cầu (schema chỉ có 1 desired_date / yêu cầu).
+        for (RequestItem item : dto.getItems()) {
+            String date = item.getDeliveryDate();
+            if (date != null && !date.isBlank()) {
+                repository.updateItemDeliveryDate(dto.getCode(), item.getCode(), date);
+                break;
+            }
+        }
+
         Request fresh = repository.findById(dto.getCode())
                 .orElseThrow(() -> new NoSuchElementException(
                         "Không tìm thấy yêu cầu " + dto.getCode()));
@@ -128,13 +137,6 @@ public class RequestService {
         return new OrderDetailResponse(
                 order.getCode(), order.getOrderDate(), order.getStatus(),
                 wrap.getRequestCode(), order.getSite(), items);
-    }
-
-    /** Hủy toàn bộ yêu cầu kèm lý do (đổi trạng thái sang cancelled). */
-    public void cancelRequest(String code, String reason) {
-        repository.updateStatus(code, "cancelled");
-        System.out.println("[RequestService] Đã hủy yêu cầu " + code
-                + " - Lý do: " + reason);
     }
 
     /** Hủy 1 đơn hàng liên quan kèm lý do. */

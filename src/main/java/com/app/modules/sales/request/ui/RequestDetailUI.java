@@ -120,12 +120,10 @@ public class RequestDetailUI extends ScrollPane {
 
         orderActionsColumn.setCellFactory(col -> new TableCell<RelatedOrder, Void>() {
             private final Button viewBtn = iconButton(eyePath(), "#475569");
-            private final Button cancelBtn = iconButton(crossPath(), "#DC2626");
-            private final HBox box = new HBox(4, viewBtn, cancelBtn);
+            private final HBox box = new HBox(viewBtn);
 
             {
                 viewBtn.getStyleClass().add("icon-btn");
-                cancelBtn.getStyleClass().addAll("icon-btn", "icon-btn-danger");
                 box.setAlignment(javafx.geometry.Pos.CENTER);
                 viewBtn.setOnAction(e -> {
                     RelatedOrder order = getTableView().getItems().get(getIndex());
@@ -134,17 +132,6 @@ public class RequestDetailUI extends ScrollPane {
                     OrderDetailDialogUI.show(
                             getScene() != null ? getScene().getWindow() : null,
                             order.getCode());
-                });
-                cancelBtn.setOnAction(e -> {
-                    RelatedOrder order = getTableView().getItems().get(getIndex());
-                    System.out.println("Nội dung chức năng: Hủy đơn hàng "
-                            + order.getCode());
-                    CancelOrderDialogUI.show(
-                            getScene() != null ? getScene().getWindow() : null,
-                            order,
-                            () -> {
-                                if (current != null) loadRequest(current.getCode());
-                            });
                 });
             }
 
@@ -170,11 +157,6 @@ public class RequestDetailUI extends ScrollPane {
     private static String eyePath() {
         return "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5"
                 + "C21.27 7.61 17 4.5 12 4.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z";
-    }
-
-    private static String crossPath() {
-        return "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59"
-                + " 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z";
     }
 
     /** Nạp dữ liệu yêu cầu theo mã. */

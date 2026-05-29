@@ -21,7 +21,6 @@
 
     <HBox styleClass="modal-header" alignment="CENTER_LEFT">
         <Label text="Thêm Mặt hàng vào Yêu cầu" styleClass="modal-title" HBox.hgrow="ALWAYS"/>
-        <Button text="✕" onAction="#onCancel" styleClass="modal-close-btn"/>
     </HBox>
 
     <GridPane styleClass="modal-body" hgap="16" vgap="16">

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  */
 public class SalesRequestDetailApp extends Application {
 
-    private static final String DEFAULT_REQUEST_CODE = "REQ-2024-001";
+    private static final String DEFAULT_REQUEST_CODE = "4";
 
     @Override
     public void start(Stage stage) {

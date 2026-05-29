@@ -81,6 +81,7 @@ public class EditRequestUI extends ScrollPane {
 
     private final RequestService service;
     private RequestResponse current;
+    private boolean dirty = false;
 
     private Runnable onBack;
     private Consumer<String> onSaved;
@@ -236,7 +237,7 @@ public class EditRequestUI extends ScrollPane {
                 if (value < 0) value = 0;
                 if (value == row.getQuantity()) return;
                 row.setQuantity(value);
-                service.updateItemQuantity(current.getCode(), row.getCode(), value);
+                dirty = true;
             } catch (NumberFormatException e) {
                 field.setText(String.valueOf(row.getQuantity()));
             }
@@ -432,23 +433,6 @@ public class EditRequestUI extends ScrollPane {
         System.out.println("Nội dung chức năng: Lưu thay đổi yêu cầu "
                 + current.getCode());
         if (onSaved != null) onSaved.accept(current.getCode());
-    }
-
-    @FXML
-    private void onCancelRequest() {
-        if (current == null) return;
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Bạn có chắc muốn hủy yêu cầu " + current.getCode()
-                        + "? Hành động này không thể hoàn tác.",
-                ButtonType.OK, ButtonType.CANCEL);
-        confirm.setHeaderText("Xác nhận hủy yêu cầu");
-        confirm.showAndWait()
-                .filter(b -> b == ButtonType.OK)
-                .ifPresent(b -> {
-                    service.cancelRequest(current.getCode(), "Hủy từ màn chỉnh sửa");
-                    loadRequest(current.getCode());
-                    System.out.println("Nội dung chức năng: Đã hủy yêu cầu " + current.getCode());
-                });
     }
 
     @FXML
