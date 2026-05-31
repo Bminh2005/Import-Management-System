@@ -1,10 +1,13 @@
 package com.app.modules.warehouse.inbound.dto;
 
 public class InboundOrderResponse {
+    private long orderId;
+    private long siteId;
     private String orderCode;
     private String receivedDate;
     private String supplier;
     private String status;
+    private String statusCode;
     private int expectedQuantity;
     private int actualQuantity;
     private String note;
@@ -18,9 +21,41 @@ public class InboundOrderResponse {
         this.receivedDate = receivedDate;
         this.supplier = supplier;
         this.status = status;
+        this.statusCode = status;
         this.expectedQuantity = expectedQuantity;
         this.actualQuantity = actualQuantity;
         this.note = note;
+    }
+
+    public InboundOrderResponse(long orderId, long siteId, String orderCode, String receivedDate, String supplier,
+                                String status, String statusCode, int expectedQuantity, int actualQuantity,
+                                String note) {
+        this.orderId = orderId;
+        this.siteId = siteId;
+        this.orderCode = orderCode;
+        this.receivedDate = receivedDate;
+        this.supplier = supplier;
+        this.status = status;
+        this.statusCode = statusCode;
+        this.expectedQuantity = expectedQuantity;
+        this.actualQuantity = actualQuantity;
+        this.note = note;
+    }
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public long getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(long siteId) {
+        this.siteId = siteId;
     }
 
     public String getOrderCode() {
@@ -53,6 +88,14 @@ public class InboundOrderResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 
     public int getExpectedQuantity() {

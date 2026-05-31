@@ -99,7 +99,15 @@ public class InboundOrderListUI extends BorderPane {
     @FXML
     private void onProcessSelectedClick() {
         System.out.println("Noi dung chuc nang: Xu ly don nhap kho duoc chon");
-        WarehouseNavigation.showInboundOrderProcess(inboundOrderTable);
+        InboundOrderResponse selectedOrder = inboundOrderTable.getSelectionModel().getSelectedItem();
+        if (selectedOrder == null && !inboundOrderTable.getItems().isEmpty()) {
+            selectedOrder = inboundOrderTable.getItems().get(0);
+        }
+        if (selectedOrder == null) {
+            System.out.println("Noi dung chuc nang: Chua co don nhap kho de xu ly");
+            return;
+        }
+        WarehouseNavigation.showInboundOrderProcess(inboundOrderTable, selectedOrder.getOrderId());
     }
 
     private void configureTable() {
@@ -114,7 +122,6 @@ public class InboundOrderListUI extends BorderPane {
         actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xu ly"));
         statusColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        inboundOrderTable.setSelectionModel(null);
     }
 
     public String getKeyword() {

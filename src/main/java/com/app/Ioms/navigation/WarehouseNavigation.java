@@ -29,6 +29,11 @@ public final class WarehouseNavigation {
         switchScene(source, InboundOrderProcessUI::new);
     }
 
+    public static void showInboundOrderProcess(Node source, long orderId) {
+        System.out.println("Chuyen trang: Xu ly don nhap kho " + orderId);
+        switchScene(source, () -> new InboundOrderProcessUI(orderId));
+    }
+
     private static void switchScene(Node source, Supplier<Parent> pageFactory) {
         Scene currentScene = source.getScene();
         if (currentScene == null) {

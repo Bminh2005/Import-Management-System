@@ -94,3 +94,37 @@
     -fx-background-color: #dc2626;
     -fx-text-fill: white;
 }
+
+.warehouse-table {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+.warehouse-table .column-header-background {
+    -fx-background-color: #f0f2f5;
+}
+
+.warehouse-table .column-header,
+.warehouse-table .filler {
+    -fx-background-color: #f0f2f5;
+    -fx-size: 44;
+}
+
+.warehouse-table .column-header .label {
+    -fx-alignment: center-left;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #6b7280;
+}
+
+.warehouse-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #d8dde6 transparent;
+    -fx-cell-size: 48;
+}
+
+.warehouse-table .table-cell {
+    -fx-alignment: center-left;
+    -fx-font-size: 15px;
+    -fx-text-fill: #1f2937;
+}
