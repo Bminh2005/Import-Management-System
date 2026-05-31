@@ -2,30 +2,68 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
-<fx:root type="HBox" alignment="CENTER_LEFT" minHeight="76.0" spacing="18.0" styleClass="warehouse-topbar"
+<fx:root type="HBox" alignment="CENTER_LEFT" prefHeight="64.0" styleClass="header-bg"
          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
-        <URL value="@WarehouseComponents.css"/>
+        <URL value="@TopHeader.css"/>
     </stylesheets>
     <padding>
-        <Insets bottom="12.0" left="24.0" right="24.0" top="12.0"/>
+        <Insets bottom="0.0" left="24.0" right="24.0" top="0.0"/>
     </padding>
-    <TextField fx:id="searchField" prefWidth="430.0" promptText="Tìm kiếm yêu cầu, mặt hàng..."
-               styleClass="global-search"/>
+
+    <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="420.0" spacing="10.0" styleClass="header-search-box">
+        <padding>
+            <Insets left="14.0" right="14.0"/>
+        </padding>
+        <SVGPath content="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                 fill="#94a3b8"/>
+        <TextField fx:id="searchField" promptText="Tìm kiếm yêu cầu, mặt hàng..." styleClass="header-search-field"
+                   HBox.hgrow="ALWAYS"/>
+    </HBox>
+
     <Region HBox.hgrow="ALWAYS"/>
-    <Button mnemonicParsing="false" onAction="#onLanguageClick" styleClass="top-icon-button" text="VI⌄"/>
-    <Button mnemonicParsing="false" onAction="#onNotificationClick" styleClass="notify-button" text="5"/>
-    <Button mnemonicParsing="false" onAction="#onUserMenuClick" styleClass="avatar-button" text="○"/>
-    <VBox spacing="2.0">
-        <Label fx:id="userNameLabel" styleClass="user-name" text="Nguyen Van A"/>
-        <Label fx:id="roleLabel" styleClass="user-role" text="Bo phan Quan ly Kho"/>
-    </VBox>
-    <Button mnemonicParsing="false" onAction="#onUserMenuClick" styleClass="top-icon-button" text="⌄"/>
+
+    <HBox alignment="CENTER" spacing="24.0">
+        <HBox alignment="CENTER" onMouseClicked="#onLanguageClick" spacing="6.0" styleClass="header-action-btn">
+            <SVGPath content="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.34-.14 2 0 .66.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.31.78 2.51 1.38 3.56A8.03 8.03 0 0 1 5.08 16zm2.95-8H5.08a8.03 8.03 0 0 1 3.81-3.56c-.6 1.05-1.06 2.25-1.38 3.56zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zm2.26-5.96h-4.52c-.07-.66-.14-1.34-.14-2 0-.66.07-1.34.14-2h4.52c.07.66.14 1.34.14 2 0 .66-.07 1.34-.14 2zm1.66 5.56c.6-1.05 1.06-2.25 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56zM16.36 14c.08-.66.14-1.34.14-2 0-.66-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"
+                     fill="#64748b"/>
+            <Label styleClass="lang-text" text="VI"/>
+            <SVGPath content="M7 10l5 5 5-5z" fill="#64748b"/>
+        </HBox>
+
+        <StackPane onMouseClicked="#onNotificationClick" styleClass="header-action-btn">
+            <padding>
+                <Insets bottom="4.0" left="4.0" right="6.0" top="4.0"/>
+            </padding>
+            <SVGPath content="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1-1.5-1s-1.5.17-1.5 1v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"
+                     fill="#64748b"/>
+            <Label styleClass="badge-notify" text="5" StackPane.alignment="TOP_RIGHT">
+                <StackPane.margin>
+                    <Insets right="-4.0" top="-4.0"/>
+                </StackPane.margin>
+            </Label>
+        </StackPane>
+
+        <HBox alignment="CENTER_LEFT" onMouseClicked="#onUserMenuClick" spacing="10.0" styleClass="header-action-btn">
+            <StackPane styleClass="header-avatar">
+                <SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                         fill="white" scaleX="0.9" scaleY="0.9"/>
+            </StackPane>
+
+            <VBox alignment="CENTER_LEFT">
+                <Label fx:id="userNameLabel" styleClass="user-name" text="Nguyễn Văn A"/>
+                <Label fx:id="roleLabel" styleClass="user-role" text="Bộ phận Quản lý Kho"/>
+            </VBox>
+
+            <SVGPath content="M7 10l5 5 5-5z" fill="#64748b"/>
+        </HBox>
+    </HBox>
 </fx:root>

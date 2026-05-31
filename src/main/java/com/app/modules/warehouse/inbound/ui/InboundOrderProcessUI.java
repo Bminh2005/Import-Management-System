@@ -1,7 +1,7 @@
 package com.app.modules.warehouse.inbound.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
-import com.app.common.ui.components.WarehouseSidebarUI;
+import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar;
 import com.app.modules.warehouse.inbound.dto.InboundOrderItemResponse;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
@@ -66,7 +66,7 @@ public class InboundOrderProcessUI extends BorderPane {
     private VBox pageRoot;
 
     @FXML
-    private WarehouseSidebarUI sidebar;
+    private WarehouseSidebar sidebar;
 
     private InboundOrderResponse inboundOrder;
     private ObservableList<InboundOrderItemResponse> inboundOrderItems = FXCollections.observableArrayList();

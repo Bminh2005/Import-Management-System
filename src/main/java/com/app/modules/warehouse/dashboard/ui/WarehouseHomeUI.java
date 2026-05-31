@@ -1,7 +1,6 @@
 package com.app.modules.warehouse.dashboard.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
-import com.app.common.ui.components.WarehouseSidebarUI;
 import com.app.modules.warehouse.dashboard.dto.WarehouseDashboardSummary;
 import com.app.modules.warehouse.dashboard.service.WarehouseDashboardService;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
@@ -54,7 +53,7 @@ public class WarehouseHomeUI extends BorderPane {
     private TableColumn<InboundOrderResponse, String> actionColumn;
 
     @FXML
-    private WarehouseSidebarUI sidebar;
+    private WarehouseSidebar sidebar;
 
     private WarehouseDashboardSummary dashboardSummary;
     private ObservableList<InboundOrderResponse> recentOrders = FXCollections.observableArrayList();

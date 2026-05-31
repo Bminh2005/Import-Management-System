@@ -59,11 +59,11 @@ public class Sidebar extends VBox {
         // Nếu chưa có item nào được chọn
         // thì chọn item đầu tiên
         if (selected == null) {
-            setSelected(item);
+            setSelectedItem(item);
         }
 
         item.setOnAction(() -> {
-            setSelected(item);
+            setSelectedItem(item);
             System.out.println("You navigated to " + item.getTextLabel());
         });
 
@@ -139,7 +139,7 @@ public class Sidebar extends VBox {
         }
     }
 
-    private void setSelected(SidebarItem item) {
+    protected void setSelectedItem(SidebarItem item) {
 
         // Bỏ chọn item cũ
         if (selected != null) {

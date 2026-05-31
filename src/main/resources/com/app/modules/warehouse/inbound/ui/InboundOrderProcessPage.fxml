@@ -8,8 +8,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import com.app.common.ui.components.WarehouseSidebarUI?>
 <?import com.app.common.ui.components.WarehouseTopBarUI?>
+<?import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -21,7 +21,7 @@
         <URL value="@InboundOrderProcessPage.css"/>
     </stylesheets>
     <left>
-        <WarehouseSidebarUI fx:id="sidebar"/>
+        <WarehouseSidebar fx:id="sidebar"/>
     </left>
     <top>
         <WarehouseTopBarUI/>

@@ -18,8 +18,8 @@ public class WarehouseTopBarUI extends HBox {
     @FXML
     private Label roleLabel;
 
-    private String userName = "Nguyen Van A";
-    private String role = "Bo phan Quan ly Kho";
+    private String userName = "Nguyễn Văn A";
+    private String role = "Bộ phận Quản lý Kho";
 
     public WarehouseTopBarUI() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseTopBar.fxml"));

@@ -1,7 +1,7 @@
 package com.app.modules.warehouse.inbound.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
-import com.app.common.ui.components.WarehouseSidebarUI;
+import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -53,7 +53,7 @@ public class InboundOrderListUI extends BorderPane {
     private TableColumn<InboundOrderResponse, String> actionColumn;
 
     @FXML
-    private WarehouseSidebarUI sidebar;
+    private WarehouseSidebar sidebar;
 
     private ObservableList<InboundOrderResponse> inboundOrders = FXCollections.observableArrayList();
 
