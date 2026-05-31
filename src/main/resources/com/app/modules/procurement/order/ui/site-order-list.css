@@ -1,0 +1,163 @@
+/* ============================================================
+   site-order-list.css
+   Style cho danh sách Đơn Đặt Hàng.
+   ============================================================ */
+
+.stat-cards-row {
+    -fx-padding: 0;
+}
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 4);
+}
+
+.stat-card-blue {
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 0 0 0 4;
+}
+
+.stat-card-yellow {
+    -fx-border-color: #f59e0b;
+    -fx-border-width: 0 0 0 4;
+}
+
+.stat-card-green {
+    -fx-border-color: #10b981;
+    -fx-border-width: 0 0 0 4;
+}
+
+.stat-card-red {
+    -fx-border-color: #ef4444;
+    -fx-border-width: 0 0 0 4;
+}
+
+.stat-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+}
+
+.stat-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.icon-box {
+    -fx-min-width: 44px;
+    -fx-min-height: 44px;
+    -fx-alignment: CENTER;
+    -fx-background-radius: 10px;
+}
+
+.icon-blue {
+    -fx-background-color: #dbeafe;
+}
+
+.icon-yellow {
+    -fx-background-color: #fef3c7;
+}
+
+.icon-green {
+    -fx-background-color: #d1fae5;
+}
+
+.icon-red {
+    -fx-background-color: #fee2e2;
+}
+
+.filter-section {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-padding: 20px;
+}
+
+.tab-bar {
+    -fx-padding: 4 0 0 0;
+}
+
+.tab-btn {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-font-size: 13px;
+    -fx-text-fill: #374151;
+    -fx-padding: 8 18;
+}
+
+.tab-btn:selected, .tab-btn.active, .tab-btn.tab-btn-active {
+    -fx-background-color: #1d4ed8;
+    -fx-text-fill: white;
+}
+
+.badge-pill {
+    -fx-background-radius: 999px;
+    -fx-padding: 5 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.badge-yellow {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+.badge-blue {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+}
+
+.badge-green {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #065f46;
+}
+
+.badge-red {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+}
+
+.btn-realloc {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-font-size: 12px;
+    -fx-padding: 8 14;
+}
+
+.data-table {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: #6b7280;
+}
+
+.section-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-padding: 20px;
+}
+
+.badge-count {
+    -fx-background-color: #eef2ff;
+    -fx-text-fill: #1d4ed8;
+    -fx-background-radius: 12px;
+    -fx-padding: 4 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.value-money {
+    -fx-text-fill: #047857;
+    -fx-font-weight: bold;
+}
+
+.footer-bar {
+    -fx-padding: 18 0 0 0;
+}

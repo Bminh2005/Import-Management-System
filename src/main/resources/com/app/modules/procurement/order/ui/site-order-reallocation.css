@@ -1,0 +1,148 @@
+/* ============================================================
+   site-order-reallocation.css
+   Style cho màn Phân bổ lại Đơn bị hủy.
+   ============================================================ */
+
+.nav-bar {
+    -fx-alignment: CENTER_LEFT;
+}
+
+.progress-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+}
+
+.progress-bar-main {
+    -fx-accent: #2563eb;
+}
+
+.alert-refused {
+    -fx-background-color: #fef2f2;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 16;
+}
+
+.stat-cards-row {
+    -fx-spacing: 16;
+}
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 4);
+}
+
+.stat-card-blue {
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 0 0 0 4;
+}
+
+.stat-card-green {
+    -fx-border-color: #10b981;
+    -fx-border-width: 0 0 0 4;
+}
+
+.stat-card-purple {
+    -fx-border-color: #8b5cf6;
+    -fx-border-width: 0 0 0 4;
+}
+
+.item-cards-container {
+    -fx-padding: 8 0 0 0;
+}
+
+.item-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 4);
+}
+
+.item-card-header {
+    -fx-spacing: 8;
+}
+
+.item-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.item-code-badge {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: #3730a3;
+    -fx-background-radius: 6px;
+    -fx-padding: 3 10;
+    -fx-font-size: 12px;
+}
+
+.badge-pill {
+    -fx-background-radius: 999px;
+    -fx-padding: 4 10;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.badge-orange {
+    -fx-background-color: #ffedd5;
+    -fx-text-fill: #9a3412;
+}
+
+.badge-green {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #065f46;
+}
+
+.item-qty-row {
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.item-progress-row {
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.percent-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #374151;
+    -fx-font-weight: bold;
+}
+
+.item-progress-bar {
+    -fx-pref-height: 8px;
+    -fx-accent: #2563eb;
+}
+
+.alloc-sub-table {
+    -fx-padding: 12 0 0 0;
+}
+
+.alloc-table {
+    -fx-pref-height: 140px;
+}
+
+.empty-alloc {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 13px;
+}
+
+.btn-allocate-site {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16;
+}
+
+.btn-success {
+    -fx-background-color: #059669;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16;
+}
+
+.footer-bar {
+    -fx-padding: 14 0 0 0;
+}

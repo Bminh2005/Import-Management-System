@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.HPos?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.modules.procurement.order.ui.SiteOrderDetailController"
+      spacing="20"
+      styleClass="main-content site-order-detail">
+
+    <stylesheets>
+        <URL value="@../../../../common/ui/components/components.css"/>
+        <URL value="@site-order-detail.css"/>
+    </stylesheets>
+
+    <padding>
+        <Insets top="28" right="32" bottom="28" left="32"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="nav-bar">
+        <Button fx:id="btnBack" text="←" styleClass="btn-back" onAction="#handleBack"/>
+        <VBox spacing="4">
+            <Label fx:id="lblTitle" text="Chi tiết Đơn Đặt Hàng #DH000" styleClass="page-title"/>
+            <Label text="Thông tin chi tiết đơn hàng" styleClass="page-subtitle"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblStatusBadge" text="Chưa xử lý" styleClass="badge-pill badge-yellow"/>
+    </HBox>
+
+    <HBox spacing="16" styleClass="info-cards-row">
+        <VBox styleClass="card info-card info-card-blue" spacing="8">
+            <Label text="NGƯỜI ĐẶT" styleClass="info-label"/>
+            <Label fx:id="lblOrderer" text="Nguyễn Văn A" styleClass="info-value"/>
+        </VBox>
+        <VBox styleClass="card info-card info-card-purple" spacing="8">
+            <Label text="SITE" styleClass="info-label"/>
+            <Label fx:id="lblSite" text="SITE01 – Site ABC" styleClass="info-value link-text"/>
+        </VBox>
+        <VBox styleClass="card info-card info-card-green" spacing="8">
+            <Label text="NGÀY TẠO" styleClass="info-label"/>
+            <Label fx:id="lblCreatedAt" text="12/05/2026" styleClass="info-value"/>
+        </VBox>
+        <VBox styleClass="card info-card info-card-orange" spacing="8">
+            <Label text="TỔNG GIÁ TRỊ" styleClass="info-label"/>
+            <Label fx:id="lblTotalValue" text="0 đ" styleClass="info-value value-money"/>
+        </VBox>
+    </HBox>
+
+    <HBox fx:id="alertRefused" styleClass="alert-refused" visible="false" managed="false" spacing="12">
+        <Label text="⚠"/>
+        <VBox spacing="4">
+            <Label text="Lý do hủy đơn" styleClass="alert-title"/>
+            <Label fx:id="lblRefusedReason" text="Đơn hàng đã bị hủy do hết hàng" styleClass="alert-body" wrapText="true"/>
+        </VBox>
+    </HBox>
+
+    <VBox styleClass="card section-card" spacing="14">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Danh sách Mặt hàng" styleClass="section-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblItemCount" text="0 mặt hàng" styleClass="badge-count"/>
+        </HBox>
+
+        <TableView fx:id="itemTable" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colItemCode" text="MÃ HÀNG"/>
+                <TableColumn fx:id="colItemName" text="TÊN MẶT HÀNG"/>
+                <TableColumn fx:id="colQty" text="SỐ LƯỢNG"/>
+                <TableColumn fx:id="colUnitPrice" text="ĐƠN GIÁ"/>
+                <TableColumn fx:id="colSubtotal" text="THÀNH TIỀN"/>
+            </columns>
+        </TableView>
+
+        <HBox styleClass="total-row" alignment="CENTER_RIGHT" spacing="8">
+            <Label text="Tổng cộng:" styleClass="total-label"/>
+            <Label fx:id="lblGrandTotal" text="0 đ" styleClass="total-value value-money"/>
+        </HBox>
+    </VBox>
+
+    <VBox styleClass="card section-card" spacing="14">
+        <Label text="📍 Thông tin Site cung cấp" styleClass="section-title"/>
+        <GridPane styleClass="info-grid" hgap="16" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <Label text="Mã Site" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="lblSiteCode" text="SITE01" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Tên Site" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="lblSiteName" text="Site ABC" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Địa chỉ" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="lblSiteAddress" text="123 Đường A, Hà Nội" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Tàu biển" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="lblShipDays" text="5 ngày" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Hàng không" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <Label fx:id="lblAirDays" text="2 ngày" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        </GridPane>
+    </VBox>
+
+    <HBox styleClass="footer-bar" alignment="CENTER_LEFT" spacing="12">
+        <Button fx:id="btnBackList" text="Quay lại danh sách" styleClass="btn-secondary" onAction="#handleBack"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnReallocate" text="↺ Phân bổ lại" styleClass="btn-primary" onAction="#handleReallocate"/>
+    </HBox>
+</VBox>
