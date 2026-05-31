@@ -17,7 +17,6 @@
 <fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@WarehouseHomePage.css"/>
-        <URL value="/com/app/common/ui/components/WarehouseComponents.css"/>
     </stylesheets>
     <left>
         <WarehouseSidebarUI fx:id="sidebar"/>
