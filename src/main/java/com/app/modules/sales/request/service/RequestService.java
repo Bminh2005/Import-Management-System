@@ -138,11 +138,4 @@ public class RequestService {
                 order.getCode(), order.getOrderDate(), order.getStatus(),
                 wrap.getRequestCode(), order.getSite(), items);
     }
-
-    /** Hủy 1 đơn hàng liên quan kèm lý do. */
-    public void cancelRelatedOrder(String orderCode, String reason) {
-        repository.updateRelatedOrderStatus(orderCode, "cancelled");
-        System.out.println("[RequestService] Đã hủy đơn hàng " + orderCode
-                + " - Lý do: " + reason);
-    }
 }

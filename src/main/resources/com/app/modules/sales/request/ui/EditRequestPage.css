@@ -97,10 +97,6 @@
     -fx-background-color: #F1F5F9;
 }
 
-.icon-btn-danger:hover {
-    -fx-background-color: #FEE2E2;
-}
-
 /* ---------- Mặt hàng bị từ chối ---------- */
 .rejected-row {
     -fx-background-color: #FEF2F2;

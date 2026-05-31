@@ -83,7 +83,7 @@
             <HBox alignment="CENTER_LEFT">
                 <Label text="Danh sách Mặt hàng" styleClass="section-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="+ Thêm mặt hàng" styleClass="btn-primary"
+                <Button fx:id="addItemButton" text="+ Thêm mặt hàng" styleClass="btn-primary"
                         onAction="#onAddItem"/>
             </HBox>
             <TableView fx:id="itemsTable" styleClass="data-table edit-table" prefHeight="320"
@@ -162,7 +162,7 @@
                 <Insets top="8"/>
             </padding>
             <Button text="Quay lại" styleClass="btn-secondary" onAction="#onBack"/>
-            <Button text="💾  Lưu thay đổi" styleClass="btn-primary" onAction="#onSave"/>
+            <Button fx:id="saveButton" text="💾  Lưu thay đổi" styleClass="btn-primary" onAction="#onSave"/>
         </HBox>
     </VBox>
 </fx:root>

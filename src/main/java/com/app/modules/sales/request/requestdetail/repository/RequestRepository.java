@@ -365,25 +365,6 @@ public class RequestRepository {
         public RelatedOrder getOrder() { return order; }
     }
 
-    /**
-     * Đổi trạng thái 1 đơn hàng liên quan (dùng cho hủy đơn).
-     * Token "cancelled" → REFUSED trong enum order_status.
-     */
-    public void updateRelatedOrderStatus(String orderCode, String status) {
-        Long orderId = tryParseId(orderCode);
-        String dbStatus = toOrderEnum(status);
-        if (orderId == null || dbStatus == null) return;
-        String sql = "UPDATE \"Order\" SET status = ?::order_status WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, dbStatus);
-            ps.setLong(2, orderId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi cập nhật trạng thái đơn " + orderCode, e);
-        }
-    }
-
     /** Xóa 1 yêu cầu (xóa chi tiết trước để tránh vi phạm khóa ngoại). */
     public void deleteById(String code) {
         Long id = tryParseId(code);
@@ -446,18 +427,6 @@ public class RequestRepository {
             case "ACCEPTED": return "completed";
             case "REFUSED": return "cancelled";
             default: return dbStatus.toLowerCase();
-        }
-    }
-
-    /** token UI → order_status (DB); null nếu không có enum tương ứng. */
-    private static String toOrderEnum(String token) {
-        if (token == null) return null;
-        switch (token.toLowerCase()) {
-            case "pending": return "PENDING";
-            case "processing": return "PROCESSING";
-            case "completed": return "ACCEPTED";
-            case "cancelled": return "REFUSED";
-            default: return null;
         }
     }
 }

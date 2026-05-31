@@ -49,6 +49,12 @@ public class RequestService {
                 .orElseThrow(() -> new NoSuchElementException(
                         "Không tìm thấy yêu cầu " + dto.getCode()));
 
+        // Chỉ cho lưu khi yêu cầu chưa hoàn tất (chưa PROCESSED).
+        if ("completed".equals(request.getStatus())) {
+            throw new IllegalStateException("Yêu cầu " + dto.getCode()
+                    + " đã hoàn tất, không thể chỉnh sửa.");
+        }
+
         Set<String> keep = new HashSet<>();
         int pos = 0;
         for (RequestItem item : dto.getItems()) {
@@ -137,12 +143,5 @@ public class RequestService {
         return new OrderDetailResponse(
                 order.getCode(), order.getOrderDate(), order.getStatus(),
                 wrap.getRequestCode(), order.getSite(), items);
-    }
-
-    /** Hủy 1 đơn hàng liên quan kèm lý do. */
-    public void cancelRelatedOrder(String orderCode, String reason) {
-        repository.updateRelatedOrderStatus(orderCode, "cancelled");
-        System.out.println("[RequestService] Đã hủy đơn hàng " + orderCode
-                + " - Lý do: " + reason);
     }
 }

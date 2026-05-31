@@ -79,9 +79,15 @@ public class EditRequestUI extends ScrollPane {
     @FXML private Label orderCountLabel;
     @FXML private Label orderEmptyLabel;
 
+    // --- Action buttons ---
+    @FXML private Button addItemButton;
+    @FXML private Button saveButton;
+
     private final RequestService service;
     private RequestResponse current;
     private boolean dirty = false;
+    /** Yêu cầu chỉ được chỉnh sửa khi chưa ở trạng thái "completed" (PROCESSED). */
+    private boolean editable = true;
 
     private Runnable onBack;
     private Consumer<String> onSaved;
@@ -133,7 +139,7 @@ public class EditRequestUI extends ScrollPane {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
+                if (empty || !editable) {
                     setGraphic(null);
                 } else {
                     HBox box = new HBox(deleteBtn);
@@ -157,12 +163,10 @@ public class EditRequestUI extends ScrollPane {
 
         orderActionsColumn.setCellFactory(col -> new TableCell<RelatedOrder, Void>() {
             private final Button viewBtn = createIconButton(eyePath(), "#475569");
-            private final Button cancelBtn = createIconButton(crossPath(), "#DC2626");
-            private final HBox box = new HBox(4, viewBtn, cancelBtn);
+            private final HBox box = new HBox(4, viewBtn);
 
             {
                 viewBtn.getStyleClass().add("icon-btn");
-                cancelBtn.getStyleClass().addAll("icon-btn", "icon-btn-danger");
                 box.setAlignment(Pos.CENTER);
                 viewBtn.setOnAction(e -> {
                     RelatedOrder order = getTableView().getItems().get(getIndex());
@@ -171,17 +175,6 @@ public class EditRequestUI extends ScrollPane {
                     OrderDetailDialogUI.show(
                             getScene() != null ? getScene().getWindow() : null,
                             order.getCode());
-                });
-                cancelBtn.setOnAction(e -> {
-                    RelatedOrder order = getTableView().getItems().get(getIndex());
-                    System.out.println("Nội dung chức năng: Hủy đơn hàng "
-                            + order.getCode());
-                    CancelOrderDialogUI.show(
-                            getScene() != null ? getScene().getWindow() : null,
-                            order,
-                            () -> {
-                                if (current != null) loadRequest(current.getCode());
-                            });
                 });
             }
 
@@ -210,10 +203,6 @@ public class EditRequestUI extends ScrollPane {
     private static String eyePath() {
         return "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5"
                 + "C21.27 7.61 17 4.5 12 4.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z";
-    }
-    private static String crossPath() {
-        return "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59"
-                + " 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z";
     }
 
     /** Cell hiển thị TextField sửa số lượng trực tiếp. */
@@ -250,6 +239,7 @@ public class EditRequestUI extends ScrollPane {
                 setGraphic(null);
             } else {
                 field.setText(String.valueOf(item.getQuantity()));
+                field.setDisable(!editable);
                 setGraphic(field);
             }
         }
@@ -282,6 +272,7 @@ public class EditRequestUI extends ScrollPane {
             } else {
                 LocalDate value = parse(item.getDeliveryDate());
                 picker.setValue(value);
+                picker.setDisable(!editable);
                 setGraphic(picker);
             }
         }
@@ -305,6 +296,9 @@ public class EditRequestUI extends ScrollPane {
     private void render() {
         if (current == null) return;
 
+        // Chỉ cho chỉnh sửa khi yêu cầu chưa hoàn tất (chưa PROCESSED).
+        editable = !"completed".equals(current.getStatus());
+
         titleLabel.setText("Chỉnh sửa Yêu cầu: " + current.getCode());
         codeLabel.setText(current.getCode());
         createdDateLabel.setText(current.getCreatedDate());
@@ -319,6 +313,32 @@ public class EditRequestUI extends ScrollPane {
 
         renderRejected(current.getRejectedItems());
         renderOrders(current.getOrders());
+
+        applyEditableState();
+    }
+
+    /**
+     * Bật/tắt các điều khiển chỉnh sửa theo {@link #editable}.
+     * Khi yêu cầu đã hoàn tất (PROCESSED) thì khóa thêm/lưu và thông báo.
+     */
+    private void applyEditableState() {
+        if (addItemButton != null) {
+            addItemButton.setDisable(!editable);
+            addItemButton.setVisible(editable);
+            addItemButton.setManaged(editable);
+        }
+        if (saveButton != null) saveButton.setDisable(!editable);
+        itemsTable.refresh();
+
+        if (!editable) {
+            Alert info = new Alert(Alert.AlertType.INFORMATION,
+                    "Yêu cầu " + current.getCode()
+                            + " đã hoàn tất nên không thể chỉnh sửa. "
+                            + "Bạn chỉ có thể xem thông tin.");
+            info.setHeaderText("Không thể chỉnh sửa");
+            info.initOwner(getScene() != null ? getScene().getWindow() : null);
+            info.show();
+        }
     }
 
     private void renderRejected(ObservableList<RejectedItem> items) {
@@ -394,7 +414,7 @@ public class EditRequestUI extends ScrollPane {
     }
 
     private void onDeleteItem(RequestItem item) {
-        if (current == null) return;
+        if (current == null || !editable) return;
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Bạn có chắc muốn xóa mặt hàng " + item.getCode() + " không?",
                 ButtonType.OK, ButtonType.CANCEL);
@@ -411,7 +431,7 @@ public class EditRequestUI extends ScrollPane {
 
     @FXML
     private void onAddItem() {
-        if (current == null) return;
+        if (current == null || !editable) return;
         javafx.stage.Window owner = getScene() != null ? getScene().getWindow() : null;
         SelectProductDialogUI.show(owner, current.getCode(), product ->
                 EnterItemInfoDialogUI.show(owner, product, newItem -> {
@@ -425,9 +445,27 @@ public class EditRequestUI extends ScrollPane {
     @FXML
     private void onSave() {
         if (current == null) return;
+        if (!editable) {
+            Alert err = new Alert(Alert.AlertType.WARNING,
+                    "Yêu cầu " + current.getCode()
+                            + " đã hoàn tất, không thể lưu thay đổi.");
+            err.setHeaderText("Không thể chỉnh sửa");
+            err.initOwner(getScene() != null ? getScene().getWindow() : null);
+            err.showAndWait();
+            return;
+        }
         UpdateRequestDTO dto = new UpdateRequestDTO(current.getCode(),
                 new ArrayList<>(current.getItems()));
-        service.updateRequest(dto);
+        try {
+            service.updateRequest(dto);
+        } catch (IllegalStateException ex) {
+            // Chốt chặn tầng service (vd trạng thái đổi sang hoàn tất ở phiên khác).
+            Alert err = new Alert(Alert.AlertType.WARNING, ex.getMessage());
+            err.setHeaderText("Không thể chỉnh sửa");
+            err.initOwner(getScene() != null ? getScene().getWindow() : null);
+            err.showAndWait();
+            return;
+        }
         dirty = false;
         Alert info = new Alert(Alert.AlertType.INFORMATION,
                 "Đã lưu thay đổi yêu cầu " + current.getCode());
