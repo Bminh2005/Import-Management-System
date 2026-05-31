@@ -10,7 +10,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -56,6 +58,7 @@ public class InboundOrderListUI extends BorderPane {
     private WarehouseSidebar sidebar;
 
     private ObservableList<InboundOrderResponse> inboundOrders = FXCollections.observableArrayList();
+    private ObservableList<InboundOrderResponse> allInboundOrders = FXCollections.observableArrayList();
 
     public InboundOrderListUI() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("InboundOrderListPage.fxml"));
@@ -76,12 +79,15 @@ public class InboundOrderListUI extends BorderPane {
         ));
         statusFilter.getSelectionModel().selectFirst();
         configureTable();
-        setInboundOrders(FXCollections.observableArrayList(inboundOrderService.getAllInboundOrders()));
+        reloadInboundOrders();
     }
 
     @FXML
     private void onSearchClick() {
         System.out.println("Noi dung chuc nang: Tim kiem don nhap kho - " + getKeyword());
+        setInboundOrders(FXCollections.observableArrayList(
+                inboundOrderService.searchInboundOrders(getKeyword(), getSelectedStatus())
+        ));
     }
 
     @FXML
@@ -89,11 +95,13 @@ public class InboundOrderListUI extends BorderPane {
         System.out.println("Noi dung chuc nang: Dat lai bo loc don nhap kho");
         setKeyword("");
         statusFilter.getSelectionModel().selectFirst();
+        setInboundOrders(FXCollections.observableArrayList(allInboundOrders));
     }
 
     @FXML
     private void onCreateInboundClick() {
         System.out.println("Noi dung chuc nang: Tao don nhap kho thu cong");
+        showInfo("Chuc nang dang phat trien", "Tao don nhap kho thu cong se duoc bo sung sau.");
     }
 
     @FXML
@@ -122,6 +130,28 @@ public class InboundOrderListUI extends BorderPane {
         actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xu ly"));
         statusColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        inboundOrderTable.setRowFactory(tableView -> {
+            TableRow<InboundOrderResponse> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    WarehouseNavigation.showInboundOrderProcess(inboundOrderTable, row.getItem().getOrderId());
+                }
+            });
+            return row;
+        });
+    }
+
+    private void reloadInboundOrders() {
+        allInboundOrders = FXCollections.observableArrayList(inboundOrderService.getAllInboundOrders());
+        setInboundOrders(FXCollections.observableArrayList(allInboundOrders));
+    }
+
+    private void showInfo(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     public String getKeyword() {

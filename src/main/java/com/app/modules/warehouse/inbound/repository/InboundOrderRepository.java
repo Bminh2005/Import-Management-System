@@ -15,6 +15,7 @@ import java.util.List;
 public class InboundOrderRepository {
     private static final String STATUS_IMPORTED = "IMPORTED";
     private static final String STATUS_MISMATCH = "MISMATCH";
+    private static final String STATUS_PROCESSING = "PROCESSING";
 
     public List<InboundOrderResponse> findAll() {
         ensureWarehouseSchema();
@@ -119,9 +120,12 @@ public class InboundOrderRepository {
         try (Connection connection = DatabaseManager.getConnection()) {
             connection.setAutoCommit(false);
             try {
-                long siteId = findSiteId(connection, orderId);
+                OrderLock orderLock = lockOrder(connection, orderId);
+                if (STATUS_IMPORTED.equals(orderLock.status()) || STATUS_MISMATCH.equals(orderLock.status())) {
+                    throw new IllegalStateException("Don nhap kho da duoc xac nhan, khong the cong kho lan nua.");
+                }
                 updateActualQuantities(connection, orderId, items);
-                updateInventory(connection, siteId, items);
+                updateInventory(connection, orderLock.siteId(), items);
                 updateOrderStatus(connection, orderId,
                         hasMismatch ? STATUS_MISMATCH : STATUS_IMPORTED,
                         hasMismatch ? mismatchReason : "",
@@ -135,6 +139,33 @@ public class InboundOrderRepository {
             }
         } catch (SQLException exception) {
             throw new IllegalStateException("Khong the xac nhan don nhap kho.", exception);
+        }
+    }
+
+    public void saveDraft(long orderId, List<InboundOrderItemResponse> items) {
+        ensureWarehouseSchema();
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("Don nhap kho khong co mat hang de luu tam.");
+        }
+
+        try (Connection connection = DatabaseManager.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                OrderLock orderLock = lockOrder(connection, orderId);
+                if (STATUS_IMPORTED.equals(orderLock.status()) || STATUS_MISMATCH.equals(orderLock.status())) {
+                    throw new IllegalStateException("Don nhap kho da duoc xac nhan, khong the luu tam.");
+                }
+                updateActualQuantities(connection, orderId, items);
+                updateOrderStatus(connection, orderId, STATUS_PROCESSING, null, null);
+                connection.commit();
+            } catch (SQLException | RuntimeException exception) {
+                connection.rollback();
+                throw exception;
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Khong the luu tam don nhap kho.", exception);
         }
     }
 
@@ -157,20 +188,29 @@ public class InboundOrderRepository {
     }
 
     private void updateOrderStatus(Connection connection, long orderId, String status,
-                                   String mismatchReason, long inspectedBy) throws SQLException {
+                                   String mismatchReason, Long inspectedBy) throws SQLException {
         String sql = """
                 UPDATE "Order"
                 SET status = ?::order_status,
-                    actual_delivery_date = CURRENT_TIMESTAMP,
-                    inspected_by = ?,
-                    mismatch_reason = ?
+                    actual_delivery_date = CASE
+                        WHEN ?::order_status IN ('IMPORTED'::order_status, 'MISMATCH'::order_status)
+                        THEN CURRENT_TIMESTAMP
+                        ELSE actual_delivery_date
+                    END,
+                    inspected_by = COALESCE(?, inspected_by),
+                    mismatch_reason = COALESCE(?, mismatch_reason)
                 WHERE id = ?
                 """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, status);
-            statement.setLong(2, inspectedBy);
-            statement.setString(3, mismatchReason);
-            statement.setLong(4, orderId);
+            statement.setString(2, status);
+            if (inspectedBy == null) {
+                statement.setNull(3, java.sql.Types.BIGINT);
+            } else {
+                statement.setLong(3, inspectedBy);
+            }
+            statement.setString(4, mismatchReason);
+            statement.setLong(5, orderId);
             statement.executeUpdate();
         }
     }
@@ -231,17 +271,20 @@ public class InboundOrderRepository {
         }
     }
 
-    private long findSiteId(Connection connection, long orderId) throws SQLException {
-        String sql = "SELECT site_id FROM \"Order\" WHERE id = ?";
+    private OrderLock lockOrder(Connection connection, long orderId) throws SQLException {
+        String sql = "SELECT site_id, status::text AS status FROM \"Order\" WHERE id = ? FOR UPDATE";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, orderId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    return resultSet.getLong("site_id");
+                    return new OrderLock(resultSet.getLong("site_id"), resultSet.getString("status"));
                 }
             }
         }
         throw new IllegalArgumentException("Khong tim thay don nhap kho: " + orderId);
+    }
+
+    private record OrderLock(long siteId, String status) {
     }
 
     private void ensureWarehouseSchema() {

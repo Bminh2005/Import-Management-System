@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -24,6 +25,7 @@ import javafx.util.converter.IntegerStringConverter;
 import java.io.IOException;
 
 public class InboundOrderProcessUI extends BorderPane {
+    private static final long TEMP_INSPECTED_BY_USER_ID = 5;
     private final InboundOrderService inboundOrderService = new InboundOrderService();
 
     @FXML
@@ -115,6 +117,16 @@ public class InboundOrderProcessUI extends BorderPane {
     @FXML
     private void onSaveDraftClick() {
         System.out.println("Noi dung chuc nang: Luu tam ket qua xu ly don nhap kho");
+        if (!hasValidInboundOrder()) {
+            return;
+        }
+        try {
+            inboundOrderService.saveDraft(inboundOrder.getOrderId(), inboundOrderItems);
+            setInboundOrder(inboundOrderService.getOrderById(inboundOrder.getOrderId()));
+            showInfo("Da luu tam", "Ket qua kiem dem da duoc luu voi trang thai Dang xu ly.");
+        } catch (RuntimeException exception) {
+            showError("Khong the luu tam", exception.getMessage());
+        }
     }
 
     @FXML
@@ -122,22 +134,38 @@ public class InboundOrderProcessUI extends BorderPane {
         System.out.println("Noi dung chuc nang: Xac nhan nhap kho");
         if (inboundOrder == null || inboundOrder.getOrderId() <= 0) {
             System.out.println("Noi dung chuc nang: Khong co don nhap kho hop le de xac nhan");
+            showError("Khong the xac nhan", "Khong co don nhap kho hop le de xac nhan.");
+            return;
+        }
+        if ("IMPORTED".equals(inboundOrder.getStatusCode()) || "MISMATCH".equals(inboundOrder.getStatusCode())) {
+            showError("Khong the xac nhan", "Don nay da duoc xac nhan, khong the cong kho lan nua.");
+            return;
+        }
+        if (hasMismatch() && getProcessNote().isBlank()) {
+            showError("Thieu ly do sai lech", "Nhap ghi chu sai lech truoc khi xac nhan don lech so luong.");
             return;
         }
         try {
             inboundOrderService.confirmInboundOrder(inboundOrder.getOrderId(), inboundOrderItems,
-                    getProcessNote(), 5);
+                    getProcessNote(), TEMP_INSPECTED_BY_USER_ID);
             setInboundOrder(inboundOrderService.getOrderById(inboundOrder.getOrderId()));
+            showInfo("Xac nhan thanh cong", "Don nhap kho da cap nhat trang thai va cong so luong thuc nhan vao ton kho.");
             System.out.println("Noi dung chuc nang: Xac nhan nhap kho thanh cong");
         } catch (RuntimeException exception) {
             System.out.println("Noi dung chuc nang: Xac nhan nhap kho that bai - " + exception.getMessage());
             statusLabel.setText("Can bo sung thong tin");
+            showError("Xac nhan that bai", exception.getMessage());
         }
     }
 
     @FXML
     private void onReportMismatchClick() {
         System.out.println("Noi dung chuc nang: Bao cao sai lech don nhap kho");
+        if (hasMismatch()) {
+            showInfo("Phat hien sai lech", "Hay nhap ly do vao o ghi chu roi bam Xac nhan nhap kho.");
+        } else {
+            showInfo("Chua co sai lech", "So luong thuc nhan hien dang khop voi so luong du kien.");
+        }
     }
 
     public InboundOrderResponse getInboundOrder() {
@@ -195,6 +223,12 @@ public class InboundOrderProcessUI extends BorderPane {
                 new SimpleIntegerProperty(data.getValue().getActualQuantity()).asObject());
         itemActualQuantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         itemActualQuantityColumn.setOnEditCommit(event -> {
+            if (event.getNewValue() == null || event.getNewValue() < 0) {
+                event.getRowValue().setActualQuantity(event.getOldValue());
+                itemTable.refresh();
+                showError("So luong khong hop le", "So luong thuc nhan phai lon hon hoac bang 0.");
+                return;
+            }
             event.getRowValue().setActualQuantity(event.getNewValue());
             refreshTotals();
         });
@@ -209,5 +243,33 @@ public class InboundOrderProcessUI extends BorderPane {
                 .sum();
         expectedQuantityField.setText(String.valueOf(expectedTotal));
         actualQuantityField.setText(String.valueOf(actualTotal));
+    }
+
+    private boolean hasValidInboundOrder() {
+        if (inboundOrder == null || inboundOrder.getOrderId() <= 0) {
+            showError("Khong co don", "Khong co don nhap kho hop le de xu ly.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean hasMismatch() {
+        return inboundOrderItems.stream().anyMatch(InboundOrderItemResponse::hasMismatch);
+    }
+
+    private void showInfo(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

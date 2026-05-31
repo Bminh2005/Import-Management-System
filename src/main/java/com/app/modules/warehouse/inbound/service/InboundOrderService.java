@@ -5,6 +5,7 @@ import com.app.modules.warehouse.inbound.dto.InboundOrderItemResponse;
 import com.app.modules.warehouse.inbound.repository.InboundOrderRepository;
 
 import java.util.List;
+import java.util.Locale;
 
 public class InboundOrderService {
     private final InboundOrderRepository inboundOrderRepository = new InboundOrderRepository();
@@ -17,6 +18,17 @@ public class InboundOrderService {
 
     public List<InboundOrderResponse> getAllInboundOrders() {
         return inboundOrderRepository.findAll();
+    }
+
+    public List<InboundOrderResponse> searchInboundOrders(String keyword, String selectedStatus) {
+        String normalizedKeyword = normalize(keyword);
+        String statusCode = mapStatusCode(selectedStatus);
+        return inboundOrderRepository.findAll().stream()
+                .filter(order -> normalizedKeyword.isBlank()
+                        || normalize(order.getOrderCode()).contains(normalizedKeyword)
+                        || normalize(order.getSupplier()).contains(normalizedKeyword))
+                .filter(order -> statusCode.isBlank() || statusCode.equals(order.getStatusCode()))
+                .toList();
     }
 
     public List<InboundOrderItemResponse> getOrderItems(long orderId) {
@@ -39,6 +51,47 @@ public class InboundOrderService {
 
     public void confirmInboundOrder(long orderId, List<InboundOrderItemResponse> items,
                                     String mismatchReason, long inspectedBy) {
+        validateItems(items);
         inboundOrderRepository.confirmInboundOrder(orderId, items, mismatchReason, inspectedBy);
+    }
+
+    public void saveDraft(long orderId, List<InboundOrderItemResponse> items) {
+        validateItems(items);
+        inboundOrderRepository.saveDraft(orderId, items);
+    }
+
+    private void validateItems(List<InboundOrderItemResponse> items) {
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("Don nhap kho khong co mat hang de xu ly.");
+        }
+        boolean hasNegativeQuantity = items.stream()
+                .anyMatch(item -> item.getActualQuantity() < 0);
+        if (hasNegativeQuantity) {
+            throw new IllegalArgumentException("So luong thuc nhan khong duoc am.");
+        }
+    }
+
+    private String mapStatusCode(String selectedStatus) {
+        String status = normalize(selectedStatus);
+        if (status.isBlank() || "tat ca".equals(status)) {
+            return "";
+        }
+        if ("cho xu ly".equals(status)) {
+            return "PENDING";
+        }
+        if ("dang xu ly".equals(status)) {
+            return "PROCESSING";
+        }
+        if ("da nhap kho".equals(status)) {
+            return "IMPORTED";
+        }
+        if ("co sai lech".equals(status)) {
+            return "MISMATCH";
+        }
+        return "";
+    }
+
+    private String normalize(String value) {
+        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
     }
 }
