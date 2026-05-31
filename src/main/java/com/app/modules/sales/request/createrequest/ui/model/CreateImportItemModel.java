@@ -1,6 +1,8 @@
 package com.app.modules.sales.request.createrequest.ui.model;
 
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+
 import java.time.LocalDate;
 
 public class CreateImportItemModel {
@@ -10,13 +12,15 @@ public class CreateImportItemModel {
     private final StringProperty unit;         // đơn vị
     private final ObjectProperty<LocalDate> expectedDate; // ngày nhận mong muốn
     private final BooleanProperty selected;
+    private final DoubleProperty referencePrice;
 
-    public CreateImportItemModel(String itemCode, String itemName, int quantity, String unit, LocalDate expectedDate) {
+    public CreateImportItemModel(String itemCode, String itemName, int quantity, String unit, double referencePrice,LocalDate expectedDate) {
         this.itemCode = new SimpleStringProperty(itemCode);
         this.itemName = new SimpleStringProperty(itemName);
         this.quantity = new SimpleIntegerProperty(quantity);
         this.unit = new SimpleStringProperty(unit);
         this.expectedDate = new SimpleObjectProperty<>(expectedDate);
+        this.referencePrice = new SimpleDoubleProperty(referencePrice != 0.0? referencePrice:0.0);
         this.selected = new SimpleBooleanProperty(false);
     }
 
@@ -39,7 +43,10 @@ public class CreateImportItemModel {
     public String getUnit() { return unit.get(); }
     public void setUnit(String value) { unit.set(value); }
     public StringProperty unitProperty() { return unit; }
-
+    // --- referencePrice ---
+    public DoubleProperty referencePriceProperty() { return referencePrice; }
+    public double getReferencePrice() { return referencePrice.get(); }
+    public void setReferencePrice(double value) { referencePrice.set(value); }
     // --- expectedDate ---
     public LocalDate getExpectedDate() { return expectedDate.get(); }
     public void setExpectedDate(LocalDate value) { expectedDate.set(value); }
