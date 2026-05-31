@@ -4,14 +4,10 @@ import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
 import com.app.modules.sales.request.dto.RequestResponse;
 import com.app.modules.sales.request.dto.UpdateRequestDTO;
-import com.app.modules.sales.request.entity.RejectedItem;
-import com.app.modules.sales.request.entity.RelatedOrder;
 import com.app.modules.sales.request.entity.RequestItem;
 import com.app.modules.sales.request.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -24,9 +20,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 
 import java.time.LocalDate;
@@ -37,8 +30,8 @@ import java.util.function.Consumer;
 /**
  * UI Class cho màn "Chỉnh sửa Yêu cầu Nhập hàng".
  * Cho phép sửa số lượng / ngày nhận của từng mặt hàng ngay trên bảng,
- * thêm hoặc xóa mặt hàng, hủy yêu cầu, lưu thay đổi. Đồng thời hiển thị
- * danh sách mặt hàng bị từ chối/hủy và đơn hàng liên quan (chỉ đọc).
+ * thêm hoặc xóa mặt hàng, lưu thay đổi. Chỉ gồm 2 mục: thông tin yêu cầu
+ * và danh sách mặt hàng.
  *
  * Caller đăng ký {@link #setOnBack(Runnable)} để xử lý thoát màn hình.
  * Theo quy ước README: UI chỉ gọi service.
@@ -63,22 +56,6 @@ public class EditRequestUI extends ScrollPane {
     @FXML private TableColumn<RequestItem, String> statusColumn;
     @FXML private TableColumn<RequestItem, Void> actionsColumn;
 
-    // --- Rejected panel ---
-    @FXML private VBox rejectedList;
-    @FXML private Label rejectedCountLabel;
-    @FXML private Label rejectedEmptyLabel;
-
-    // --- Related orders ---
-    @FXML private TableView<RelatedOrder> ordersTable;
-    @FXML private TableColumn<RelatedOrder, String> orderCodeColumn;
-    @FXML private TableColumn<RelatedOrder, String> orderDateColumn;
-    @FXML private TableColumn<RelatedOrder, String> orderSiteColumn;
-    @FXML private TableColumn<RelatedOrder, Number> orderItemCountColumn;
-    @FXML private TableColumn<RelatedOrder, String> orderStatusColumn;
-    @FXML private TableColumn<RelatedOrder, Void> orderActionsColumn;
-    @FXML private Label orderCountLabel;
-    @FXML private Label orderEmptyLabel;
-
     private final RequestService service;
     private RequestResponse current;
     private boolean dirty = false;
@@ -95,7 +72,6 @@ public class EditRequestUI extends ScrollPane {
         FxmlUiHelper.loadSelf(this, "EditRequestPage.fxml");
         itemsTable.setEditable(false);
         setupItemsTable();
-        setupOrdersTable();
     }
 
     public void setOnBack(Runnable callback) { this.onBack = callback; }
@@ -144,42 +120,6 @@ public class EditRequestUI extends ScrollPane {
         });
     }
 
-    private void setupOrdersTable() {
-        orderCodeColumn.setCellValueFactory(c -> c.getValue().codeProperty());
-        orderDateColumn.setCellValueFactory(c -> c.getValue().orderDateProperty());
-        orderSiteColumn.setCellValueFactory(c -> c.getValue().siteProperty());
-        orderItemCountColumn.setCellValueFactory(c -> c.getValue().itemCountProperty());
-
-        orderStatusColumn.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getStatus()));
-        orderStatusColumn.setCellFactory(
-                StatusStyle.badgeCellFactory(StatusStyle::requestStatusLabel));
-
-        orderActionsColumn.setCellFactory(col -> new TableCell<RelatedOrder, Void>() {
-            private final Button viewBtn = createIconButton(eyePath(), "#475569");
-            private final HBox box = new HBox(4, viewBtn);
-
-            {
-                viewBtn.getStyleClass().add("icon-btn");
-                box.setAlignment(Pos.CENTER);
-                viewBtn.setOnAction(e -> {
-                    RelatedOrder order = getTableView().getItems().get(getIndex());
-                    System.out.println("Nội dung chức năng: Xem chi tiết đơn hàng "
-                            + order.getCode());
-                    OrderDetailDialogUI.show(
-                            getScene() != null ? getScene().getWindow() : null,
-                            order.getCode());
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : box);
-            }
-        });
-    }
-
     private static Button createIconButton(String svg, String fill) {
         SVGPath icon = new SVGPath();
         icon.setContent(svg);
@@ -193,10 +133,6 @@ public class EditRequestUI extends ScrollPane {
 
     private static String trashPath() {
         return "M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z";
-    }
-    private static String eyePath() {
-        return "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5"
-                + "C21.27 7.61 17 4.5 12 4.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z";
     }
 
     /** Cell hiển thị TextField sửa số lượng trực tiếp. */
@@ -299,81 +235,6 @@ public class EditRequestUI extends ScrollPane {
         itemsTable.setItems(current.getItems());
         current.getItems().addListener((javafx.collections.ListChangeListener<RequestItem>)
                 c -> itemCountLabel.setText(String.valueOf(current.getItems().size())));
-
-        renderRejected(current.getRejectedItems());
-        renderOrders(current.getOrders());
-    }
-
-    private void renderRejected(ObservableList<RejectedItem> items) {
-        rejectedList.getChildren().clear();
-        int size = items == null ? 0 : items.size();
-        rejectedCountLabel.setText("(" + size + " mặt hàng)");
-
-        boolean hasItems = size > 0;
-        rejectedList.setVisible(hasItems);
-        rejectedList.setManaged(hasItems);
-        rejectedEmptyLabel.setVisible(!hasItems);
-        rejectedEmptyLabel.setManaged(!hasItems);
-        if (!hasItems) return;
-
-        for (RejectedItem item : items) {
-            rejectedList.getChildren().add(buildRejectedRow(item));
-        }
-    }
-
-    private VBox buildRejectedRow(RejectedItem item) {
-        Label codeChip = new Label(item.getCode());
-        codeChip.getStyleClass().add("code-chip");
-
-        Label name = new Label(item.getName());
-        name.getStyleClass().add("rejected-name");
-
-        HBox header = new HBox(10, name, codeChip);
-        header.setAlignment(Pos.CENTER_LEFT);
-
-        Label qty = new Label("Số lượng: " + item.getQuantity() + " " + item.getUnit());
-        qty.getStyleClass().add("rejected-sub");
-
-        boolean isOverseas = "overseas".equals(item.getRejectedBy());
-        Label rejectedByBadge = new Label(
-                isOverseas ? "Từ chối bởi Đặt hàng Quốc tế" : "Hủy bởi người dùng");
-        rejectedByBadge.getStyleClass().add(
-                isOverseas ? "rejected-badge-overseas" : "rejected-badge-user");
-
-        Label dateLabel = new Label(item.getRejectedDate());
-        dateLabel.getStyleClass().add("rejected-sub");
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        VBox rightBox = new VBox(4, rejectedByBadge, dateLabel);
-        rightBox.setAlignment(Pos.CENTER_RIGHT);
-
-        HBox topRow = new HBox(12, header, spacer, rightBox);
-        topRow.setAlignment(Pos.CENTER_LEFT);
-
-        Label reasonTitle = new Label("Lý do:");
-        reasonTitle.getStyleClass().add("rejected-reason-title");
-        Label reason = new Label(item.getReason());
-        reason.getStyleClass().add("rejected-sub");
-        reason.setWrapText(true);
-
-        VBox row = new VBox(8, topRow, qty, reasonTitle, reason);
-        row.getStyleClass().add("rejected-row");
-        row.setPadding(new Insets(14, 16, 14, 16));
-        return row;
-    }
-
-    private void renderOrders(ObservableList<RelatedOrder> orders) {
-        ordersTable.setItems(orders);
-        int size = orders == null ? 0 : orders.size();
-        orderCountLabel.setText("(" + size + " đơn)");
-
-        boolean hasOrders = size > 0;
-        ordersTable.setVisible(hasOrders);
-        ordersTable.setManaged(hasOrders);
-        orderEmptyLabel.setVisible(!hasOrders);
-        orderEmptyLabel.setManaged(!hasOrders);
     }
 
     private void onDeleteItem(RequestItem item) {
