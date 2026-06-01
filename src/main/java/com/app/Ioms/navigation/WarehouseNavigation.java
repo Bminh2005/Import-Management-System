@@ -15,22 +15,31 @@ public final class WarehouseNavigation {
     }
 
     public static void showWarehouseHome(Node source) {
-        System.out.println("Chuyen trang: Trang chu quan ly kho");
+        System.out.println("Chuyển trang: Trang chủ quản lý kho");
         switchScene(source, WarehouseHomeUI::new);
     }
 
     public static void showInboundOrderList(Node source) {
-        System.out.println("Chuyen trang: Danh sach don nhap kho");
+        System.out.println("Chuyển trang: Danh sách đơn nhập kho");
         switchScene(source, InboundOrderListUI::new);
     }
 
+    public static void showInboundOrderList(Node source, String statusCode) {
+        System.out.println("Chuyển trang: Danh sách đơn nhập kho - " + statusCode);
+        switchScene(source, () -> {
+            InboundOrderListUI page = new InboundOrderListUI();
+            page.setSelectedStatusCode(statusCode);
+            return page;
+        });
+    }
+
     public static void showInboundOrderProcess(Node source) {
-        System.out.println("Chuyen trang: Xu ly don nhap kho");
+        System.out.println("Chuyển trang: Xử lý đơn nhập kho");
         switchScene(source, InboundOrderProcessUI::new);
     }
 
     public static void showInboundOrderProcess(Node source, long orderId) {
-        System.out.println("Chuyen trang: Xu ly don nhap kho " + orderId);
+        System.out.println("Chuyển trang: Xử lý đơn nhập kho " + orderId);
         switchScene(source, () -> new InboundOrderProcessUI(orderId));
     }
 
@@ -41,6 +50,6 @@ public final class WarehouseNavigation {
         }
         currentScene.setRoot(pageFactory.get());
         Stage stage = (Stage) currentScene.getWindow();
-        stage.setTitle("He thong Nhap hang - Quan ly Kho");
+        stage.setTitle("Hệ thống Nhập hàng - Quản lý Kho");
     }
 }

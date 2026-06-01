@@ -5,10 +5,9 @@
 }
 
 .brand-icon {
-    -fx-font-family: "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
-    -fx-font-size: 34px;
-    -fx-font-weight: 700;
-    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-min-height: 36;
+    -fx-min-width: 36;
 }
 
 .nav-icon-button,
@@ -17,9 +16,6 @@
     -fx-background-radius: 8;
     -fx-border-color: transparent;
     -fx-cursor: hand;
-    -fx-font-family: "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
-    -fx-font-size: 26px;
-    -fx-font-weight: 700;
     -fx-min-height: 48;
     -fx-min-width: 48;
     -fx-pref-height: 48;
@@ -41,7 +37,6 @@
     -fx-background-radius: 0;
     -fx-border-color: rgba(255, 255, 255, 0.12) transparent transparent transparent;
     -fx-border-width: 1 0 0 0;
-    -fx-font-size: 32px;
     -fx-min-height: 58;
     -fx-pref-height: 58;
     -fx-pref-width: 66;

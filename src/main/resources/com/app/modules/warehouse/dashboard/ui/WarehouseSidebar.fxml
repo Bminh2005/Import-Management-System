@@ -13,8 +13,9 @@
     <stylesheets>
         <URL value="@WarehouseSidebar.css"/>
     </stylesheets>
+
     <StackPane minHeight="64.0" prefHeight="64.0">
-        <Label styleClass="brand-icon" text="◎"/>
+        <Label fx:id="brandIcon" styleClass="brand-icon"/>
     </StackPane>
 
     <VBox alignment="TOP_CENTER" spacing="12.0">
@@ -22,12 +23,13 @@
             <Insets top="18.0"/>
         </padding>
         <Button fx:id="homeButton" mnemonicParsing="false" onAction="#onHomeClick"
-                styleClass="nav-icon-button" text="⌂"/>
+                styleClass="nav-icon-button"/>
         <Button fx:id="inboundButton" mnemonicParsing="false" onAction="#onInboundClick"
-                styleClass="nav-icon-button" text="▧"/>
+                styleClass="nav-icon-button"/>
     </VBox>
 
     <Region VBox.vgrow="ALWAYS"/>
 
-    <Button mnemonicParsing="false" onAction="#onCollapseClick" styleClass="collapse-button" text="›"/>
+    <Button fx:id="collapseButton" mnemonicParsing="false" onAction="#onCollapseClick"
+            styleClass="collapse-button"/>
 </fx:root>

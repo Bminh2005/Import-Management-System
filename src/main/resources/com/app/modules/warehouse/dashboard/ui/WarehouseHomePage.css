@@ -51,6 +51,7 @@
 .quick-icon {
     -fx-alignment: center;
     -fx-background-radius: 8;
+    -fx-content-display: graphic-only;
     -fx-font-family: "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
     -fx-font-size: 25px;
     -fx-font-weight: 800;

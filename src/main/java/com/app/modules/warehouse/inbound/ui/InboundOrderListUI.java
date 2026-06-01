@@ -1,6 +1,7 @@
 package com.app.modules.warehouse.inbound.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
+import com.app.common.util.FxmlUiHelper;
 import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
@@ -9,7 +10,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -20,12 +20,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
 import java.text.Normalizer;
 import java.util.Comparator;
 import java.util.Locale;
 
 public class InboundOrderListUI extends BorderPane {
+    private static final String ALL_STATUSES = "Tất cả trạng thái";
+
     private final InboundOrderService inboundOrderService = new InboundOrderService();
 
     @FXML
@@ -75,21 +76,18 @@ public class InboundOrderListUI extends BorderPane {
     private boolean sortAscending;
 
     public InboundOrderListUI() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("InboundOrderListPage.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException exception) {
-            throw new IllegalStateException("Khong the tai InboundOrderListPage.fxml", exception);
-        }
+        FxmlUiHelper.loadSelf(this, "InboundOrderListPage.fxml");
     }
 
     @FXML
     private void initialize() {
         sidebar.setActiveMenu("inbound");
         statusFilter.setItems(FXCollections.observableArrayList(
-                "Tất cả trạng thái", "Chờ xử lý", "Đang xử lý", "Đã nhập kho", "Có sai lệch"
+                ALL_STATUSES,
+                WarehouseInboundStatus.label("PENDING"),
+                WarehouseInboundStatus.label("PROCESSING"),
+                WarehouseInboundStatus.label("IMPORTED"),
+                WarehouseInboundStatus.label("MISMATCH")
         ));
         statusFilter.getSelectionModel().selectFirst();
         configureTable();
@@ -100,7 +98,7 @@ public class InboundOrderListUI extends BorderPane {
 
     @FXML
     private void onSearchClick() {
-        System.out.println("Noi dung chuc nang: Tim kiem don nhap kho - " + getKeyword());
+        System.out.println("Nội dung chức năng: Tìm kiếm đơn nhập kho - " + getKeyword());
         applyFilters();
     }
 
@@ -129,7 +127,7 @@ public class InboundOrderListUI extends BorderPane {
                 new SimpleIntegerProperty(data.getValue().getItemCount()).asObject());
         totalQuantityColumn.setCellValueFactory(data ->
                 new SimpleIntegerProperty(data.getValue().getExpectedQuantity()).asObject());
-        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
+        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatusCode()));
         statusColumn.setCellFactory(column -> new StatusChipCell<>());
         actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xử lý →"));
         actionColumn.setCellFactory(column -> new ActionCell());
@@ -142,6 +140,7 @@ public class InboundOrderListUI extends BorderPane {
             });
             return row;
         });
+        inboundOrderTable.setPlaceholder(new Label("Không tìm thấy đơn nhập kho phù hợp"));
     }
 
     private void reloadInboundOrders() {
@@ -161,31 +160,40 @@ public class InboundOrderListUI extends BorderPane {
                                 || normalize(order.getOrderCode()).contains(keyword)
                                 || normalize(order.getRequestCode()).contains(keyword)
                                 || normalize(order.getSupplier()).contains(keyword))
-                        .filter(order -> selectedStatus.isBlank()
-                                || selectedStatus.equals(order.getStatusCode()))
+                        .filter(order -> matchesSelectedStatus(order, selectedStatus))
                         .toList()
         );
         setInboundOrders(filtered);
     }
 
     private String mapStatusCode(String value) {
-        String status = normalize(value);
-        if (status.isBlank() || "tat ca trang thai".equals(status)) {
+        if (value == null || value.isBlank() || ALL_STATUSES.equals(value)) {
             return "";
         }
-        if ("cho xu ly".equals(status)) {
+        if (WarehouseInboundStatus.label("PENDING").equals(value)) {
             return "PENDING";
         }
-        if ("dang xu ly".equals(status)) {
+        if (WarehouseInboundStatus.label("PROCESSING").equals(value)) {
             return "PROCESSING";
         }
-        if ("da nhap kho".equals(status)) {
+        if (WarehouseInboundStatus.label("IMPORTED").equals(value)) {
             return "IMPORTED";
         }
-        if ("co sai lech".equals(status)) {
+        if (WarehouseInboundStatus.label("MISMATCH").equals(value)) {
             return "MISMATCH";
         }
         return "";
+    }
+
+    private boolean matchesSelectedStatus(InboundOrderResponse order, String selectedStatus) {
+        if (selectedStatus.isBlank()) {
+            return true;
+        }
+        String statusCode = order.getStatusCode();
+        if ("PENDING".equals(selectedStatus)) {
+            return "PENDING".equals(statusCode) || "ACCEPTED".equals(statusCode);
+        }
+        return selectedStatus.equals(statusCode);
     }
 
     private String normalize(String value) {
@@ -211,6 +219,15 @@ public class InboundOrderListUI extends BorderPane {
 
     public void setSelectedStatus(String selectedStatus) {
         statusFilter.getSelectionModel().select(selectedStatus);
+    }
+
+    public void setSelectedStatusCode(String statusCode) {
+        if (statusCode == null || statusCode.isBlank()) {
+            statusFilter.getSelectionModel().select(ALL_STATUSES);
+        } else {
+            statusFilter.getSelectionModel().select(WarehouseInboundStatus.label(statusCode));
+        }
+        applyFilters();
     }
 
     public ObservableList<InboundOrderResponse> getInboundOrders() {
@@ -279,23 +296,10 @@ public class InboundOrderListUI extends BorderPane {
                 setText(null);
                 return;
             }
-            chip.setText(item);
-            chip.getStyleClass().setAll("status-chip", statusClass(item));
+            chip.setText(WarehouseInboundStatus.label(item));
+            chip.getStyleClass().setAll("status-chip", WarehouseInboundStatus.cssClass(item));
             setGraphic(chip);
             setText(null);
-        }
-
-        private String statusClass(String status) {
-            if (status.contains("Đang")) {
-                return "status-processing";
-            }
-            if (status.contains("Đã")) {
-                return "status-imported";
-            }
-            if (status.contains("Sai") || status.contains("sai")) {
-                return "status-mismatch";
-            }
-            return "status-pending";
         }
     }
 }

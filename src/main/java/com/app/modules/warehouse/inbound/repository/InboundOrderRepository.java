@@ -64,7 +64,7 @@ public class InboundOrderRepository {
             }
             return orders;
         } catch (SQLException exception) {
-            System.out.println("Noi dung chuc nang: Khong doc duoc don nhap kho tu database - "
+            System.out.println("Nội dung chức năng: Không đọc được đơn nhập kho từ database - "
                     + exception.getMessage());
             return sampleOrders();
         }
@@ -108,7 +108,7 @@ public class InboundOrderRepository {
                 return items;
             }
         } catch (SQLException exception) {
-            System.out.println("Noi dung chuc nang: Khong doc duoc chi tiet don nhap kho - "
+            System.out.println("Nội dung chức năng: Không đọc được chi tiết đơn nhập kho - "
                     + exception.getMessage());
             return List.of();
         }
@@ -118,12 +118,12 @@ public class InboundOrderRepository {
                                     String mismatchReason, long inspectedBy) {
         ensureWarehouseSchema();
         if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Don nhap kho khong co mat hang de xac nhan.");
+            throw new IllegalArgumentException("Đơn nhập kho không có mặt hàng để xác nhận.");
         }
 
         boolean hasMismatch = items.stream().anyMatch(InboundOrderItemResponse::hasMismatch);
         if (hasMismatch && (mismatchReason == null || mismatchReason.isBlank())) {
-            throw new IllegalArgumentException("Bat buoc nhap ly do sai lech khi so luong thuc nhan khong khop.");
+            throw new IllegalArgumentException("Bắt buộc nhập lý do sai lệch khi số lượng thực nhận không khớp.");
         }
 
         try (Connection connection = DatabaseManager.getConnection()) {
@@ -131,7 +131,7 @@ public class InboundOrderRepository {
             try {
                 OrderLock orderLock = lockOrder(connection, orderId);
                 if (STATUS_IMPORTED.equals(orderLock.status()) || STATUS_MISMATCH.equals(orderLock.status())) {
-                    throw new IllegalStateException("Don nhap kho da duoc xac nhan, khong the cong kho lan nua.");
+                    throw new IllegalStateException("Đơn nhập kho đã được xác nhận, không thể cộng kho lần nữa.");
                 }
                 updateActualQuantities(connection, orderId, items);
                 updateInventory(connection, orderLock.siteId(), items);
@@ -147,14 +147,14 @@ public class InboundOrderRepository {
                 connection.setAutoCommit(true);
             }
         } catch (SQLException exception) {
-            throw new IllegalStateException("Khong the xac nhan don nhap kho.", exception);
+            throw new IllegalStateException("Không thể xác nhận đơn nhập kho.", exception);
         }
     }
 
     public void saveDraft(long orderId, List<InboundOrderItemResponse> items) {
         ensureWarehouseSchema();
         if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Don nhap kho khong co mat hang de luu tam.");
+            throw new IllegalArgumentException("Đơn nhập kho không có mặt hàng để lưu tạm.");
         }
 
         try (Connection connection = DatabaseManager.getConnection()) {
@@ -162,7 +162,7 @@ public class InboundOrderRepository {
             try {
                 OrderLock orderLock = lockOrder(connection, orderId);
                 if (STATUS_IMPORTED.equals(orderLock.status()) || STATUS_MISMATCH.equals(orderLock.status())) {
-                    throw new IllegalStateException("Don nhap kho da duoc xac nhan, khong the luu tam.");
+                    throw new IllegalStateException("Đơn nhập kho đã được xác nhận, không thể lưu tạm.");
                 }
                 updateActualQuantities(connection, orderId, items);
                 updateOrderStatus(connection, orderId, STATUS_PROCESSING, null, null);
@@ -174,7 +174,7 @@ public class InboundOrderRepository {
                 connection.setAutoCommit(true);
             }
         } catch (SQLException exception) {
-            throw new IllegalStateException("Khong the luu tam don nhap kho.", exception);
+            throw new IllegalStateException("Không thể lưu tạm đơn nhập kho.", exception);
         }
     }
 
@@ -292,7 +292,7 @@ public class InboundOrderRepository {
                 }
             }
         }
-        throw new IllegalArgumentException("Khong tim thay don nhap kho: " + orderId);
+        throw new IllegalArgumentException("Không tìm thấy đơn nhập kho: " + orderId);
     }
 
     private record OrderLock(long siteId, String status) {
@@ -320,7 +320,7 @@ public class InboundOrderRepository {
                     ADD COLUMN IF NOT EXISTS actual_quantity BIGINT
                     """);
         } catch (SQLException exception) {
-            System.out.println("Noi dung chuc nang: Chua dam bao duoc schema warehouse - "
+            System.out.println("Nội dung chức năng: Chưa đảm bảo được schema warehouse - "
                     + exception.getMessage());
         }
     }

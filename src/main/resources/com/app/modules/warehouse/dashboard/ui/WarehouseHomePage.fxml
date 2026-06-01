@@ -3,6 +3,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -11,7 +12,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ScrollPane?>
 <?import com.app.common.ui.components.WarehouseTopBarUI?>
 <?import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar?>
 
@@ -49,40 +49,40 @@
                         <HBox alignment="TOP_LEFT">
                             <VBox spacing="8.0">
                                 <Label styleClass="metric-title" text="Đơn Chờ Nhập Kho"/>
-                                <Label fx:id="pendingInboundLabel" styleClass="metric-value" text="12"/>
+                                <Label fx:id="pendingInboundLabel" styleClass="metric-value" text="0"/>
                             </VBox>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label styleClass="metric-icon orange" text="◷"/>
+                            <Label fx:id="pendingMetricIcon" styleClass="metric-icon orange"/>
                         </HBox>
                     </VBox>
                     <VBox styleClass="metric-card" GridPane.columnIndex="1">
                         <HBox alignment="TOP_LEFT">
                             <VBox spacing="8.0">
                                 <Label styleClass="metric-title" text="Đang Xử Lý"/>
-                                <Label fx:id="processingLabel" styleClass="metric-value" text="5"/>
+                                <Label fx:id="processingLabel" styleClass="metric-value" text="0"/>
                             </VBox>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label styleClass="metric-icon blue" text="▧"/>
+                            <Label fx:id="processingMetricIcon" styleClass="metric-icon blue"/>
                         </HBox>
                     </VBox>
                     <VBox styleClass="metric-card" GridPane.columnIndex="2">
                         <HBox alignment="TOP_LEFT">
                             <VBox spacing="8.0">
                                 <Label styleClass="metric-title" text="Đã Nhập Tháng này"/>
-                                <Label fx:id="importedThisMonthLabel" styleClass="metric-value" text="87"/>
+                                <Label fx:id="importedThisMonthLabel" styleClass="metric-value" text="0"/>
                             </VBox>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label styleClass="metric-icon green" text="↗"/>
+                            <Label fx:id="importedMetricIcon" styleClass="metric-icon green"/>
                         </HBox>
                     </VBox>
                     <VBox styleClass="metric-card" GridPane.columnIndex="3">
                         <HBox alignment="TOP_LEFT">
                             <VBox spacing="8.0">
                                 <Label styleClass="metric-title" text="Có Sai Lệch"/>
-                                <Label fx:id="mismatchLabel" styleClass="metric-value" text="3"/>
+                                <Label fx:id="mismatchLabel" styleClass="metric-value" text="0"/>
                             </VBox>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label styleClass="metric-icon red" text="⚠"/>
+                            <Label fx:id="mismatchMetricIcon" styleClass="metric-icon red"/>
                         </HBox>
                     </VBox>
                 </GridPane>
@@ -92,7 +92,7 @@
                     <HBox spacing="18.0">
                         <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onProcessInboundClick"
                               styleClass="quick-action" HBox.hgrow="ALWAYS">
-                            <Label styleClass="quick-icon success" text="▧"/>
+                            <Label fx:id="quickProcessIcon" styleClass="quick-icon success"/>
                             <VBox spacing="3.0">
                                 <Label styleClass="quick-title" text="Xử lý Đơn Nhập Kho"/>
                                 <Label styleClass="quick-subtitle" text="Kiểm tra và nhập hàng vào kho"/>
@@ -100,7 +100,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onMismatchClick"
                               styleClass="quick-action danger" HBox.hgrow="ALWAYS">
-                            <Label styleClass="quick-icon danger" text="⚠"/>
+                            <Label fx:id="quickMismatchIcon" styleClass="quick-icon danger"/>
                             <VBox spacing="3.0">
                                 <Label styleClass="quick-title" text="Xem Đơn Có Sai Lệch"/>
                                 <Label styleClass="quick-subtitle" text="Xử lý các trường hợp thiếu/sai hàng"/>

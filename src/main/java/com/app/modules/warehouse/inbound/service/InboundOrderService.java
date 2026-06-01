@@ -65,18 +65,18 @@ public class InboundOrderService {
 
     private void validateItems(List<InboundOrderItemResponse> items, boolean requireMismatchReason) {
         if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Don nhap kho khong co mat hang de xu ly.");
+            throw new IllegalArgumentException("Đơn nhập kho không có mặt hàng để xử lý.");
         }
         boolean hasNegativeQuantity = items.stream()
                 .anyMatch(item -> item.getActualQuantity() < 0);
         if (hasNegativeQuantity) {
-            throw new IllegalArgumentException("So luong thuc nhan khong duoc am.");
+            throw new IllegalArgumentException("Số lượng thực nhận không được âm.");
         }
         boolean hasMissingReason = requireMismatchReason && items.stream()
                 .anyMatch(item -> item.hasMismatch()
                         && (item.getDiscrepancyReason() == null || item.getDiscrepancyReason().isBlank()));
         if (hasMissingReason) {
-            throw new IllegalArgumentException("Moi mat hang sai lech can co ly do xu ly.");
+            throw new IllegalArgumentException("Mỗi mặt hàng sai lệch cần có lý do xử lý.");
         }
     }
 

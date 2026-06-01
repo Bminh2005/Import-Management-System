@@ -40,9 +40,11 @@
                 </VBox>
 
                 <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="filter-panel">
-                    <TextField fx:id="keywordField" onAction="#onSearchClick" promptText="Tìm theo mã đơn hàng, mã yêu cầu, hoặc nhà cung cấp..."
+                    <TextField fx:id="keywordField" onAction="#onSearchClick"
+                               promptText="Tìm theo mã đơn hàng, mã yêu cầu, hoặc nhà cung cấp..."
                                styleClass="search-input" HBox.hgrow="ALWAYS"/>
-                    <ComboBox fx:id="statusFilter" onAction="#onSearchClick" prefWidth="245.0" styleClass="status-filter"/>
+                    <ComboBox fx:id="statusFilter" onAction="#onSearchClick" prefWidth="245.0"
+                              styleClass="status-filter"/>
                 </HBox>
 
                 <HBox alignment="CENTER_LEFT">

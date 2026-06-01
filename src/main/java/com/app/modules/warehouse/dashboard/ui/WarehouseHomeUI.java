@@ -1,25 +1,30 @@
 package com.app.modules.warehouse.dashboard.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
+import com.app.common.util.FxmlUiHelper;
 import com.app.modules.warehouse.dashboard.dto.WarehouseDashboardSummary;
 import com.app.modules.warehouse.dashboard.service.WarehouseDashboardService;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
+import com.app.modules.warehouse.inbound.ui.WarehouseInboundStatus;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
-
-import java.io.IOException;
+import javafx.scene.shape.SVGPath;
 
 public class WarehouseHomeUI extends BorderPane {
+    private static final String CLOCK_ICON = "M12 20c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z";
+    private static final String PACKAGE_ICON = "M21 8.5 12 3 3 8.5l9 5.2 9-5.2zM5 10.2v5.4l6 3.5v-5.4l-6-3.5zm14 0-6 3.5v5.4l6-3.5v-5.4z";
+    private static final String TREND_ICON = "M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z";
+    private static final String ALERT_ICON = "M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z";
+
     private final WarehouseDashboardService dashboardService = new WarehouseDashboardService();
     private final InboundOrderService inboundOrderService = new InboundOrderService();
 
@@ -34,6 +39,24 @@ public class WarehouseHomeUI extends BorderPane {
 
     @FXML
     private Label mismatchLabel;
+
+    @FXML
+    private Label pendingMetricIcon;
+
+    @FXML
+    private Label processingMetricIcon;
+
+    @FXML
+    private Label importedMetricIcon;
+
+    @FXML
+    private Label mismatchMetricIcon;
+
+    @FXML
+    private Label quickProcessIcon;
+
+    @FXML
+    private Label quickMismatchIcon;
 
     @FXML
     private TableView<InboundOrderResponse> recentOrderTable;
@@ -60,19 +83,13 @@ public class WarehouseHomeUI extends BorderPane {
     private ObservableList<InboundOrderResponse> recentOrders = FXCollections.observableArrayList();
 
     public WarehouseHomeUI() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseHomePage.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException exception) {
-            throw new IllegalStateException("Khong the tai WarehouseHomePage.fxml", exception);
-        }
+        FxmlUiHelper.loadSelf(this, "WarehouseHomePage.fxml");
     }
 
     @FXML
     private void initialize() {
         sidebar.setActiveMenu("home");
+        installIcons();
         configureTable();
         setDashboardSummary(dashboardService.getDashboardSummary());
         setRecentOrders(FXCollections.observableArrayList(inboundOrderService.getRecentInboundOrders()));
@@ -80,18 +97,19 @@ public class WarehouseHomeUI extends BorderPane {
 
     @FXML
     private void onProcessInboundClick() {
-        System.out.println("Noi dung chuc nang: Xu ly don nhap kho");
+        System.out.println("Nội dung chức năng: Xử lý đơn nhập kho");
         WarehouseNavigation.showInboundOrderProcess(recentOrderTable);
     }
 
     @FXML
     private void onMismatchClick() {
-        System.out.println("Noi dung chuc nang: Xem don co sai lech");
+        System.out.println("Nội dung chức năng: Xem đơn có sai lệch");
+        WarehouseNavigation.showInboundOrderList(recentOrderTable, "MISMATCH");
     }
 
     @FXML
     private void onViewAllClick() {
-        System.out.println("Noi dung chuc nang: Xem tat ca don nhap kho");
+        System.out.println("Nội dung chức năng: Xem tất cả đơn nhập kho");
         WarehouseNavigation.showInboundOrderList(recentOrderTable);
     }
 
@@ -99,8 +117,8 @@ public class WarehouseHomeUI extends BorderPane {
         orderCodeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOrderCode()));
         receivedDateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getReceivedDate()));
         supplierColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSupplier()));
-        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
-        actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xu ly"));
+        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatusCode()));
+        actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xử lý"));
         statusColumn.setCellFactory(column -> new StatusChipCell<>());
         actionColumn.setCellFactory(column -> new TableCell<>() {
             private final Button actionButton = new Button("Xử lý");
@@ -121,6 +139,7 @@ public class WarehouseHomeUI extends BorderPane {
             }
         });
         recentOrderTable.setSelectionModel(null);
+        recentOrderTable.setPlaceholder(new Label("Chưa có đơn nhập kho"));
     }
 
     private static class StatusChipCell<S> extends TableCell<S, String> {
@@ -134,24 +153,32 @@ public class WarehouseHomeUI extends BorderPane {
                 setGraphic(null);
                 return;
             }
-            chip.setText(item);
-            chip.getStyleClass().setAll("status-chip", statusClass(item));
+            chip.setText(WarehouseInboundStatus.label(item));
+            chip.getStyleClass().setAll("status-chip", WarehouseInboundStatus.cssClass(item));
             setGraphic(chip);
             setText(null);
         }
+    }
 
-        private String statusClass(String item) {
-            if (item.contains("Đang")) {
-                return "status-processing";
-            }
-            if (item.contains("Đã")) {
-                return "status-imported";
-            }
-            if (item.contains("Sai") || item.contains("sai")) {
-                return "status-mismatch";
-            }
-            return "status-pending";
+    private void installIcons() {
+        setIcon(pendingMetricIcon, CLOCK_ICON, "#ea580c");
+        setIcon(processingMetricIcon, PACKAGE_ICON, "#2563eb");
+        setIcon(importedMetricIcon, TREND_ICON, "#2f9b6e");
+        setIcon(mismatchMetricIcon, ALERT_ICON, "#dc2626");
+        setIcon(quickProcessIcon, PACKAGE_ICON, "white");
+        setIcon(quickMismatchIcon, ALERT_ICON, "white");
+    }
+
+    private void setIcon(Label target, String svgContent, String fillColor) {
+        if (target == null) {
+            return;
         }
+        SVGPath icon = new SVGPath();
+        icon.setContent(svgContent);
+        icon.setStyle("-fx-fill: " + fillColor + ";");
+        icon.setScaleX(0.9);
+        icon.setScaleY(0.9);
+        target.setGraphic(icon);
     }
 
     public WarehouseDashboardSummary getDashboardSummary() {

@@ -40,7 +40,7 @@ public class VinhWarehouseTestApplication extends Application {
             case "process" -> new InboundOrderProcessUI();
             case "home" -> new WarehouseHomeUI();
             default -> {
-                System.out.println("Noi dung chuc nang: Man hinh test khong hop le - " + screenName);
+                System.out.println("Nội dung chức năng: Màn hình test không hợp lệ - " + screenName);
                 yield new WarehouseHomeUI();
             }
         };
