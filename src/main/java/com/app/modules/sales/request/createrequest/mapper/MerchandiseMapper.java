@@ -15,7 +15,7 @@ public class MerchandiseMapper {
     public static ObservableList<CreateImportItemModel> mapToCreateImportItemModel(List<MerchandiseDTO> merchandiseList) {
         List<CreateImportItemModel> models = merchandiseList.stream()
                 .map(e-> new CreateImportItemModel(
-                        Long.toString(e.getId()), e.getMerchandise_name(), 1, e.getUnit(), e.getReference_price(), null
+                        e.getMerchandise_detail_id(),Long.toString(e.getId()), e.getMerchandise_name(), 1, e.getUnit(), e.getReference_price(), null
                 )).collect(Collectors.toList());
         return FXCollections.observableArrayList(models);
     }

@@ -1,6 +1,7 @@
 package com.app.modules.sales.request.createrequest.controller;
 
 import com.app.common.entity.Merchandise;
+import com.app.common.exception.BusinessException;
 import com.app.modules.sales.request.createrequest.dto.MerchandiseDTO;
 import com.app.modules.sales.request.createrequest.mapper.MerchandiseMapper;
 import com.app.modules.sales.request.createrequest.service.CreateRequestService;
@@ -19,15 +20,33 @@ public class CreateRequestController {
         init();
     }
     private void init(){
-        List<MerchandiseDTO> allMerchandise = service.fetchMerchandiseList();
-        ObservableList<CreateImportItemModel> models = MerchandiseMapper.mapToCreateImportItemModel(allMerchandise);
-        view.setAvailableProducts(models);
+        try{
+            List<MerchandiseDTO> allMerchandise = service.fetchMerchandiseList();
+            ObservableList<CreateImportItemModel> models = MerchandiseMapper.mapToCreateImportItemModel(allMerchandise);
+            view.setAvailableProducts(models);
+        }
+        catch (BusinessException e){
+            this.view.showToastNotification(e.getMessage(),false);
+        }
+        try{
+            view.setCreateButtonAction(this::SubmitCreateRequest);
+        } catch (RuntimeException e) {
+            view.showToastNotification(e.getMessage(),false);
+            e.getCause().printStackTrace();
+        }
     }
+
     public CreateImportRequestUI getView() {
         return view;
     }
 
-    public Merchandise getAllMerchandises(){
-        return null;
+    private void SubmitCreateRequest(){
+        try{
+            ObservableList<CreateImportItemModel> list = view.getItems();
+            long id = service.saveNewRequest(list);
+            view.showToastNotification(String.format("%s%d","Đã tạo yêu cầu thành công! ID: ",id), true);
+        }catch (BusinessException e){
+            view.showToastNotification(e.getMessage(),false);
+        }
     }
 }

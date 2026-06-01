@@ -98,28 +98,17 @@ public class CreateImportRequestUI extends VBox {
     }
     public void setCreateButtonAction(Runnable r){
         createButton.setOnAction(e ->{
-            // Lấy cửa sổ (Window) hiện tại từ một node bất kỳ (ví dụ: createButton)
-            javafx.stage.Window currentWindow = createButton.getScene().getWindow();
-
             try {
-                if (tableItems.getItems().isEmpty()) {
-                    ToastNotification.show(currentWindow, "Vui lòng thêm ít nhất một mặt hàng!", false);
-                    return;
-                }
-
+//                if (tableItems.getItems().isEmpty()) {
+//                    showToastNotification("Vui lòng thêm ít nhất một mặt hàng!", false);
+//                    return;
+//                }
                 r.run();
-                ToastNotification.show(currentWindow, "Tạo Yêu cầu Nhập hàng thành công!", true);
-
             } catch (Exception ex) {
-                ToastNotification.show(currentWindow, "Lỗi hệ thống: " + ex.getMessage(), false);
+                throw new RuntimeException("Lỗi hệ thống: " + ex.getMessage(), ex);
             }
         });
     }
-//    public void setCreateButtonAction(Runnable r){
-//        createButton.setOnAction(e ->{
-//            r.run();
-//        });
-//    }
     public void setCancelButtonAction(Runnable r){
         cancelButton.setOnAction(e ->{
             r.run();
@@ -129,23 +118,13 @@ public class CreateImportRequestUI extends VBox {
         try {
             FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/app/modules/sales/request/ui/SelectMerchandiseDialog.fxml"));
             Parent root = loader.load();
-
-            // Tạo danh sách kho hàng tổng để test (Mô phỏng giống ảnh mẫu của bạn)
-            // Đảm bảo khởi tạo chuẩn như thế này, không dùng chung hay gán qua một biến static nào khác
-//            availableProducts = FXCollections.observableArrayList(
-//                    new CreateImportItemModel("MH001", "Laptop Dell XPS 13", 1, "cái", "0.0",null),
-//                    new CreateImportItemModel("MH002", "Bàn phím cơ Keychron K2", 1, "cái", "0.0",null),
-//                    new CreateImportItemModel("MH003", "Chuột Logitech MX Master 3", 1, "cái", "0.0",null),
-//                    new CreateImportItemModel("MH004", "Màn hình LG UltraWide 34\"", 1, "cái", "0.0",null)
-//            );
-
             SelectMerchandiseController dialogController = loader.getController();
-
             // Nhận lại một LOẠT các hàng đã được chọn và đẩy vào bảng chính
             dialogController.initData(availableProducts, selectedList -> {
                 for (CreateImportItemModel selectedItem : selectedList) {
                     // Tạo bản sao mới add vào TableView chính
                     CreateImportItemModel newItem = new CreateImportItemModel(
+                            selectedItem.getMerchandiseDetailId(),
                             selectedItem.getItemCode(),
                             selectedItem.getItemName(),
                             1, // Mặc định số lượng nhập ban đầu là 1
@@ -175,4 +154,13 @@ public class CreateImportRequestUI extends VBox {
     public void setAvailableProducts(ObservableList<CreateImportItemModel> availableProducts) {
         this.availableProducts = availableProducts;
     }
+
+    public void showToastNotification(String message, boolean isSuccess) {
+        ToastNotification.show(this.getScene().getWindow(), message, isSuccess);
+    }
+
+    public ObservableList<CreateImportItemModel> getItems() {
+        return tableItems.getItems();
+    }
+
 }

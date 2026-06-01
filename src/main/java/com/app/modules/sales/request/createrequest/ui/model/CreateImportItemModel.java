@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import java.time.LocalDate;
 
 public class CreateImportItemModel {
+    private final long merchandiseDetailId;
     private final StringProperty itemCode;     // mã hàng
     private final StringProperty itemName;     // tên hàng
     private final IntegerProperty quantity;    // số lượng
@@ -14,7 +15,7 @@ public class CreateImportItemModel {
     private final BooleanProperty selected;
     private final DoubleProperty referencePrice;
 
-    public CreateImportItemModel(String itemCode, String itemName, int quantity, String unit, double referencePrice,LocalDate expectedDate) {
+    public CreateImportItemModel(long merchandiseDetailId,String itemCode, String itemName, int quantity, String unit, double referencePrice,LocalDate expectedDate) {
         this.itemCode = new SimpleStringProperty(itemCode);
         this.itemName = new SimpleStringProperty(itemName);
         this.quantity = new SimpleIntegerProperty(quantity);
@@ -22,6 +23,7 @@ public class CreateImportItemModel {
         this.expectedDate = new SimpleObjectProperty<>(expectedDate);
         this.referencePrice = new SimpleDoubleProperty(referencePrice != 0.0? referencePrice:0.0);
         this.selected = new SimpleBooleanProperty(false);
+        this.merchandiseDetailId = merchandiseDetailId;
     }
 
     // --- itemCode ---
@@ -55,4 +57,6 @@ public class CreateImportItemModel {
     public boolean isSelected() { return selected.get(); }
     public void setSelected(boolean value) { selected.set(value); }
     public BooleanProperty selectedProperty() { return selected; }
+
+    public long getMerchandiseDetailId() { return merchandiseDetailId; }
 }
