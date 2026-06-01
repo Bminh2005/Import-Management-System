@@ -2,7 +2,8 @@ package com.app.modules.sales.apptest;
 
 import com.app.common.ui.MainLayoutUI;
 import com.app.modules.sales.dashboard.ui.SalesSidebar;
-import com.app.modules.sales.request.ui.EditRequestUI;
+import com.app.modules.sales.request.editrequest.ui.EditRequestUI;
+import com.app.modules.sales.request.editrequest.ui.EditRequestController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -16,11 +17,12 @@ import javafx.stage.Stage;
  */
 public class SalesEditRequestApp extends Application {
 
-    private static final String DEFAULT_REQUEST_CODE = "2";
+    private static final String DEFAULT_REQUEST_CODE = "6";
 
     @Override
     public void start(Stage stage) {
         EditRequestUI ui = new EditRequestUI();
+        new EditRequestController(ui);
         ui.loadRequest(DEFAULT_REQUEST_CODE);
 
         MainLayoutUI root = new MainLayoutUI();

@@ -72,11 +72,10 @@ public class RequestRepository {
         String itemStatus = "completed".equals(request.getStatus()) ? "approved" : "pending";
         String sql = "SELECT d.merchandise_detail_id AS item_code, "
                 + "m.merchandise_name AS name, d.quantity AS quantity, "
-                + "md.unit AS unit, COALESCE(r.desired_date::text, '') AS delivery_date "
+                + "md.unit AS unit, COALESCE(d.desired_date::text, '') AS delivery_date "
                 + "FROM \"RequestDetail\" d "
                 + "JOIN \"MerchandiseDetail\" md ON md.id = d.merchandise_detail_id "
                 + "JOIN \"Merchandise\" m ON m.id = md.merchandise_id "
-                + "JOIN \"ImportRequest\" r ON r.id = d.request_id "
                 + "WHERE d.request_id = ? ORDER BY d.id";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
@@ -328,7 +327,8 @@ public class RequestRepository {
         Long reqId = tryParseId(requestCode);
         if (reqId == null) return result;
         String sql = "SELECT d.merchandise_detail_id AS item_code, "
-                + "m.merchandise_name AS name, d.quantity AS quantity, md.unit AS unit "
+                + "m.merchandise_name AS name, d.quantity AS quantity, md.unit AS unit, "
+                + "COALESCE(d.desired_date::text, '') AS delivery_date "
                 + "FROM \"RequestDetail\" d "
                 + "JOIN \"MerchandiseDetail\" md ON md.id = d.merchandise_detail_id "
                 + "JOIN \"Merchandise\" m ON m.id = md.merchandise_id "
@@ -343,7 +343,7 @@ public class RequestRepository {
                             rs.getString("name"),
                             rs.getInt("quantity"),
                             rs.getString("unit"),
-                            "",
+                            rs.getString("delivery_date"),
                             "pending"));
                 }
             }

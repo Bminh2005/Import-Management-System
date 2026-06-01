@@ -1,5 +1,8 @@
 package com.app.modules.sales.request.ui;
 
+import com.app.common.ui.components.DatePickerCell;
+import com.app.common.ui.components.IntegerEditCell;
+import com.app.common.ui.components.SvgButton;
 import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
 import com.app.modules.sales.request.dto.RequestResponse;
@@ -53,7 +56,6 @@ public class EditRequestUI extends ScrollPane {
     @FXML private TableColumn<RequestItem, RequestItem> quantityColumn;
     @FXML private TableColumn<RequestItem, String> unitColumn;
     @FXML private TableColumn<RequestItem, RequestItem> deliveryDateColumn;
-    @FXML private TableColumn<RequestItem, String> statusColumn;
     @FXML private TableColumn<RequestItem, Void> actionsColumn;
 
     private final RequestService service;
@@ -84,19 +86,31 @@ public class EditRequestUI extends ScrollPane {
 
         quantityColumn.setCellValueFactory(c ->
                 new javafx.beans.property.SimpleObjectProperty<>(c.getValue()));
-        quantityColumn.setCellFactory(col -> new QuantityCell());
+        quantityColumn.setCellFactory(col -> new IntegerEditCell<>(
+                RequestItem::getQuantity,
+                (item, val) -> {
+                    item.setQuantity(val);
+                    dirty = true;
+                },
+                true
+        ));
 
         deliveryDateColumn.setCellValueFactory(c ->
                 new javafx.beans.property.SimpleObjectProperty<>(c.getValue()));
-        deliveryDateColumn.setCellFactory(col -> new DeliveryDateCell());
-
-        statusColumn.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getStatus()));
-        statusColumn.setCellFactory(
-                StatusStyle.badgeCellFactory(StatusStyle::itemStatusLabel));
+        deliveryDateColumn.setCellFactory(col -> new DatePickerCell<>(
+                RequestItem::getDeliveryDate,
+                (item, val) -> {
+                    for (RequestItem it : itemsTable.getItems()) {
+                        it.setDeliveryDate(val);
+                    }
+                    dirty = true;
+                    itemsTable.refresh();
+                },
+                true
+        ));
 
         actionsColumn.setCellFactory(col -> new TableCell<RequestItem, Void>() {
-            private final Button deleteBtn = createIconButton(trashPath(), "#DC2626");
+            private final Button deleteBtn = new SvgButton(trashPath(), "#DC2626");
 
             {
                 deleteBtn.getStyleClass().add("icon-delete");
@@ -120,99 +134,8 @@ public class EditRequestUI extends ScrollPane {
         });
     }
 
-    private static Button createIconButton(String svg, String fill) {
-        SVGPath icon = new SVGPath();
-        icon.setContent(svg);
-        icon.setStyle("-fx-fill: " + fill + ";");
-        icon.setScaleX(0.85);
-        icon.setScaleY(0.85);
-        Button btn = new Button();
-        btn.setGraphic(icon);
-        return btn;
-    }
-
     private static String trashPath() {
         return "M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z";
-    }
-
-    /** Cell hiển thị TextField sửa số lượng trực tiếp. */
-    private class QuantityCell extends TableCell<RequestItem, RequestItem> {
-        private final TextField field = new TextField();
-
-        QuantityCell() {
-            field.getStyleClass().add("edit-cell-field");
-            field.setPrefWidth(80);
-            field.focusedProperty().addListener((obs, oldF, newF) -> {
-                if (!newF) commit();
-            });
-            field.setOnAction(e -> commit());
-        }
-
-        private void commit() {
-            RequestItem row = getItem();
-            if (row == null) return;
-            try {
-                int value = Integer.parseInt(field.getText().trim());
-                if (value < 0) value = 0;
-                if (value == row.getQuantity()) return;
-                row.setQuantity(value);
-                dirty = true;
-            } catch (NumberFormatException e) {
-                field.setText(String.valueOf(row.getQuantity()));
-            }
-        }
-
-        @Override
-        protected void updateItem(RequestItem item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || item == null) {
-                setGraphic(null);
-            } else {
-                field.setText(String.valueOf(item.getQuantity()));
-                setGraphic(field);
-            }
-        }
-    }
-
-    /** Cell hiển thị DatePicker sửa ngày nhận trực tiếp. */
-    private class DeliveryDateCell extends TableCell<RequestItem, RequestItem> {
-        private final DatePicker picker = new DatePicker();
-
-        DeliveryDateCell() {
-            picker.getStyleClass().add("edit-cell-field");
-            picker.setPrefWidth(140);
-            picker.valueProperty().addListener((obs, oldV, newV) -> {
-                RequestItem row = getItem();
-                if (row == null || newV == null) return;
-                String iso = newV.toString();
-                if (iso.equals(row.getDeliveryDate())) return;
-                // Ngày nhận là field cấp yêu cầu -> đồng bộ cho mọi mặt hàng.
-                for (RequestItem it : itemsTable.getItems()) it.setDeliveryDate(iso);
-                dirty = true;
-                itemsTable.refresh();
-            });
-        }
-
-        @Override
-        protected void updateItem(RequestItem item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || item == null) {
-                setGraphic(null);
-            } else {
-                LocalDate value = parse(item.getDeliveryDate());
-                picker.setValue(value);
-                setGraphic(picker);
-            }
-        }
-
-        private LocalDate parse(String text) {
-            if (text == null || text.isBlank()) return null;
-            try {
-                return LocalDate.parse(text);
-            } catch (DateTimeParseException e) {
-                return null;
-            }
-        }
     }
 
     /** Nạp dữ liệu yêu cầu theo mã. */

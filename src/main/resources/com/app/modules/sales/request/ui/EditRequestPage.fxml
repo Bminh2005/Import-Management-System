@@ -95,7 +95,6 @@
                     <TableColumn fx:id="unitColumn" text="ĐƠN VỊ" prefWidth="70"/>
                     <TableColumn fx:id="deliveryDateColumn" text="NGÀY NHẬN"
                                  prefWidth="150"/>
-                    <TableColumn fx:id="statusColumn" text="TRẠNG THÁI" prefWidth="110"/>
                     <TableColumn fx:id="actionsColumn" text="THAO TÁC" prefWidth="80"/>
                 </columns>
                 <columnResizePolicy>

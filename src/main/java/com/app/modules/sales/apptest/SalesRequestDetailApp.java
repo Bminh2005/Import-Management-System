@@ -2,7 +2,7 @@ package com.app.modules.sales.apptest;
 
 import com.app.common.ui.MainLayoutUI;
 import com.app.modules.sales.dashboard.ui.SalesSidebar;
-import com.app.modules.sales.request.ui.RequestDetailUI;
+import com.app.modules.sales.request.requestdetail.ui.RequestDetailUI;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
