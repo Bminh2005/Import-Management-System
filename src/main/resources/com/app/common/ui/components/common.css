@@ -123,6 +123,34 @@
     -fx-background-color: #DBEAFE;
 }
 
+/* ---------- Badge trạng thái dùng chung ---------- */
+.status-chip {
+    -fx-background-radius: 999;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+}
+
+.status-pending {
+    -fx-background-color: #FFEDD5;
+    -fx-text-fill: #B45309;
+}
+
+.status-processing {
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1D4ED8;
+}
+
+.status-imported {
+    -fx-background-color: #D1FAE5;
+    -fx-text-fill: #047857;
+}
+
+.status-mismatch {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #B91C1C;
+}
+
 /* ---------- Trạng thái rỗng ---------- */
 .empty-state {
     -fx-text-fill: -text-secondary;
@@ -157,6 +185,15 @@
 
 .link-button-danger:hover {
     -fx-background-color: #FEF2F2;
+}
+
+.table-link,
+.table-action {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F9B6E;
 }
 
 /* ---------- Nút cuối trang ---------- */

@@ -19,6 +19,8 @@
 <fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../../../../common/ui/theme.css"/>
+        <URL value="@../../../../common/ui/components/common.css"/>
         <URL value="@InboundOrderListPage.css"/>
     </stylesheets>
     <left>
@@ -28,8 +30,8 @@
         <WarehouseTopBarUI/>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" styleClass="content-scroll">
-            <VBox spacing="18.0" styleClass="page-content">
+        <ScrollPane fitToWidth="true" styleClass="screen-scroll">
+            <VBox spacing="18.0" styleClass="main-content">
                 <padding>
                     <Insets bottom="32.0" left="24.0" right="24.0" top="24.0"/>
                 </padding>
@@ -39,7 +41,7 @@
                     <Label styleClass="page-subtitle" text="Quản lý và xử lý các đơn hàng nhập kho từ nhà cung cấp"/>
                 </VBox>
 
-                <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="filter-panel">
+                <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="card filter-panel">
                     <TextField fx:id="keywordField" onAction="#onSearchClick"
                                promptText="Tìm theo mã đơn hàng, mã yêu cầu, hoặc nhà cung cấp..."
                                styleClass="search-input" HBox.hgrow="ALWAYS"/>
@@ -53,8 +55,8 @@
                     <Button mnemonicParsing="false" onAction="#onSortClick" styleClass="sort-button" text="⇅  Sắp xếp"/>
                 </HBox>
 
-                <VBox styleClass="table-panel">
-                    <TableView fx:id="inboundOrderTable" prefHeight="430.0" styleClass="warehouse-table">
+                <VBox styleClass="card table-panel">
+                    <TableView fx:id="inboundOrderTable" prefHeight="430.0" styleClass="data-table warehouse-table">
                         <columns>
                             <TableColumn fx:id="orderCodeColumn" prefWidth="150.0" text="MÃ ĐƠN HÀNG"/>
                             <TableColumn fx:id="requestCodeColumn" prefWidth="140.0" text="MÃ YÊU CẦU"/>

@@ -1,34 +1,10 @@
-.page-shell,
-.content-scroll,
-.content-scroll > .viewport,
-.page-content {
-    -fx-background-color: #f5f6f8;
-    -fx-font-family: "Segoe UI", Arial, sans-serif;
-}
-
-.content-scroll {
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-}
-
 .page-title {
     -fx-font-size: 34px;
     -fx-font-weight: 800;
-    -fx-text-fill: #111827;
 }
 
 .page-subtitle {
     -fx-font-size: 17px;
-    -fx-text-fill: #737b8c;
-}
-
-.metric-card,
-.panel {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-border-color: #d6dbe3;
-    -fx-border-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.12), 8, 0, 0, 2);
 }
 
 .metric-card {
@@ -38,13 +14,11 @@
 
 .metric-title {
     -fx-font-size: 16px;
-    -fx-text-fill: #737b8c;
 }
 
 .metric-value {
     -fx-font-size: 34px;
     -fx-font-weight: 800;
-    -fx-text-fill: #111827;
 }
 
 .metric-icon,
@@ -86,7 +60,6 @@
 .section-title {
     -fx-font-size: 24px;
     -fx-font-weight: 800;
-    -fx-text-fill: #1f2937;
 }
 
 .quick-action {
@@ -122,12 +95,10 @@
 .quick-title {
     -fx-font-size: 18px;
     -fx-font-weight: 800;
-    -fx-text-fill: #1f2937;
 }
 
 .quick-subtitle {
     -fx-font-size: 15px;
-    -fx-text-fill: #737b8c;
 }
 
 .view-all-link {
@@ -137,75 +108,21 @@
     -fx-text-fill: #2f9b6e;
 }
 
-.warehouse-table {
-    -fx-background-color: white;
-    -fx-border-color: transparent;
-}
-
-.warehouse-table .column-header-background {
-    -fx-background-color: #f1f3f6;
-}
-
-.warehouse-table .column-header,
-.warehouse-table .filler {
-    -fx-background-color: #f1f3f6;
-    -fx-size: 48;
-}
-
 .warehouse-table .column-header .label {
     -fx-alignment: center-left;
     -fx-font-size: 13px;
     -fx-font-weight: 800;
-    -fx-text-fill: #6b7280;
 }
 
 .warehouse-table .table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: transparent transparent #d8dde6 transparent;
     -fx-cell-size: 54;
-}
-
-.warehouse-table .table-row-cell:hover {
-    -fx-background-color: #f9fafb;
 }
 
 .warehouse-table .table-cell {
     -fx-alignment: center-left;
     -fx-font-size: 15px;
-    -fx-text-fill: #1f2937;
-}
-
-.status-chip {
-    -fx-background-radius: 999;
-    -fx-font-size: 13px;
-    -fx-font-weight: 800;
-    -fx-padding: 5 12;
-}
-
-.status-pending {
-    -fx-background-color: #ffedd5;
-    -fx-text-fill: #b45309;
-}
-
-.status-processing {
-    -fx-background-color: #dbeafe;
-    -fx-text-fill: #1d4ed8;
-}
-
-.status-imported {
-    -fx-background-color: #d1fae5;
-    -fx-text-fill: #047857;
-}
-
-.status-mismatch {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #b91c1c;
 }
 
 .table-action {
-    -fx-background-color: transparent;
-    -fx-cursor: hand;
     -fx-font-size: 15px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #2f9b6e;
 }

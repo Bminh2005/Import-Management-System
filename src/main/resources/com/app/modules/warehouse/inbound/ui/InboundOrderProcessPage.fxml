@@ -21,6 +21,7 @@
 <fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../../../../common/ui/theme.css"/>
         <URL value="@../../../../common/ui/components/common.css"/>
         <URL value="@InboundOrderProcessPage.css"/>
     </stylesheets>

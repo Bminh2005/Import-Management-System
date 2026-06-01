@@ -13,6 +13,8 @@
 <fx:root type="HBox" alignment="CENTER_LEFT" prefHeight="52.0" minHeight="52.0" styleClass="warehouse-topbar"
          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../theme.css"/>
+        <URL value="@common.css"/>
         <URL value="@WarehouseTopBar.css"/>
     </stylesheets>
     <padding>

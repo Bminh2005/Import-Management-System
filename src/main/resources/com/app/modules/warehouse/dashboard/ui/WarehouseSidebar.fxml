@@ -11,6 +11,7 @@
 <fx:root type="VBox" alignment="CENTER" maxWidth="66.0" minWidth="66.0" prefWidth="66.0"
          styleClass="warehouse-sidebar" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../../../../common/ui/theme.css"/>
         <URL value="@WarehouseSidebar.css"/>
     </stylesheets>
 

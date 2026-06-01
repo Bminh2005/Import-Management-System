@@ -13,11 +13,14 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import com.app.common.ui.components.WarehouseTopBarUI?>
+<?import com.app.modules.warehouse.common.ui.WarehouseMetricCardUI?>
 <?import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar?>
 
 <fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../../../../common/ui/theme.css"/>
+        <URL value="@../../../../common/ui/components/common.css"/>
         <URL value="@WarehouseHomePage.css"/>
     </stylesheets>
     <left>
@@ -27,8 +30,8 @@
         <WarehouseTopBarUI/>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" styleClass="content-scroll">
-            <VBox spacing="26.0" styleClass="page-content">
+        <ScrollPane fitToWidth="true" styleClass="screen-scroll">
+            <VBox spacing="26.0" styleClass="main-content">
                 <padding>
                     <Insets bottom="32.0" left="34.0" right="34.0" top="34.0"/>
                 </padding>
@@ -45,49 +48,13 @@
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
                     </columnConstraints>
-                    <VBox styleClass="metric-card" GridPane.columnIndex="0">
-                        <HBox alignment="TOP_LEFT">
-                            <VBox spacing="8.0">
-                                <Label styleClass="metric-title" text="Đơn Chờ Nhập Kho"/>
-                                <Label fx:id="pendingInboundLabel" styleClass="metric-value" text="0"/>
-                            </VBox>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="pendingMetricIcon" styleClass="metric-icon orange"/>
-                        </HBox>
-                    </VBox>
-                    <VBox styleClass="metric-card" GridPane.columnIndex="1">
-                        <HBox alignment="TOP_LEFT">
-                            <VBox spacing="8.0">
-                                <Label styleClass="metric-title" text="Đang Xử Lý"/>
-                                <Label fx:id="processingLabel" styleClass="metric-value" text="0"/>
-                            </VBox>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="processingMetricIcon" styleClass="metric-icon blue"/>
-                        </HBox>
-                    </VBox>
-                    <VBox styleClass="metric-card" GridPane.columnIndex="2">
-                        <HBox alignment="TOP_LEFT">
-                            <VBox spacing="8.0">
-                                <Label styleClass="metric-title" text="Đã Nhập Tháng này"/>
-                                <Label fx:id="importedThisMonthLabel" styleClass="metric-value" text="0"/>
-                            </VBox>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="importedMetricIcon" styleClass="metric-icon green"/>
-                        </HBox>
-                    </VBox>
-                    <VBox styleClass="metric-card" GridPane.columnIndex="3">
-                        <HBox alignment="TOP_LEFT">
-                            <VBox spacing="8.0">
-                                <Label styleClass="metric-title" text="Có Sai Lệch"/>
-                                <Label fx:id="mismatchLabel" styleClass="metric-value" text="0"/>
-                            </VBox>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="mismatchMetricIcon" styleClass="metric-icon red"/>
-                        </HBox>
-                    </VBox>
+                    <WarehouseMetricCardUI fx:id="pendingMetricCard" GridPane.columnIndex="0"/>
+                    <WarehouseMetricCardUI fx:id="processingMetricCard" GridPane.columnIndex="1"/>
+                    <WarehouseMetricCardUI fx:id="importedMetricCard" GridPane.columnIndex="2"/>
+                    <WarehouseMetricCardUI fx:id="mismatchMetricCard" GridPane.columnIndex="3"/>
                 </GridPane>
 
-                <VBox spacing="18.0" styleClass="panel">
+                <VBox spacing="18.0" styleClass="card panel">
                     <Label styleClass="section-title" text="Thao tác Nhanh"/>
                     <HBox spacing="18.0">
                         <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onProcessInboundClick"
@@ -109,13 +76,13 @@
                     </HBox>
                 </VBox>
 
-                <VBox spacing="18.0" styleClass="panel">
+                <VBox spacing="18.0" styleClass="card panel">
                     <HBox alignment="CENTER_LEFT">
                         <Label styleClass="section-title" text="Đơn Nhập Kho Gần đây"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label onMouseClicked="#onViewAllClick" styleClass="view-all-link" text="Xem tất cả →"/>
                     </HBox>
-                    <TableView fx:id="recentOrderTable" prefHeight="285.0" styleClass="warehouse-table">
+                    <TableView fx:id="recentOrderTable" prefHeight="285.0" styleClass="data-table warehouse-table">
                         <columns>
                             <TableColumn fx:id="orderCodeColumn" prefWidth="230.0" text="MÃ ĐƠN HÀNG"/>
                             <TableColumn fx:id="receivedDateColumn" prefWidth="190.0" text="NGÀY NHẬN"/>

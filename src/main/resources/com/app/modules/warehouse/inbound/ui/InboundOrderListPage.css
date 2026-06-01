@@ -1,34 +1,11 @@
-.page-shell,
-.content-scroll,
-.content-scroll > .viewport,
-.page-content {
-    -fx-background-color: #f5f6f8;
-    -fx-font-family: "Segoe UI", Arial, sans-serif;
-}
-
-.content-scroll {
-    -fx-border-color: transparent;
-}
-
 .page-title {
     -fx-font-size: 22px;
     -fx-font-weight: 800;
-    -fx-text-fill: #111827;
 }
 
 .page-subtitle,
 .result-count {
     -fx-font-size: 15px;
-    -fx-text-fill: #64748b;
-}
-
-.filter-panel,
-.table-panel {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-border-color: #d6dbe3;
-    -fx-border-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.10), 8, 0, 0, 2);
 }
 
 .filter-panel {
@@ -69,78 +46,22 @@
     -fx-background-color: #eef2f7;
 }
 
-.warehouse-table {
-    -fx-background-color: white;
-    -fx-border-color: transparent;
-}
-
-.warehouse-table .column-header-background {
-    -fx-background-color: #f8fafc;
-    -fx-border-color: transparent transparent #d6dbe3 transparent;
-    -fx-border-width: 0 0 1 0;
-}
-
-.warehouse-table .column-header,
-.warehouse-table .filler {
-    -fx-background-color: #f8fafc;
-    -fx-size: 44;
-}
-
 .warehouse-table .column-header .label {
     -fx-alignment: center-left;
     -fx-font-size: 12px;
     -fx-font-weight: 800;
-    -fx-text-fill: #6b7280;
 }
 
 .warehouse-table .table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: transparent transparent #edf0f4 transparent;
     -fx-cell-size: 52;
-}
-
-.warehouse-table .table-row-cell:hover {
-    -fx-background-color: #f9fafb;
 }
 
 .warehouse-table .table-cell {
     -fx-alignment: center-left;
     -fx-font-size: 14px;
-    -fx-text-fill: #1f2937;
-}
-
-.status-chip {
-    -fx-background-radius: 8;
-    -fx-font-size: 12px;
-    -fx-font-weight: 800;
-    -fx-padding: 5 10;
-}
-
-.status-pending {
-    -fx-background-color: #ffedd5;
-    -fx-text-fill: #b45309;
-}
-
-.status-processing {
-    -fx-background-color: #dbeafe;
-    -fx-text-fill: #1d4ed8;
-}
-
-.status-imported {
-    -fx-background-color: #d1fae5;
-    -fx-text-fill: #047857;
-}
-
-.status-mismatch {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #b91c1c;
 }
 
 .table-link,
 .table-action {
-    -fx-background-color: transparent;
-    -fx-cursor: hand;
     -fx-font-size: 14px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #2f9b6e;
 }

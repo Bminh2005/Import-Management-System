@@ -3,6 +3,8 @@ package com.app.modules.warehouse.inbound.ui;
 import com.app.Ioms.navigation.WarehouseNavigation;
 import com.app.common.util.FxmlUiHelper;
 import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar;
+import com.app.modules.warehouse.common.ui.WarehouseInboundStatus;
+import com.app.modules.warehouse.common.ui.WarehouseStatusCell;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -128,7 +130,7 @@ public class InboundOrderListUI extends BorderPane {
         totalQuantityColumn.setCellValueFactory(data ->
                 new SimpleIntegerProperty(data.getValue().getExpectedQuantity()).asObject());
         statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatusCode()));
-        statusColumn.setCellFactory(column -> new StatusChipCell<>());
+        statusColumn.setCellFactory(column -> new WarehouseStatusCell<>());
         actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xử lý →"));
         actionColumn.setCellFactory(column -> new ActionCell());
         inboundOrderTable.setRowFactory(tableView -> {
@@ -285,21 +287,4 @@ public class InboundOrderListUI extends BorderPane {
         WarehouseNavigation.showInboundOrderProcess(source, order.getOrderId());
     }
 
-    private static class StatusChipCell<S> extends TableCell<S, String> {
-        private final Label chip = new Label();
-
-        @Override
-        protected void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || item == null) {
-                setGraphic(null);
-                setText(null);
-                return;
-            }
-            chip.setText(WarehouseInboundStatus.label(item));
-            chip.getStyleClass().setAll("status-chip", WarehouseInboundStatus.cssClass(item));
-            setGraphic(chip);
-            setText(null);
-        }
-    }
 }

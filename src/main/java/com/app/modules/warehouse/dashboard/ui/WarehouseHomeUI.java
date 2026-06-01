@@ -4,8 +4,9 @@ import com.app.Ioms.navigation.WarehouseNavigation;
 import com.app.common.util.FxmlUiHelper;
 import com.app.modules.warehouse.dashboard.dto.WarehouseDashboardSummary;
 import com.app.modules.warehouse.dashboard.service.WarehouseDashboardService;
+import com.app.modules.warehouse.common.ui.WarehouseMetricCardUI;
+import com.app.modules.warehouse.common.ui.WarehouseStatusCell;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
-import com.app.modules.warehouse.inbound.ui.WarehouseInboundStatus;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -29,28 +30,16 @@ public class WarehouseHomeUI extends BorderPane {
     private final InboundOrderService inboundOrderService = new InboundOrderService();
 
     @FXML
-    private Label pendingInboundLabel;
+    private WarehouseMetricCardUI pendingMetricCard;
 
     @FXML
-    private Label processingLabel;
+    private WarehouseMetricCardUI processingMetricCard;
 
     @FXML
-    private Label importedThisMonthLabel;
+    private WarehouseMetricCardUI importedMetricCard;
 
     @FXML
-    private Label mismatchLabel;
-
-    @FXML
-    private Label pendingMetricIcon;
-
-    @FXML
-    private Label processingMetricIcon;
-
-    @FXML
-    private Label importedMetricIcon;
-
-    @FXML
-    private Label mismatchMetricIcon;
+    private WarehouseMetricCardUI mismatchMetricCard;
 
     @FXML
     private Label quickProcessIcon;
@@ -89,7 +78,8 @@ public class WarehouseHomeUI extends BorderPane {
     @FXML
     private void initialize() {
         sidebar.setActiveMenu("home");
-        installIcons();
+        configureMetricCards();
+        installQuickActionIcons();
         configureTable();
         setDashboardSummary(dashboardService.getDashboardSummary());
         setRecentOrders(FXCollections.observableArrayList(inboundOrderService.getRecentInboundOrders()));
@@ -119,7 +109,7 @@ public class WarehouseHomeUI extends BorderPane {
         supplierColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSupplier()));
         statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatusCode()));
         actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xử lý"));
-        statusColumn.setCellFactory(column -> new StatusChipCell<>());
+        statusColumn.setCellFactory(column -> new WarehouseStatusCell<>());
         actionColumn.setCellFactory(column -> new TableCell<>() {
             private final Button actionButton = new Button("Xử lý");
 
@@ -142,29 +132,18 @@ public class WarehouseHomeUI extends BorderPane {
         recentOrderTable.setPlaceholder(new Label("Chưa có đơn nhập kho"));
     }
 
-    private static class StatusChipCell<S> extends TableCell<S, String> {
-        private final Label chip = new Label();
-
-        @Override
-        protected void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || item == null) {
-                setText(null);
-                setGraphic(null);
-                return;
-            }
-            chip.setText(WarehouseInboundStatus.label(item));
-            chip.getStyleClass().setAll("status-chip", WarehouseInboundStatus.cssClass(item));
-            setGraphic(chip);
-            setText(null);
-        }
+    private void configureMetricCards() {
+        pendingMetricCard.setTitle("Đơn Chờ Nhập Kho");
+        pendingMetricCard.setIcon(CLOCK_ICON, "#ea580c", "orange");
+        processingMetricCard.setTitle("Đang Xử Lý");
+        processingMetricCard.setIcon(PACKAGE_ICON, "#2563eb", "blue");
+        importedMetricCard.setTitle("Đã Nhập Tháng này");
+        importedMetricCard.setIcon(TREND_ICON, "#2f9b6e", "green");
+        mismatchMetricCard.setTitle("Có Sai Lệch");
+        mismatchMetricCard.setIcon(ALERT_ICON, "#dc2626", "red");
     }
 
-    private void installIcons() {
-        setIcon(pendingMetricIcon, CLOCK_ICON, "#ea580c");
-        setIcon(processingMetricIcon, PACKAGE_ICON, "#2563eb");
-        setIcon(importedMetricIcon, TREND_ICON, "#2f9b6e");
-        setIcon(mismatchMetricIcon, ALERT_ICON, "#dc2626");
+    private void installQuickActionIcons() {
         setIcon(quickProcessIcon, PACKAGE_ICON, "white");
         setIcon(quickMismatchIcon, ALERT_ICON, "white");
     }
@@ -190,10 +169,10 @@ public class WarehouseHomeUI extends BorderPane {
         if (dashboardSummary == null) {
             return;
         }
-        pendingInboundLabel.setText(String.valueOf(dashboardSummary.getPendingInboundCount()));
-        processingLabel.setText(String.valueOf(dashboardSummary.getProcessingCount()));
-        importedThisMonthLabel.setText(String.valueOf(dashboardSummary.getImportedThisMonthCount()));
-        mismatchLabel.setText(String.valueOf(dashboardSummary.getMismatchCount()));
+        pendingMetricCard.setValue(String.valueOf(dashboardSummary.getPendingInboundCount()));
+        processingMetricCard.setValue(String.valueOf(dashboardSummary.getProcessingCount()));
+        importedMetricCard.setValue(String.valueOf(dashboardSummary.getImportedThisMonthCount()));
+        mismatchMetricCard.setValue(String.valueOf(dashboardSummary.getMismatchCount()));
     }
 
     public ObservableList<InboundOrderResponse> getRecentOrders() {

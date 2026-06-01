@@ -3,6 +3,7 @@ package com.app.modules.warehouse.inbound.ui;
 import com.app.Ioms.navigation.WarehouseNavigation;
 import com.app.common.util.FxmlUiHelper;
 import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar;
+import com.app.modules.warehouse.common.ui.WarehouseStatusBadge;
 import com.app.modules.warehouse.inbound.dto.InboundOrderItemResponse;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
@@ -143,8 +144,7 @@ public class InboundOrderProcessUI extends BorderPane {
         supplierLabel.setText(inboundOrder.getSupplier());
         receivedDateLabel.setText(inboundOrder.getReceivedDate());
         expectedDateLabel.setText(inboundOrder.getExpectedDate());
-        statusLabel.setText(WarehouseInboundStatus.label(inboundOrder.getStatusCode()));
-        statusLabel.getStyleClass().setAll("status-chip", WarehouseInboundStatus.cssClass(inboundOrder.getStatusCode()));
+        WarehouseStatusBadge.apply(statusLabel, inboundOrder.getStatusCode());
         noteArea.setText(inboundOrder.getNote());
         setInboundOrderItems(FXCollections.observableArrayList(
                 inboundOrderService.getOrderItems(inboundOrder.getOrderId())

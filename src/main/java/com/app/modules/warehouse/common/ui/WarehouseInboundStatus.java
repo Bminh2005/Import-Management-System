@@ -1,4 +1,4 @@
-package com.app.modules.warehouse.inbound.ui;
+package com.app.modules.warehouse.common.ui;
 
 public final class WarehouseInboundStatus {
     private WarehouseInboundStatus() {
