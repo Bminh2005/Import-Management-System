@@ -99,10 +99,6 @@ public class CreateImportRequestUI extends VBox {
     public void setCreateButtonAction(Runnable r){
         createButton.setOnAction(e ->{
             try {
-//                if (tableItems.getItems().isEmpty()) {
-//                    showToastNotification("Vui lòng thêm ít nhất một mặt hàng!", false);
-//                    return;
-//                }
                 r.run();
             } catch (Exception ex) {
                 throw new RuntimeException("Lỗi hệ thống: " + ex.getMessage(), ex);
