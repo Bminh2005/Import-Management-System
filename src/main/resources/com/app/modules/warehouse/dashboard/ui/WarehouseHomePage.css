@@ -22,7 +22,8 @@
 }
 
 .metric-icon,
-.quick-icon {
+.quick-icon-success,
+.quick-icon-danger {
     -fx-alignment: center;
     -fx-background-radius: 8;
     -fx-content-display: graphic-only;
@@ -62,13 +63,15 @@
     -fx-font-weight: 800;
 }
 
-.quick-action {
+.quick-action,
+.quick-action-danger {
     -fx-background-color: white;
     -fx-background-radius: 8;
     -fx-border-color: #d1d7e0;
     -fx-border-radius: 8;
     -fx-border-width: 2;
     -fx-cursor: hand;
+    -fx-min-height: 96;
     -fx-padding: 20 22;
 }
 
@@ -77,17 +80,17 @@
     -fx-border-color: #2f9b6e;
 }
 
-.quick-action.danger:hover {
+.quick-action-danger:hover {
     -fx-background-color: #fef2f2;
     -fx-border-color: #dc2626;
 }
 
-.quick-icon.success {
+.quick-icon-success {
     -fx-background-color: #2f9b6e;
     -fx-text-fill: white;
 }
 
-.quick-icon.danger {
+.quick-icon-danger {
     -fx-background-color: #dc2626;
     -fx-text-fill: white;
 }

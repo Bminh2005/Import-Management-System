@@ -59,15 +59,15 @@
                     <HBox spacing="18.0">
                         <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onProcessInboundClick"
                               styleClass="quick-action" HBox.hgrow="ALWAYS">
-                            <Label fx:id="quickProcessIcon" styleClass="quick-icon success"/>
+                            <Label fx:id="quickProcessIcon" styleClass="quick-icon-success"/>
                             <VBox spacing="3.0">
                                 <Label styleClass="quick-title" text="Xử lý Đơn Nhập Kho"/>
                                 <Label styleClass="quick-subtitle" text="Kiểm tra và nhập hàng vào kho"/>
                             </VBox>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onMismatchClick"
-                              styleClass="quick-action danger" HBox.hgrow="ALWAYS">
-                            <Label fx:id="quickMismatchIcon" styleClass="quick-icon danger"/>
+                              styleClass="quick-action-danger" HBox.hgrow="ALWAYS">
+                            <Label fx:id="quickMismatchIcon" styleClass="quick-icon-danger"/>
                             <VBox spacing="3.0">
                                 <Label styleClass="quick-title" text="Xem Đơn Có Sai Lệch"/>
                                 <Label styleClass="quick-subtitle" text="Xử lý các trường hợp thiếu/sai hàng"/>
