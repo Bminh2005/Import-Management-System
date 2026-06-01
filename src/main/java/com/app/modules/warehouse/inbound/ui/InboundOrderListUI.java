@@ -10,16 +10,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableRow;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.text.Normalizer;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class InboundOrderListUI extends BorderPane {
     private final InboundOrderService inboundOrderService = new InboundOrderService();
@@ -31,25 +35,34 @@ public class InboundOrderListUI extends BorderPane {
     private ComboBox<String> statusFilter;
 
     @FXML
+    private Label resultCountLabel;
+
+    @FXML
     private TableView<InboundOrderResponse> inboundOrderTable;
 
     @FXML
     private TableColumn<InboundOrderResponse, String> orderCodeColumn;
 
     @FXML
-    private TableColumn<InboundOrderResponse, String> receivedDateColumn;
+    private TableColumn<InboundOrderResponse, String> requestCodeColumn;
 
     @FXML
     private TableColumn<InboundOrderResponse, String> supplierColumn;
 
     @FXML
+    private TableColumn<InboundOrderResponse, String> receivedDateColumn;
+
+    @FXML
+    private TableColumn<InboundOrderResponse, String> expectedDateColumn;
+
+    @FXML
+    private TableColumn<InboundOrderResponse, Integer> itemCountColumn;
+
+    @FXML
+    private TableColumn<InboundOrderResponse, Integer> totalQuantityColumn;
+
+    @FXML
     private TableColumn<InboundOrderResponse, String> statusColumn;
-
-    @FXML
-    private TableColumn<InboundOrderResponse, Integer> expectedQuantityColumn;
-
-    @FXML
-    private TableColumn<InboundOrderResponse, Integer> actualQuantityColumn;
 
     @FXML
     private TableColumn<InboundOrderResponse, String> actionColumn;
@@ -59,6 +72,7 @@ public class InboundOrderListUI extends BorderPane {
 
     private ObservableList<InboundOrderResponse> inboundOrders = FXCollections.observableArrayList();
     private ObservableList<InboundOrderResponse> allInboundOrders = FXCollections.observableArrayList();
+    private boolean sortAscending;
 
     public InboundOrderListUI() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("InboundOrderListPage.fxml"));
@@ -75,61 +89,50 @@ public class InboundOrderListUI extends BorderPane {
     private void initialize() {
         sidebar.setActiveMenu("inbound");
         statusFilter.setItems(FXCollections.observableArrayList(
-                "Tat ca", "Cho xu ly", "Dang xu ly", "Da nhap kho", "Co sai lech"
+                "Tất cả trạng thái", "Chờ xử lý", "Đang xử lý", "Đã nhập kho", "Có sai lệch"
         ));
         statusFilter.getSelectionModel().selectFirst();
         configureTable();
+        keywordField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        statusFilter.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         reloadInboundOrders();
     }
 
     @FXML
     private void onSearchClick() {
         System.out.println("Noi dung chuc nang: Tim kiem don nhap kho - " + getKeyword());
-        setInboundOrders(FXCollections.observableArrayList(
-                inboundOrderService.searchInboundOrders(getKeyword(), getSelectedStatus())
-        ));
+        applyFilters();
     }
 
     @FXML
-    private void onResetFilterClick() {
-        System.out.println("Noi dung chuc nang: Dat lai bo loc don nhap kho");
-        setKeyword("");
-        statusFilter.getSelectionModel().selectFirst();
-        setInboundOrders(FXCollections.observableArrayList(allInboundOrders));
-    }
-
-    @FXML
-    private void onCreateInboundClick() {
-        System.out.println("Noi dung chuc nang: Tao don nhap kho thu cong");
-        showInfo("Chuc nang dang phat trien", "Tao don nhap kho thu cong se duoc bo sung sau.");
-    }
-
-    @FXML
-    private void onProcessSelectedClick() {
-        System.out.println("Noi dung chuc nang: Xu ly don nhap kho duoc chon");
-        InboundOrderResponse selectedOrder = inboundOrderTable.getSelectionModel().getSelectedItem();
-        if (selectedOrder == null && !inboundOrderTable.getItems().isEmpty()) {
-            selectedOrder = inboundOrderTable.getItems().get(0);
+    private void onSortClick() {
+        sortAscending = !sortAscending;
+        Comparator<InboundOrderResponse> comparator = Comparator.comparing(InboundOrderResponse::getReceivedDate,
+                Comparator.nullsLast(String::compareTo));
+        if (!sortAscending) {
+            comparator = comparator.reversed();
         }
-        if (selectedOrder == null) {
-            System.out.println("Noi dung chuc nang: Chua co don nhap kho de xu ly");
-            return;
-        }
-        WarehouseNavigation.showInboundOrderProcess(inboundOrderTable, selectedOrder.getOrderId());
+        inboundOrders = FXCollections.observableArrayList(inboundOrders.stream()
+                .sorted(comparator)
+                .toList());
+        setInboundOrders(inboundOrders);
     }
 
     private void configureTable() {
         orderCodeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOrderCode()));
-        receivedDateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getReceivedDate()));
+        orderCodeColumn.setCellFactory(column -> new OrderLinkCell());
+        requestCodeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRequestCode()));
         supplierColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSupplier()));
-        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
-        expectedQuantityColumn.setCellValueFactory(data ->
+        receivedDateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getReceivedDate()));
+        expectedDateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getExpectedDate()));
+        itemCountColumn.setCellValueFactory(data ->
+                new SimpleIntegerProperty(data.getValue().getItemCount()).asObject());
+        totalQuantityColumn.setCellValueFactory(data ->
                 new SimpleIntegerProperty(data.getValue().getExpectedQuantity()).asObject());
-        actualQuantityColumn.setCellValueFactory(data ->
-                new SimpleIntegerProperty(data.getValue().getActualQuantity()).asObject());
-        actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xu ly"));
-        statusColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
+        statusColumn.setCellFactory(column -> new StatusChipCell<>());
+        actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xử lý →"));
+        actionColumn.setCellFactory(column -> new ActionCell());
         inboundOrderTable.setRowFactory(tableView -> {
             TableRow<InboundOrderResponse> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -143,15 +146,55 @@ public class InboundOrderListUI extends BorderPane {
 
     private void reloadInboundOrders() {
         allInboundOrders = FXCollections.observableArrayList(inboundOrderService.getAllInboundOrders());
-        setInboundOrders(FXCollections.observableArrayList(allInboundOrders));
+        applyFilters();
     }
 
-    private void showInfo(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void applyFilters() {
+        if (allInboundOrders == null) {
+            return;
+        }
+        String keyword = normalize(getKeyword());
+        String selectedStatus = mapStatusCode(getSelectedStatus());
+        ObservableList<InboundOrderResponse> filtered = FXCollections.observableArrayList(
+                allInboundOrders.stream()
+                        .filter(order -> keyword.isBlank()
+                                || normalize(order.getOrderCode()).contains(keyword)
+                                || normalize(order.getRequestCode()).contains(keyword)
+                                || normalize(order.getSupplier()).contains(keyword))
+                        .filter(order -> selectedStatus.isBlank()
+                                || selectedStatus.equals(order.getStatusCode()))
+                        .toList()
+        );
+        setInboundOrders(filtered);
+    }
+
+    private String mapStatusCode(String value) {
+        String status = normalize(value);
+        if (status.isBlank() || "tat ca trang thai".equals(status)) {
+            return "";
+        }
+        if ("cho xu ly".equals(status)) {
+            return "PENDING";
+        }
+        if ("dang xu ly".equals(status)) {
+            return "PROCESSING";
+        }
+        if ("da nhap kho".equals(status)) {
+            return "IMPORTED";
+        }
+        if ("co sai lech".equals(status)) {
+            return "MISMATCH";
+        }
+        return "";
+    }
+
+    private String normalize(String value) {
+        if (value == null) {
+            return "";
+        }
+        return Normalizer.normalize(value.trim(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase(Locale.ROOT);
     }
 
     public String getKeyword() {
@@ -177,5 +220,82 @@ public class InboundOrderListUI extends BorderPane {
     public void setInboundOrders(ObservableList<InboundOrderResponse> inboundOrders) {
         this.inboundOrders = inboundOrders;
         inboundOrderTable.setItems(inboundOrders);
+        resultCountLabel.setText("Hiển thị " + inboundOrders.size() + " đơn hàng");
+    }
+
+    private class OrderLinkCell extends TableCell<InboundOrderResponse, String> {
+        private final Button linkButton = new Button();
+
+        private OrderLinkCell() {
+            linkButton.getStyleClass().add("table-link");
+            linkButton.setOnAction(event -> openOrderAt(getIndex(), linkButton));
+        }
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setGraphic(null);
+                return;
+            }
+            linkButton.setText(item);
+            setGraphic(linkButton);
+            setText(null);
+        }
+    }
+
+    private class ActionCell extends TableCell<InboundOrderResponse, String> {
+        private final Button actionButton = new Button("Xử lý →");
+
+        private ActionCell() {
+            actionButton.getStyleClass().add("table-action");
+            actionButton.setOnAction(event -> openOrderAt(getIndex(), actionButton));
+        }
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            setGraphic(empty ? null : actionButton);
+            setText(null);
+        }
+    }
+
+    private void openOrderAt(int index, Button source) {
+        if (index < 0 || index >= inboundOrderTable.getItems().size()) {
+            return;
+        }
+        InboundOrderResponse order = inboundOrderTable.getItems().get(index);
+        WarehouseNavigation.showInboundOrderProcess(source, order.getOrderId());
+    }
+
+    private static class StatusChipCell<S> extends TableCell<S, String> {
+        private final Label chip = new Label();
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setGraphic(null);
+                setText(null);
+                return;
+            }
+            chip.setText(item);
+            chip.getStyleClass().setAll("status-chip", statusClass(item));
+            setGraphic(chip);
+            setText(null);
+        }
+
+        private String statusClass(String status) {
+            if (status.contains("Đang")) {
+                return "status-processing";
+            }
+            if (status.contains("Đã")) {
+                return "status-imported";
+            }
+            if (status.contains("Sai") || status.contains("sai")) {
+                return "status-mismatch";
+            }
+            return "status-pending";
+        }
     }
 }

@@ -22,16 +22,20 @@ public class InboundOrderRepository {
         String sql = """
                 SELECT o.id,
                        o.site_id,
+                       o.request_id,
                        o.expected_delivery_date,
+                       COALESCE(o.actual_delivery_date::date::text, o.expected_delivery_date::text, '') AS received_date,
                        COALESCE(s.site_name, 'N/A') AS supplier,
                        o.status::text AS status,
+                       COUNT(od.id) AS item_count,
                        COALESCE(SUM(od.quantity), 0) AS expected_quantity,
                        COALESCE(SUM(COALESCE(od.actual_quantity, 0)), 0) AS actual_quantity,
                        COALESCE(o.mismatch_reason, '') AS mismatch_reason
                 FROM "Order" o
                 LEFT JOIN "Site" s ON s.id = o.site_id
                 LEFT JOIN "OrderDetail" od ON od.order_id = o.id
-                GROUP BY o.id, o.site_id, o.expected_delivery_date, s.site_name, o.status, o.mismatch_reason
+                GROUP BY o.id, o.site_id, o.request_id, o.expected_delivery_date, o.actual_delivery_date,
+                         s.site_name, o.status, o.mismatch_reason
                 ORDER BY o.expected_delivery_date DESC NULLS LAST, o.id DESC
                 """;
 
@@ -46,10 +50,13 @@ public class InboundOrderRepository {
                         orderId,
                         resultSet.getLong("site_id"),
                         buildOrderCode(orderId, resultSet.getString("expected_delivery_date")),
+                        buildRequestCode(resultSet.getLong("request_id"), resultSet.getString("expected_delivery_date")),
+                        resultSet.getString("received_date"),
                         resultSet.getString("expected_delivery_date"),
                         resultSet.getString("supplier"),
                         displayStatus(statusCode),
                         statusCode,
+                        resultSet.getInt("item_count"),
                         resultSet.getInt("expected_quantity"),
                         resultSet.getInt("actual_quantity"),
                         resultSet.getString("mismatch_reason")
@@ -72,7 +79,8 @@ public class InboundOrderRepository {
                        ('MD-' || od.merchandise_detail_id) AS product_code,
                        COALESCE(m.merchandise_name, 'N/A') AS product_name,
                        COALESCE(od.quantity, 0) AS ordered_quantity,
-                       COALESCE(od.actual_quantity, od.quantity, 0) AS actual_quantity
+                       COALESCE(od.actual_quantity, od.quantity, 0) AS actual_quantity,
+                       COALESCE(od.refused_reason, '') AS discrepancy_reason
                 FROM "OrderDetail" od
                 LEFT JOIN "MerchandiseDetail" md ON md.id = od.merchandise_detail_id
                 LEFT JOIN "Merchandise" m ON m.id = md.merchandise_id
@@ -93,7 +101,8 @@ public class InboundOrderRepository {
                             resultSet.getString("product_code"),
                             resultSet.getString("product_name"),
                             resultSet.getInt("ordered_quantity"),
-                            resultSet.getInt("actual_quantity")
+                            resultSet.getInt("actual_quantity"),
+                            resultSet.getString("discrepancy_reason")
                     ));
                 }
                 return items;
@@ -173,14 +182,16 @@ public class InboundOrderRepository {
                                         List<InboundOrderItemResponse> items) throws SQLException {
         String sql = """
                 UPDATE "OrderDetail"
-                SET actual_quantity = ?
+                SET actual_quantity = ?,
+                    refused_reason = ?
                 WHERE id = ? AND order_id = ?
                 """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (InboundOrderItemResponse item : items) {
                 statement.setInt(1, item.getActualQuantity());
-                statement.setLong(2, item.getOrderDetailId());
-                statement.setLong(3, orderId);
+                statement.setString(2, item.hasMismatch() ? item.getDiscrepancyReason() : null);
+                statement.setLong(3, item.getOrderDetailId());
+                statement.setLong(4, orderId);
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -322,27 +333,41 @@ public class InboundOrderRepository {
         return "ORD-" + year + "-" + String.format("%03d", orderId);
     }
 
+    private String buildRequestCode(long requestId, String expectedDate) {
+        if (requestId <= 0) {
+            return "REQ-N/A";
+        }
+        String year = "2026";
+        if (expectedDate != null && expectedDate.length() >= 4) {
+            year = expectedDate.substring(0, 4);
+        }
+        return "REQ-" + year + "-" + String.format("%03d", requestId);
+    }
+
     private String displayStatus(String statusCode) {
         if (STATUS_IMPORTED.equals(statusCode)) {
-            return "Da nhap kho";
+            return "Đã nhập kho";
         }
         if (STATUS_MISMATCH.equals(statusCode)) {
-            return "Co sai lech";
+            return "Có sai lệch";
         }
         if ("PROCESSING".equals(statusCode)) {
-            return "Dang xu ly";
+            return "Đang xử lý";
         }
-        return "Cho xu ly";
+        return "Chờ xử lý";
     }
 
     private List<InboundOrderResponse> sampleOrders() {
         return List.of(
-                new InboundOrderResponse(1, 1, "ORD-2026-001", "2026-06-12", "Kho Tong Mien Bac",
-                        "Cho xu ly", "PENDING", 15, 0, ""),
-                new InboundOrderResponse(2, 2, "ORD-2026-002", "2026-06-20", "Kho Ve Tinh Mien Nam",
-                        "Dang xu ly", "PROCESSING", 15, 0, ""),
-                new InboundOrderResponse(3, 3, "ORD-2026-003", "2026-07-01", "Chi nhanh Da Nang",
-                        "Cho xu ly", "PENDING", 0, 0, "")
+                new InboundOrderResponse(1, 1, "ORD-2026-001", "REQ-2026-001",
+                        "2026-06-12", "2026-06-12", "Kho Tổng Miền Bắc",
+                        "Chờ xử lý", "PENDING", 3, 15, 0, ""),
+                new InboundOrderResponse(2, 2, "ORD-2026-002", "REQ-2026-002",
+                        "2026-06-20", "2026-06-20", "Kho Vệ Tinh Miền Nam",
+                        "Đang xử lý", "PROCESSING", 2, 15, 0, ""),
+                new InboundOrderResponse(3, 3, "ORD-2026-003", "REQ-2026-003",
+                        "2026-07-01", "2026-07-01", "Chi nhánh Đà Nẵng",
+                        "Chờ xử lý", "PENDING", 0, 0, 0, "")
         );
     }
 }

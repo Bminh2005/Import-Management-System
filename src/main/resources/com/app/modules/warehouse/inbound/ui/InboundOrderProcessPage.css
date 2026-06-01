@@ -1,86 +1,223 @@
-.page-shell {
-    -fx-background-color: #f4f6f8;
+.page-shell,
+.content-scroll,
+.content-scroll > .viewport,
+.page-content {
+    -fx-background-color: #f5f6f8;
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
-.page-content {
-    -fx-background-color: #f4f6f8;
+.content-scroll {
+    -fx-border-color: transparent;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-padding: 0;
+    -fx-text-fill: #2f9b6e;
 }
 
 .page-title {
-    -fx-font-size: 28px;
+    -fx-font-size: 34px;
     -fx-font-weight: 800;
     -fx-text-fill: #111827;
 }
 
 .page-subtitle {
-    -fx-font-size: 15px;
-    -fx-text-fill: #6b7280;
+    -fx-font-size: 16px;
+    -fx-text-fill: #64748b;
 }
 
-.panel {
+.panel,
+.action-panel {
     -fx-background-color: white;
     -fx-background-radius: 8;
-    -fx-border-color: #d7dde6;
+    -fx-border-color: #d6dbe3;
     -fx-border-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.10), 8, 0, 0, 2);
-    -fx-min-width: 420;
     -fx-padding: 24;
+}
+
+.order-icon {
+    -fx-alignment: center;
+    -fx-background-color: #d1fae5;
+    -fx-background-radius: 8;
+    -fx-font-family: "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 27px;
+    -fx-font-weight: 800;
+    -fx-min-height: 52;
+    -fx-min-width: 52;
+    -fx-text-fill: #059669;
+}
+
+.order-code {
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111827;
+}
+
+.order-request,
+.field-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.field-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+}
+
+.info-grid {
+    -fx-border-color: #edf0f4 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 16 0 0 0;
+}
+
+.summary-input,
+.note-area,
+.quantity-input,
+.reason-area {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: #d6dbe3;
+    -fx-border-radius: 8;
+    -fx-font-size: 14px;
+    -fx-padding: 8 10;
+    -fx-text-fill: #111827;
+}
+
+.summary-input {
+    -fx-font-weight: 800;
 }
 
 .section-title {
     -fx-font-size: 22px;
     -fx-font-weight: 800;
-    -fx-text-fill: #1f2937;
+    -fx-text-fill: #111827;
 }
 
-.field-label {
-    -fx-font-size: 14px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #6b7280;
+.item-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d6dbe3;
+    -fx-border-radius: 8;
+    -fx-padding: 18;
 }
 
-.field-value {
+.item-card-mismatch {
+    -fx-background-color: #fff7f7;
+    -fx-border-color: #fca5a5;
+}
+
+.item-name {
     -fx-font-size: 16px;
-    -fx-text-fill: #1f2937;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111827;
 }
 
-.field-value.strong {
+.item-code,
+.mini-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.readonly-quantity,
+.difference-box {
+    -fx-alignment: center-left;
+    -fx-background-color: #f1f3f6;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
     -fx-font-weight: 800;
-    -fx-text-fill: #2f9b6e;
+    -fx-min-height: 38;
+    -fx-padding: 8 10;
+    -fx-text-fill: #111827;
+}
+
+.difference-ok {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #047857;
+}
+
+.difference-extra {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1d4ed8;
+}
+
+.difference-missing {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #b91c1c;
 }
 
 .status-chip {
-    -fx-background-color: #fff4e8;
     -fx-background-radius: 999;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-font-weight: 800;
-    -fx-padding: 6 14;
+    -fx-padding: 5 12;
+}
+
+.status-pending {
+    -fx-background-color: #ffedd5;
     -fx-text-fill: #b45309;
 }
 
-.form-input {
-    -fx-background-color: #f8fafc;
-    -fx-background-radius: 8;
-    -fx-border-color: #d7dde6;
-    -fx-border-radius: 8;
+.status-processing {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1d4ed8;
+}
+
+.status-imported,
+.status-ok {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #047857;
+}
+
+.status-mismatch {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #b91c1c;
+}
+
+.reason-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #b91c1c;
+}
+
+.warning-icon {
+    -fx-font-family: "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 17px;
+    -fx-text-fill: #ea580c;
+}
+
+.action-title {
     -fx-font-size: 15px;
-    -fx-padding: 10 12;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111827;
+}
+
+.action-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
 }
 
 .primary-button,
-.secondary-button,
-.danger-button {
+.secondary-button {
     -fx-background-radius: 8;
     -fx-cursor: hand;
-    -fx-font-size: 15px;
-    -fx-font-weight: 700;
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
     -fx-padding: 10 16;
 }
 
 .primary-button {
-    -fx-background-color: #2f9b6e;
+    -fx-background-color: #059669;
     -fx-text-fill: white;
+}
+
+.primary-button:hover {
+    -fx-background-color: #047857;
 }
 
 .secondary-button {
@@ -90,41 +227,6 @@
     -fx-text-fill: #374151;
 }
 
-.danger-button {
-    -fx-background-color: #dc2626;
-    -fx-text-fill: white;
-}
-
-.warehouse-table {
-    -fx-background-color: white;
-    -fx-border-color: transparent;
-}
-
-.warehouse-table .column-header-background {
-    -fx-background-color: #f0f2f5;
-}
-
-.warehouse-table .column-header,
-.warehouse-table .filler {
-    -fx-background-color: #f0f2f5;
-    -fx-size: 44;
-}
-
-.warehouse-table .column-header .label {
-    -fx-alignment: center-left;
-    -fx-font-size: 13px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #6b7280;
-}
-
-.warehouse-table .table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: transparent transparent #d8dde6 transparent;
-    -fx-cell-size: 48;
-}
-
-.warehouse-table .table-cell {
-    -fx-alignment: center-left;
-    -fx-font-size: 15px;
-    -fx-text-fill: #1f2937;
+.secondary-button:hover {
+    -fx-background-color: #f8fafc;
 }

@@ -8,6 +8,7 @@ public class InboundOrderItemResponse {
     private String productName;
     private int orderedQuantity;
     private int actualQuantity;
+    private String discrepancyReason;
 
     public InboundOrderItemResponse() {
     }
@@ -22,6 +23,15 @@ public class InboundOrderItemResponse {
         this.productName = productName;
         this.orderedQuantity = orderedQuantity;
         this.actualQuantity = actualQuantity;
+        this.discrepancyReason = "";
+    }
+
+    public InboundOrderItemResponse(long orderDetailId, long orderId, long merchandiseDetailId,
+                                    String productCode, String productName,
+                                    int orderedQuantity, int actualQuantity, String discrepancyReason) {
+        this(orderDetailId, orderId, merchandiseDetailId, productCode, productName,
+                orderedQuantity, actualQuantity);
+        this.discrepancyReason = discrepancyReason;
     }
 
     public long getOrderDetailId() {
@@ -78,6 +88,14 @@ public class InboundOrderItemResponse {
 
     public void setActualQuantity(int actualQuantity) {
         this.actualQuantity = actualQuantity;
+    }
+
+    public String getDiscrepancyReason() {
+        return discrepancyReason;
+    }
+
+    public void setDiscrepancyReason(String discrepancyReason) {
+        this.discrepancyReason = discrepancyReason;
     }
 
     public boolean hasMismatch() {

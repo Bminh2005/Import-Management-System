@@ -1,39 +1,67 @@
 package com.app.modules.warehouse.dashboard.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
-import com.app.common.ui.components.Sidebar;
-import com.app.common.ui.components.SidebarItem;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
-public class WarehouseSidebar extends Sidebar {
-    private final SidebarItem dashboard;
-    private final SidebarItem warehouseManager;
+import java.io.IOException;
+
+public class WarehouseSidebar extends VBox {
+    @FXML
+    private Button homeButton;
+
+    @FXML
+    private Button inboundButton;
 
     public WarehouseSidebar() {
-        super();
-        getDepartmentName().setText("Bộ phận Quản lý Kho");
-        getCurrentRole().setText("Bộ phận Quản lý Kho");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseSidebar.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException exception) {
+            throw new IllegalStateException("Khong the tai WarehouseSidebar.fxml", exception);
+        }
+    }
 
-        dashboard = new SidebarItem("\uD83C\uDFE0", "Trang Chủ Kho", "Ctrl+1");
-        warehouseManager = new SidebarItem("\uD83D\uDCE6", "Đơn Chờ Nhập Kho", "Ctrl+2");
-        addMenuItem(dashboard);
-        addMenuItem(warehouseManager);
+    @FXML
+    private void initialize() {
+        setActiveMenu("home");
+    }
 
-        dashboard.setOnAction(() -> {
-            setSelectedItem(dashboard);
-            WarehouseNavigation.showWarehouseHome(this);
-        });
-        warehouseManager.setOnAction(() -> {
-            setSelectedItem(warehouseManager);
-            WarehouseNavigation.showInboundOrderList(this);
-        });
-        setActionLogoutButton(() -> System.out.println("Noi dung chuc nang: Dang xuat"));
+    @FXML
+    private void onHomeClick() {
+        System.out.println("Chuyen trang: Trang chu quan ly kho");
+        setActiveMenu("home");
+        WarehouseNavigation.showWarehouseHome(this);
+    }
+
+    @FXML
+    private void onInboundClick() {
+        System.out.println("Chuyen trang: Danh sach don nhap kho");
+        setActiveMenu("inbound");
+        WarehouseNavigation.showInboundOrderList(this);
+    }
+
+    @FXML
+    private void onCollapseClick() {
+        System.out.println("Noi dung chuc nang: Thu gon/mo rong sidebar kho");
     }
 
     public void setActiveMenu(String activeMenu) {
-        if ("inbound".equals(activeMenu)) {
-            setSelectedItem(warehouseManager);
+        setButtonActive(homeButton, !"inbound".equals(activeMenu));
+        setButtonActive(inboundButton, "inbound".equals(activeMenu));
+    }
+
+    private void setButtonActive(Button button, boolean active) {
+        if (button == null) {
             return;
         }
-        setSelectedItem(dashboard);
+        button.getStyleClass().remove("active");
+        if (active) {
+            button.getStyleClass().add("active");
+        }
     }
 }

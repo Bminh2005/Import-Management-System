@@ -10,10 +10,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
@@ -100,9 +101,57 @@ public class WarehouseHomeUI extends BorderPane {
         supplierColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSupplier()));
         statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
         actionColumn.setCellValueFactory(data -> new SimpleStringProperty("Xu ly"));
-        statusColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        statusColumn.setCellFactory(column -> new StatusChipCell<>());
+        actionColumn.setCellFactory(column -> new TableCell<>() {
+            private final Button actionButton = new Button("Xử lý");
+
+            {
+                actionButton.getStyleClass().add("table-action");
+                actionButton.setOnAction(event -> {
+                    InboundOrderResponse order = getTableView().getItems().get(getIndex());
+                    WarehouseNavigation.showInboundOrderProcess(actionButton, order.getOrderId());
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : actionButton);
+                setText(null);
+            }
+        });
         recentOrderTable.setSelectionModel(null);
+    }
+
+    private static class StatusChipCell<S> extends TableCell<S, String> {
+        private final Label chip = new Label();
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setText(null);
+                setGraphic(null);
+                return;
+            }
+            chip.setText(item);
+            chip.getStyleClass().setAll("status-chip", statusClass(item));
+            setGraphic(chip);
+            setText(null);
+        }
+
+        private String statusClass(String item) {
+            if (item.contains("Đang")) {
+                return "status-processing";
+            }
+            if (item.contains("Đã")) {
+                return "status-imported";
+            }
+            if (item.contains("Sai") || item.contains("sai")) {
+                return "status-mismatch";
+            }
+            return "status-pending";
+        }
     }
 
     public WarehouseDashboardSummary getDashboardSummary() {

@@ -4,6 +4,7 @@ import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.dto.InboundOrderItemResponse;
 import com.app.modules.warehouse.inbound.repository.InboundOrderRepository;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,6 +27,7 @@ public class InboundOrderService {
         return inboundOrderRepository.findAll().stream()
                 .filter(order -> normalizedKeyword.isBlank()
                         || normalize(order.getOrderCode()).contains(normalizedKeyword)
+                        || normalize(order.getRequestCode()).contains(normalizedKeyword)
                         || normalize(order.getSupplier()).contains(normalizedKeyword))
                 .filter(order -> statusCode.isBlank() || statusCode.equals(order.getStatusCode()))
                 .toList();
@@ -51,16 +53,17 @@ public class InboundOrderService {
 
     public void confirmInboundOrder(long orderId, List<InboundOrderItemResponse> items,
                                     String mismatchReason, long inspectedBy) {
-        validateItems(items);
-        inboundOrderRepository.confirmInboundOrder(orderId, items, mismatchReason, inspectedBy);
+        validateItems(items, true);
+        inboundOrderRepository.confirmInboundOrder(orderId, items,
+                resolveMismatchReason(items, mismatchReason), inspectedBy);
     }
 
     public void saveDraft(long orderId, List<InboundOrderItemResponse> items) {
-        validateItems(items);
+        validateItems(items, false);
         inboundOrderRepository.saveDraft(orderId, items);
     }
 
-    private void validateItems(List<InboundOrderItemResponse> items) {
+    private void validateItems(List<InboundOrderItemResponse> items, boolean requireMismatchReason) {
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Don nhap kho khong co mat hang de xu ly.");
         }
@@ -69,6 +72,27 @@ public class InboundOrderService {
         if (hasNegativeQuantity) {
             throw new IllegalArgumentException("So luong thuc nhan khong duoc am.");
         }
+        boolean hasMissingReason = requireMismatchReason && items.stream()
+                .anyMatch(item -> item.hasMismatch()
+                        && (item.getDiscrepancyReason() == null || item.getDiscrepancyReason().isBlank()));
+        if (hasMissingReason) {
+            throw new IllegalArgumentException("Moi mat hang sai lech can co ly do xu ly.");
+        }
+    }
+
+    private String resolveMismatchReason(List<InboundOrderItemResponse> items, String mismatchReason) {
+        boolean hasMismatch = items.stream().anyMatch(InboundOrderItemResponse::hasMismatch);
+        if (!hasMismatch) {
+            return "";
+        }
+        if (mismatchReason != null && !mismatchReason.isBlank()) {
+            return mismatchReason;
+        }
+        return items.stream()
+                .filter(InboundOrderItemResponse::hasMismatch)
+                .map(item -> item.getProductCode() + ": " + item.getDiscrepancyReason())
+                .reduce((left, right) -> left + "; " + right)
+                .orElse("");
     }
 
     private String mapStatusCode(String selectedStatus) {
@@ -92,6 +116,11 @@ public class InboundOrderService {
     }
 
     private String normalize(String value) {
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+        if (value == null) {
+            return "";
+        }
+        String normalized = Normalizer.normalize(value.trim(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+        return normalized.toLowerCase(Locale.ROOT);
     }
 }
