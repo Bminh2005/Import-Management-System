@@ -10,9 +10,11 @@ public class AllocationProposalDTO {
     private String deliveryType; // SHIP or AIR
     private String expectedDeliveryDate;
     private double price;
+    private int availableQuantity; // tồn kho hiện có tại site (để hiển thị/giới hạn khi chỉnh tay)
 
     public AllocationProposalDTO(long siteId, String siteName, long merchandiseDetailId, String merchandiseName,
-                                 String unit, int allocatedQuantity, String deliveryType, String expectedDeliveryDate, double price) {
+                                 String unit, int allocatedQuantity, String deliveryType, String expectedDeliveryDate,
+                                 double price, int availableQuantity) {
         this.siteId = siteId;
         this.siteName = siteName;
         this.merchandiseDetailId = merchandiseDetailId;
@@ -22,6 +24,7 @@ public class AllocationProposalDTO {
         this.deliveryType = deliveryType;
         this.expectedDeliveryDate = expectedDeliveryDate;
         this.price = price;
+        this.availableQuantity = availableQuantity;
     }
 
     public long getSiteId() {
@@ -94,6 +97,14 @@ public class AllocationProposalDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(int availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
     @Override

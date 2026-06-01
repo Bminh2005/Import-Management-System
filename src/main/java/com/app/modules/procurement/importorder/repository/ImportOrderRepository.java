@@ -19,7 +19,6 @@ public class ImportOrderRepository {
             String desiredDate,
             String createdBy,
             int itemCount,
-            String priority,
             String status
     ) {}
 
@@ -43,15 +42,15 @@ public class ImportOrderRepository {
     ) {}
 
     /**
-     * Fetch all pending and processing import requests.
+     * Fetch import requests that are still pending (chưa xử lý).
      */
     public List<RequestSummary> findPendingRequests() {
         List<RequestSummary> list = new ArrayList<>();
         String sql = "SELECT r.id, r.created_at, r.desired_date, r.status, u.username, " +
-                     "  (SELECT COALESCE(SUM(quantity), 0) FROM \"RequestDetail\" rd WHERE rd.request_id = r.id) as item_count " +
+                     "  (SELECT COUNT(*) FROM \"RequestDetail\" rd WHERE rd.request_id = r.id) as item_count " +
                      "FROM \"ImportRequest\" r " +
                      "JOIN \"Users\" u ON r.user_id = u.id " +
-                     "WHERE r.status IN ('PENDING'::request_status, 'PROCESSING'::request_status) " +
+                     "WHERE r.status = 'PENDING'::request_status " +
                      "ORDER BY r.created_at DESC";
 
         try (Connection conn = DatabaseManager.getConnection();
@@ -60,24 +59,12 @@ public class ImportOrderRepository {
 
             while (rs.next()) {
                 long id = rs.getLong("id");
-                String code = "REQ-" + String.format("%03d", id);
+                String code = String.valueOf(id);
                 Timestamp createdAt = rs.getTimestamp("created_at");
                 Date desiredDate = rs.getDate("desired_date");
                 String status = rs.getString("status").toLowerCase();
                 String createdBy = rs.getString("username");
                 int itemCount = rs.getInt("item_count");
-
-                // Determine a priority based on days remaining to desired_date
-                String priority = "medium";
-                if (desiredDate != null && createdAt != null) {
-                    long diffMs = desiredDate.getTime() - createdAt.getTime();
-                    long diffDays = diffMs / (1000 * 60 * 60 * 24);
-                    if (diffDays <= 7) {
-                        priority = "high";
-                    } else if (diffDays >= 30) {
-                        priority = "low";
-                    }
-                }
 
                 list.add(new RequestSummary(
                         id,
@@ -86,7 +73,6 @@ public class ImportOrderRepository {
                         desiredDate != null ? desiredDate.toString() : "",
                         createdBy,
                         itemCount,
-                        priority,
                         status
                 ));
             }
@@ -101,7 +87,7 @@ public class ImportOrderRepository {
      */
     public RequestSummary findRequestById(long id) {
         String sql = "SELECT r.id, r.created_at, r.desired_date, r.status, u.username, " +
-                     "  (SELECT COALESCE(SUM(quantity), 0) FROM \"RequestDetail\" rd WHERE rd.request_id = r.id) as item_count " +
+                     "  (SELECT COUNT(*) FROM \"RequestDetail\" rd WHERE rd.request_id = r.id) as item_count " +
                      "FROM \"ImportRequest\" r " +
                      "JOIN \"Users\" u ON r.user_id = u.id " +
                      "WHERE r.id = ?";
@@ -111,23 +97,12 @@ public class ImportOrderRepository {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    String code = "REQ-" + String.format("%03d", id);
+                    String code = String.valueOf(id);
                     Timestamp createdAt = rs.getTimestamp("created_at");
                     Date desiredDate = rs.getDate("desired_date");
                     String status = rs.getString("status").toLowerCase();
                     String createdBy = rs.getString("username");
                     int itemCount = rs.getInt("item_count");
-
-                    String priority = "medium";
-                    if (desiredDate != null && createdAt != null) {
-                        long diffMs = desiredDate.getTime() - createdAt.getTime();
-                        long diffDays = diffMs / (1000 * 60 * 60 * 24);
-                        if (diffDays <= 7) {
-                            priority = "high";
-                        } else if (diffDays >= 30) {
-                            priority = "low";
-                        }
-                    }
 
                     return new RequestSummary(
                             id,
@@ -136,7 +111,6 @@ public class ImportOrderRepository {
                             desiredDate != null ? desiredDate.toString() : "",
                             createdBy,
                             itemCount,
-                            priority,
                             status
                     );
                 }
@@ -251,6 +225,19 @@ public class ImportOrderRepository {
     }
 
     /**
+     * Update the status of an ImportRequest using its own connection (ngoài transaction phân bổ).
+     */
+    public boolean setRequestStatus(long requestId, String status) {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            updateRequestStatus(conn, requestId, status);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * Update the status of an ImportRequest.
      */
     public void updateRequestStatus(Connection conn, long requestId, String status) throws SQLException {
@@ -267,16 +254,20 @@ public class ImportOrderRepository {
      * Deduct inventory quantity at a specific site.
      */
     public void deductSiteInventory(Connection conn, long siteId, long merchandiseDetailId, int quantity) throws SQLException {
+        // The "quantity >= ?" guard ensures we never oversell: if the site no longer
+        // has enough stock, no row is updated and the transaction is rolled back.
         String sql = "UPDATE \"SiteInventory\" SET quantity = quantity - ? " +
-                     "WHERE site_id = ? AND merchandise_detail_id = ?";
+                     "WHERE site_id = ? AND merchandise_detail_id = ? AND quantity >= ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
             stmt.setLong(2, siteId);
             stmt.setLong(3, merchandiseDetailId);
+            stmt.setInt(4, quantity);
             int rows = stmt.executeUpdate();
             if (rows == 0) {
-                throw new SQLException("SiteInventory update failed, no rows affected.");
+                throw new SQLException("SiteInventory update failed: insufficient stock for site "
+                        + siteId + ", merchandiseDetail " + merchandiseDetailId + " (needed " + quantity + ").");
             }
         }
     }

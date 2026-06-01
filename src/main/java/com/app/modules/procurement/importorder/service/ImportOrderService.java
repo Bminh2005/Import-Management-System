@@ -30,6 +30,13 @@ public class ImportOrderService {
     }
 
     /**
+     * Hủy yêu cầu nhập hàng khi không thể thỏa mãn: đánh dấu đã xử lý xong (không tạo đơn).
+     */
+    public boolean cancelRequest(long requestId) {
+        return repository.setRequestStatus(requestId, "PROCESSED");
+    }
+
+    /**
      * Allocation algorithm based on usecase: UC001.
      * Prioritize ship (cost-effective), then large inventory, then least number of sites.
      */
@@ -107,7 +114,8 @@ public class ImportOrderService {
                         neededQty,
                         delivery,
                         expectedDate,
-                        bestSite.price()
+                        bestSite.price(),
+                        bestSite.availableQuantity()
                 ));
             } else {
                 // Need multiple sites (Alternative flow 10a)
@@ -144,7 +152,8 @@ public class ImportOrderService {
                             allocated,
                             delivery,
                             expectedDate,
-                            site.price()
+                            site.price(),
+                            site.availableQuantity()
                     ));
 
                     remainingNeeded -= allocated;
@@ -157,6 +166,64 @@ public class ImportOrderService {
         }
 
         return proposals;
+    }
+
+    /**
+     * Trả về danh sách các site CÓ TỒN KHO cho từng mặt hàng của yêu cầu,
+     * kèm số lượng đề xuất tự động (theo thuật toán), cách giao và ngày nhận dự kiến.
+     * Màn xử lý dùng để vừa cho hệ thống tự phân bổ, vừa cho người dùng chỉnh tay số lượng.
+     */
+    public List<AllocationProposalDTO> getAllocationOptions(long requestId) {
+        List<AllocationProposalDTO> options = new ArrayList<>();
+
+        ImportOrderRepository.RequestSummary request = repository.findRequestById(requestId);
+        if (request == null) {
+            return options;
+        }
+
+        // Số lượng đề xuất tự động theo (mặt hàng, site)
+        Map<String, Integer> suggested = new HashMap<>();
+        for (AllocationProposalDTO p : proposeAllocation(requestId)) {
+            suggested.put(p.getMerchandiseDetailId() + "_" + p.getSiteId(), p.getAllocatedQuantity());
+        }
+
+        LocalDate desiredDate = resolveDesiredDate(request.desiredDate());
+        LocalDate today = LocalDate.now();
+
+        for (ImportOrderRepository.RequestDetailItem item : repository.getRequestDetails(requestId)) {
+            for (ImportOrderRepository.SiteInventoryInfo site : repository.getSitesInventory(item.merchandiseDetailId())) {
+                boolean shipOk = !today.plusDays(site.deliveryByShip()).isAfter(desiredDate);
+                String delivery = shipOk ? "SHIP" : "AIR";
+                long deliveryDays = shipOk ? site.deliveryByShip() : site.deliveryByAir();
+                String expectedDate = today.plusDays(deliveryDays).toString();
+                int suggestedQty = suggested.getOrDefault(item.merchandiseDetailId() + "_" + site.siteId(), 0);
+
+                options.add(new AllocationProposalDTO(
+                        site.siteId(),
+                        site.siteName(),
+                        item.merchandiseDetailId(),
+                        item.merchandiseName(),
+                        item.unit(),
+                        suggestedQty,
+                        delivery,
+                        expectedDate,
+                        site.price(),
+                        site.availableQuantity()
+                ));
+            }
+        }
+        return options;
+    }
+
+    private LocalDate resolveDesiredDate(String desiredDateText) {
+        LocalDate desired = LocalDate.now().plusDays(30); // fallback mặc định
+        if (desiredDateText != null && !desiredDateText.isBlank()) {
+            try {
+                desired = LocalDate.parse(desiredDateText);
+            } catch (Exception ignored) {
+            }
+        }
+        return desired;
     }
 
     /**

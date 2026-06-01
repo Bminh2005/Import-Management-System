@@ -50,8 +50,8 @@ public class TestProcurementAllocation {
         List<ImportOrderRepository.RequestSummary> pendingRequests = service.getPendingRequests();
         System.out.println("\nPending Requests in DB:");
         for (ImportOrderRepository.RequestSummary req : pendingRequests) {
-            System.out.printf(" - ID: %d | Code: %s | CreatedBy: %s | DesiredDate: %s | Status: %s | ItemCount: %d | Priority: %s%n",
-                    req.id(), req.code(), req.createdBy(), req.desiredDate(), req.status(), req.itemCount(), req.priority());
+            System.out.printf(" - ID: %d | Code: %s | CreatedBy: %s | DesiredDate: %s | Status: %s | ItemCount: %d%n",
+                    req.id(), req.code(), req.createdBy(), req.desiredDate(), req.status(), req.itemCount());
         }
 
         if (pendingRequests.isEmpty()) {

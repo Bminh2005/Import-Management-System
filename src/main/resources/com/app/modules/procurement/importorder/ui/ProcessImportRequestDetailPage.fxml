@@ -3,15 +3,11 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
@@ -40,7 +36,7 @@
                 <Label fx:id="titleLabel"
                        text="Xử lý yêu cầu cụ thể"
                        styleClass="page-title"/>
-                <Label text="Kiểm tra thông tin yêu cầu, chọn site nhập hàng và xác nhận phân bổ"
+                <Label text="Phân bổ từng mặt hàng đến site có tồn kho và xác nhận"
                        styleClass="page-subtitle"/>
             </VBox>
 
@@ -52,168 +48,60 @@
         <!-- Request overview -->
         <GridPane hgap="18" vgap="18">
             <columnConstraints>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
             </columnConstraints>
 
             <VBox styleClass="card info-card" GridPane.columnIndex="0" spacing="8">
                 <Label text="Mã yêu cầu" styleClass="info-title"/>
-                <Label fx:id="requestCodeLabel" text="REQ-2024-004" styleClass="info-value"/>
+                <Label fx:id="requestCodeLabel" text="-" styleClass="info-value"/>
             </VBox>
 
             <VBox styleClass="card info-card" GridPane.columnIndex="1" spacing="8">
                 <Label text="Ngày tạo" styleClass="info-title"/>
-                <Label fx:id="createdDateLabel" text="2024-05-10" styleClass="info-value"/>
+                <Label fx:id="createdDateLabel" text="-" styleClass="info-value"/>
             </VBox>
 
             <VBox styleClass="card info-card" GridPane.columnIndex="2" spacing="8">
                 <Label text="Người tạo" styleClass="info-title"/>
-                <Label fx:id="createdByLabel" text="Nguyễn Văn An" styleClass="info-value"/>
-            </VBox>
-
-            <VBox styleClass="card info-card" GridPane.columnIndex="3" spacing="8">
-                <Label text="Mức ưu tiên" styleClass="info-title"/>
-                <HBox alignment="CENTER_LEFT">
-                    <Label fx:id="priorityBadge"
-                           text="Cao"
-                           styleClass="priority-badge priority-high"/>
-                </HBox>
+                <Label fx:id="createdByLabel" text="-" styleClass="info-value"/>
             </VBox>
         </GridPane>
 
-        <!-- Main content -->
-        <HBox spacing="22" alignment="TOP_LEFT">
-
-            <!-- Left: request items -->
-            <VBox styleClass="card items-card" spacing="0" HBox.hgrow="ALWAYS">
-                <VBox spacing="5" styleClass="section-heading">
-                    <Label text="Danh sách mặt hàng cần nhập"
+        <!-- Allocation section -->
+        <VBox styleClass="card items-card" spacing="14">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Phân bổ mặt hàng theo site"
                            styleClass="section-title"/>
                     <Label fx:id="itemCountLabel"
                            text="0 mặt hàng"
                            styleClass="section-subtitle"/>
                 </VBox>
 
-                <GridPane styleClass="items-table-header">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="16"/>
-                        <ColumnConstraints percentWidth="34"/>
-                        <ColumnConstraints percentWidth="16"/>
-                        <ColumnConstraints percentWidth="16"/>
-                        <ColumnConstraints percentWidth="18"/>
-                    </columnConstraints>
+                <Button text="Tự động phân bổ"
+                        styleClass="outline-button"
+                        onAction="#onAuto"/>
+            </HBox>
 
-                    <Label text="MÃ HÀNG"
-                           styleClass="table-header-label"
-                           GridPane.columnIndex="0"/>
-                    <Label text="TÊN MẶT HÀNG"
-                           styleClass="table-header-label"
-                           GridPane.columnIndex="1"/>
-                    <Label text="SỐ LƯỢNG"
-                           styleClass="table-header-label"
-                           GridPane.columnIndex="2"/>
-                    <Label text="ĐƠN VỊ"
-                           styleClass="table-header-label"
-                           GridPane.columnIndex="3"/>
-                    <Label text="NGÀY CẦN"
-                           styleClass="table-header-label"
-                           GridPane.columnIndex="4"/>
-                </GridPane>
+            <Label text="Hệ thống tự đề xuất số lượng theo tồn kho và ngày nhận. Bạn có thể chỉnh tay số lượng ở từng site trước khi xác nhận."
+                   wrapText="true"
+                   styleClass="section-subtitle"/>
 
-                <VBox fx:id="itemsList"/>
-            </VBox>
-
-            <!-- Right: process panel -->
-            <VBox styleClass="card process-panel" spacing="18">
-                <VBox spacing="5">
-                    <Label text="Thông tin phân bổ"
-                           styleClass="section-title"/>
-                    <Label text="Chọn site và ghi chú xử lý yêu cầu"
-                           styleClass="section-subtitle"/>
-                </VBox>
-
-                <VBox spacing="8">
-                    <Label text="Site nhận đơn" styleClass="form-label"/>
-                    <ComboBox fx:id="siteComboBox"
-                              promptText="Chọn site"
-                              maxWidth="Infinity"
-                              styleClass="form-combo"/>
-                </VBox>
-
-                <VBox spacing="8">
-                    <Label text="Nhà cung cấp đề xuất" styleClass="form-label"/>
-                    <ComboBox fx:id="supplierComboBox"
-                              promptText="Chọn nhà cung cấp"
-                              maxWidth="Infinity"
-                              styleClass="form-combo"/>
-                </VBox>
-
-                <VBox spacing="8">
-                    <Label text="Ngày dự kiến đặt hàng" styleClass="form-label"/>
-                    <TextField fx:id="expectedOrderDateField"
-                               promptText="yyyy-MM-dd"
-                               styleClass="form-field"/>
-                </VBox>
-
-                <VBox spacing="8">
-                    <Label text="Ghi chú xử lý" styleClass="form-label"/>
-                    <TextArea fx:id="noteArea"
-                              promptText="Nhập ghi chú cho yêu cầu này..."
-                              prefRowCount="5"
-                              wrapText="true"
-                              styleClass="form-area"/>
-                </VBox>
-
-                <VBox spacing="10" styleClass="process-warning-box">
-                    <Label text="Lưu ý" styleClass="warning-title"/>
-                    <Label text="Sau khi xác nhận phân bổ, yêu cầu sẽ được chuyển sang trạng thái đã phân bổ và gửi đến site đã chọn."
-                           wrapText="true"
-                           styleClass="warning-text"/>
-                </VBox>
-
-                <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="Từ chối"
-                            styleClass="danger-button"
-                            onAction="#onReject"/>
-                    <Button text="Lưu nháp"
-                            styleClass="outline-button"
-                            onAction="#onSaveDraft"/>
-                    <Button text="Xác nhận phân bổ"
-                            styleClass="primary-button"
-                            onAction="#onConfirmAllocation"/>
-                </HBox>
-            </VBox>
-        </HBox>
-
-        <!-- Timeline -->
-        <VBox styleClass="card timeline-card" spacing="16">
-            <Label text="Lịch sử xử lý"
-                   styleClass="section-title"/>
-
-            <VBox fx:id="timelineList" spacing="12">
-                <HBox spacing="12" alignment="TOP_LEFT" styleClass="timeline-item">
-                    <Label text="" styleClass="timeline-dot timeline-dot-primary"/>
-                    <VBox spacing="3">
-                        <Label text="Yêu cầu được tạo bởi bộ phận bán hàng"
-                               styleClass="timeline-title"/>
-                        <Label fx:id="createdTimelineLabel"
-                               text="2024-05-10"
-                               styleClass="timeline-description"/>
-                    </VBox>
-                </HBox>
-
-                <HBox spacing="12" alignment="TOP_LEFT" styleClass="timeline-item">
-                    <Label text="" styleClass="timeline-dot timeline-dot-warning"/>
-                    <VBox spacing="3">
-                        <Label text="Đang chờ bộ phận đặt hàng quốc tế xử lý"
-                               styleClass="timeline-title"/>
-                        <Label text="Cần chọn site và xác nhận phân bổ"
-                               styleClass="timeline-description"/>
-                    </VBox>
-                </HBox>
-            </VBox>
+            <VBox fx:id="itemsList" spacing="14"/>
         </VBox>
+
+        <!-- Actions -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label fx:id="messageLabel" text="" wrapText="true" HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Từ chối"
+                    styleClass="danger-button"
+                    onAction="#onReject"/>
+            <Button text="Xác nhận phân bổ"
+                    styleClass="primary-button"
+                    onAction="#onConfirmAllocation"/>
+        </HBox>
     </VBox>
 </fx:root>

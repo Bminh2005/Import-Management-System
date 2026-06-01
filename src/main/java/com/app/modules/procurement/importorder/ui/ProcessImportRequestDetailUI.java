@@ -2,28 +2,29 @@ package com.app.modules.procurement.importorder.ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import com.app.modules.procurement.importorder.dto.AllocationProposalDTO;
+import com.app.modules.procurement.importorder.repository.ImportOrderRepository;
 import com.app.modules.procurement.importorder.service.ImportOrderService;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * UI Class cho màn "Xử lý yêu cầu cụ thể".
- * Kế thừa ScrollPane và nạp FXML thông qua fx:root.
+ * Mỗi mặt hàng được phân bổ ra các site có tồn kho; người dùng có thể để hệ thống
+ * tự đề xuất ("Tự động phân bổ") hoặc tự nhập số lượng cho từng site rồi xác nhận.
  */
 public class ProcessImportRequestDetailUI extends ScrollPane {
 
@@ -32,21 +33,16 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
     @FXML private Label requestCodeLabel;
     @FXML private Label createdDateLabel;
     @FXML private Label createdByLabel;
-    @FXML private Label priorityBadge;
     @FXML private Label itemCountLabel;
-    @FXML private Label createdTimelineLabel;
+    @FXML private Label messageLabel;
 
     @FXML private VBox itemsList;
 
-    @FXML private ComboBox<String> siteComboBox;
-    @FXML private ComboBox<String> supplierComboBox;
-    @FXML private TextField expectedOrderDateField;
-    @FXML private TextArea noteArea;
-
     private final ImportOrderService service = new ImportOrderService();
-    private List<AllocationProposalDTO> currentProposals = new ArrayList<>();
     private long currentRequestId;
     private ImportRequestDetail current;
+    private List<AllocationProposalDTO> options = new ArrayList<>();
+    private final List<OptionRow> rowControls = new ArrayList<>();
 
     public ProcessImportRequestDetailUI() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ProcessImportRequestDetailPage.fxml"));
@@ -57,48 +53,25 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        setupFormOptions();
-    }
-
-    private void setupFormOptions() {
-        siteComboBox.getItems().setAll(
-                "Amazon US",
-                "Alibaba CN",
-                "Rakuten JP",
-                "Shopee SG",
-                "eBay Global"
-        );
-
-        supplierComboBox.getItems().setAll(
-                "Global Supplier Co.",
-                "Asia Import Partner",
-                "US Wholesale Hub",
-                "China Manufacturing Group",
-                "Japan Trading Service"
-        );
-
-        expectedOrderDateField.setText(LocalDate.now().plusDays(2).toString());
     }
 
     /**
-     * Nạp dữ liệu yêu cầu theo mã.
+     * Nạp dữ liệu yêu cầu theo mã (chính là id trong DB).
      */
     public void loadRequest(String requestCode) {
         try {
-            long reqId = Long.parseLong(requestCode.replace("REQ-", "").replace("REQ", ""));
+            long reqId = Long.parseLong(requestCode.trim());
             this.currentRequestId = reqId;
-            com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestSummary reqSummary = service.getRequestById(reqId);
+
+            ImportOrderRepository.RequestSummary reqSummary = service.getRequestById(reqId);
             if (reqSummary == null) {
                 System.out.println("Không tìm thấy yêu cầu: " + requestCode);
                 return;
             }
 
-            List<com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestDetailItem> dbItems = service.getRequestDetails(reqId);
             List<ImportRequestItemRow> items = new ArrayList<>();
-            for (com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestDetailItem item : dbItems) {
+            for (ImportOrderRepository.RequestDetailItem item : service.getRequestDetails(reqId)) {
                 items.add(new ImportRequestItemRow(
-                        "MD-" + item.merchandiseDetailId(),
                         item.merchandiseName(),
                         item.quantity(),
                         item.unit(),
@@ -111,17 +84,11 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
                     reqSummary.code(),
                     reqSummary.createdDate(),
                     reqSummary.createdBy(),
-                    reqSummary.priority(),
                     reqSummary.status(),
                     items
             );
 
-            this.currentProposals = service.proposeAllocation(reqId);
-
-            if (!currentProposals.isEmpty()) {
-                siteComboBox.getSelectionModel().select(currentProposals.get(0).getSiteName());
-                supplierComboBox.getSelectionModel().select("Global Supplier Co.");
-            }
+            this.options = service.getAllocationOptions(reqId);
 
             render();
         } catch (Exception e) {
@@ -138,87 +105,99 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
         requestCodeLabel.setText(current.code());
         createdDateLabel.setText(current.createdDate());
         createdByLabel.setText(current.createdBy());
-        createdTimelineLabel.setText(current.createdDate());
 
         statusBadge.setText(getStatusLabel(current.status()));
-        statusBadge.getStyleClass().setAll(
-                "status-badge",
-                getStatusStyleClass(current.status())
-        );
-
-        priorityBadge.setText(getPriorityLabel(current.priority()));
-        priorityBadge.getStyleClass().setAll(
-                "priority-badge",
-                getPriorityStyleClass(current.priority())
-        );
+        statusBadge.getStyleClass().setAll("status-badge", getStatusStyleClass(current.status()));
 
         itemCountLabel.setText(current.items().size() + " mặt hàng");
 
         itemsList.getChildren().clear();
+        rowControls.clear();
         for (ImportRequestItemRow item : current.items()) {
-            itemsList.getChildren().add(buildItemRow(item));
+            itemsList.getChildren().add(buildItemBlock(item));
         }
     }
 
-    private GridPane buildItemRow(ImportRequestItemRow item) {
-        GridPane row = new GridPane();
-        row.getStyleClass().add("item-row");
-        row.setHgap(12);
-        row.setVgap(4);
-        applyItemColumns(row);
+    private VBox buildItemBlock(ImportRequestItemRow item) {
+        VBox block = new VBox(8);
+        block.getStyleClass().add("item-row");
 
-        Label codeLabel = new Label(item.code());
-        codeLabel.getStyleClass().add("item-code");
-        row.add(codeLabel, 0, 0);
+        HBox header = new HBox(12);
+        header.setAlignment(Pos.CENTER_LEFT);
 
-        Label nameLabel = new Label(item.name());
-        nameLabel.getStyleClass().add("item-name");
-        row.add(nameLabel, 1, 0);
+        Label name = new Label(item.name());
+        name.getStyleClass().add("item-name");
+        name.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(name, Priority.ALWAYS);
 
-        Label quantityLabel = new Label(String.format("%,d", item.quantity()));
-        quantityLabel.getStyleClass().add("item-quantity");
-        row.add(quantityLabel, 2, 0);
+        Label requested = new Label("Yêu cầu: " + String.format("%,d", item.quantity()) + " " + item.unit());
+        requested.getStyleClass().add("item-muted");
 
-        Label unitLabel = new Label(item.unit());
-        unitLabel.getStyleClass().add("item-muted");
-        row.add(unitLabel, 3, 0);
+        Label needDate = new Label("Ngày cần: "
+                + (item.requiredDate() == null || item.requiredDate().isBlank() ? "—" : item.requiredDate()));
+        needDate.getStyleClass().add("item-muted");
 
-        Label dateLabel = new Label(item.requiredDate());
-        dateLabel.getStyleClass().add("item-muted");
-        row.add(dateLabel, 4, 0);
-        GridPane.setHalignment(dateLabel, HPos.LEFT);
+        header.getChildren().addAll(name, requested, needDate);
+        block.getChildren().add(header);
 
-        AllocationProposalDTO prop = findProposalForMerchandise(item.merchandiseDetailId());
-        if (prop != null) {
-            String deliveryLabelText = prop.getDeliveryType().equals("SHIP") ? "Đường biển (Tối ưu)" : "Đường hàng không";
-            Label propLabel = new Label("Đề xuất phân bổ: " + prop.getSiteName() + " (" + deliveryLabelText + ") | SL: " + prop.getAllocatedQuantity() + " | Dự kiến giao: " + prop.getExpectedDeliveryDate());
-            propLabel.setStyle("-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-padding: 2 0 0 0;");
-            row.add(propLabel, 1, 1, 4, 1);
-        } else {
-            Label propLabel = new Label("Đề xuất phân bổ: Không tìm thấy site phù hợp có tồn kho");
-            propLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-padding: 2 0 0 0;");
-            row.add(propLabel, 1, 1, 4, 1);
+        List<AllocationProposalDTO> opts = optionsForItem(item.merchandiseDetailId());
+        if (opts.isEmpty()) {
+            Label none = new Label("Không có site nào còn tồn kho cho mặt hàng này");
+            none.setStyle("-fx-text-fill:#ef4444; -fx-font-weight:bold;");
+            block.getChildren().add(none);
+            return block;
         }
 
-        return row;
+        GridPane grid = new GridPane();
+        grid.setHgap(12);
+        grid.setVgap(6);
+        addColumn(grid, 28);
+        addColumn(grid, 16);
+        addColumn(grid, 20);
+        addColumn(grid, 18);
+        addColumn(grid, 18);
+
+        grid.add(headerCell("SITE"), 0, 0);
+        grid.add(headerCell("GIAO HÀNG"), 1, 0);
+        grid.add(headerCell("NGÀY NHẬN"), 2, 0);
+        grid.add(headerCell("TỒN KHO"), 3, 0);
+        grid.add(headerCell("SỐ LƯỢNG PHÂN BỔ"), 4, 0);
+
+        int r = 1;
+        for (AllocationProposalDTO opt : opts) {
+            grid.add(new Label(opt.getSiteName()), 0, r);
+            grid.add(new Label(opt.getDeliveryType().equals("SHIP") ? "Đường biển" : "Đường hàng không"), 1, r);
+            grid.add(new Label(opt.getExpectedDeliveryDate()), 2, r);
+            grid.add(new Label(String.format("%,d", opt.getAvailableQuantity()) + " " + item.unit()), 3, r);
+
+            TextField qtyField = new TextField(opt.getAllocatedQuantity() > 0 ? String.valueOf(opt.getAllocatedQuantity()) : "");
+            qtyField.setPromptText("0");
+            qtyField.setPrefWidth(120);
+            grid.add(qtyField, 4, r);
+
+            rowControls.add(new OptionRow(opt, qtyField));
+            r++;
+        }
+
+        block.getChildren().add(grid);
+        return block;
     }
 
-    private AllocationProposalDTO findProposalForMerchandise(long mdId) {
-        if (currentProposals == null) return null;
-        for (AllocationProposalDTO prop : currentProposals) {
-            if (prop.getMerchandiseDetailId() == mdId) {
-                return prop;
+    private Label headerCell(String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add("table-header-label");
+        return label;
+    }
+
+    private List<AllocationProposalDTO> optionsForItem(long mdId) {
+        List<AllocationProposalDTO> result = new ArrayList<>();
+        if (options == null) return result;
+        for (AllocationProposalDTO opt : options) {
+            if (opt.getMerchandiseDetailId() == mdId) {
+                result.add(opt);
             }
         }
-        return null;
-    }
-
-    private void applyItemColumns(GridPane grid) {
-        addColumn(grid, 16);
-        addColumn(grid, 34);
-        addColumn(grid, 16);
-        addColumn(grid, 16);
-        addColumn(grid, 18);
+        return result;
     }
 
     private void addColumn(GridPane grid, double percent) {
@@ -227,42 +206,103 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
         grid.getColumnConstraints().add(column);
     }
 
+    private void showMessage(String text, boolean isError) {
+        messageLabel.setText(text);
+        messageLabel.setStyle("-fx-font-weight:bold; -fx-text-fill:" + (isError ? "#ef4444" : "#10b981") + ";");
+    }
+
     private String getStatusLabel(String status) {
         return switch (status) {
-            case "allocated" -> "Đã phân bổ";
+            case "allocated", "processed" -> "Đã phân bổ";
             case "rejected" -> "Đã từ chối";
+            case "processing" -> "Đang xử lý";
             default -> "Chờ xử lý";
         };
     }
 
     private String getStatusStyleClass(String status) {
         return switch (status) {
-            case "allocated" -> "status-allocated";
+            case "allocated", "processed" -> "status-allocated";
             case "rejected" -> "status-rejected";
             default -> "status-pending";
         };
     }
 
-    private String getPriorityLabel(String priority) {
-        return switch (priority) {
-            case "medium" -> "Trung bình";
-            case "low" -> "Thấp";
-            default -> "Cao";
-        };
+    @FXML
+    private void onAuto() {
+        if (current == null) {
+            return;
+        }
+        options = service.getAllocationOptions(currentRequestId);
+        render();
+        showMessage("Đã phân bổ tự động theo đề xuất của hệ thống. Bạn có thể chỉnh tay số lượng nếu cần.", false);
     }
 
-    private String getPriorityStyleClass(String priority) {
-        return switch (priority) {
-            case "medium" -> "priority-medium";
-            case "low" -> "priority-low";
-            default -> "priority-high";
-        };
+    @FXML
+    private void onConfirmAllocation() {
+        if (current == null) {
+            return;
+        }
+
+        List<AllocationProposalDTO> chosen = new ArrayList<>();
+        for (OptionRow row : rowControls) {
+            String text = row.field().getText() == null ? "" : row.field().getText().trim();
+            if (text.isEmpty()) {
+                continue;
+            }
+            int qty;
+            try {
+                qty = Integer.parseInt(text);
+            } catch (NumberFormatException e) {
+                showMessage("Số lượng không hợp lệ ở site " + row.option().getSiteName() + ".", true);
+                return;
+            }
+            if (qty < 0) {
+                showMessage("Số lượng không được âm (site " + row.option().getSiteName() + ").", true);
+                return;
+            }
+            if (qty == 0) {
+                continue;
+            }
+            if (qty > row.option().getAvailableQuantity()) {
+                showMessage("Site " + row.option().getSiteName() + " chỉ còn "
+                        + row.option().getAvailableQuantity() + " " + row.option().getUnit()
+                        + ", không đủ để phân bổ " + qty + ".", true);
+                return;
+            }
+            row.option().setAllocatedQuantity(qty);
+            chosen.add(row.option());
+        }
+
+        if (chosen.isEmpty()) {
+            showMessage("Chưa nhập số lượng phân bổ cho site nào.", true);
+            return;
+        }
+
+        long currentUserId = 3;
+        boolean success = service.confirmAllocation(currentRequestId, chosen, currentUserId);
+        if (success) {
+            current = current.withStatus("processed");
+            options = service.getAllocationOptions(currentRequestId); // làm mới tồn kho sau khi trừ
+            render();
+            showMessage("Phân bổ thành công! Đơn hàng đã được tạo và tồn kho đã cập nhật.", false);
+        } else {
+            showMessage("Phân bổ thất bại (lỗi ghi Database). Vui lòng kiểm tra lại tồn kho.", true);
+        }
+    }
+
+    @FXML
+    private void onReject() {
+        if (current == null) {
+            return;
+        }
+        current = current.withStatus("rejected");
+        render();
+        showMessage("Đã đánh dấu từ chối yêu cầu.", true);
     }
 
     @FXML
     private void onBack() {
-        System.out.println("Nội dung chức năng: Quay lại màn Xử lý Yêu cầu nhập hàng");
-
         ProcessImportRequestsUI root = new ProcessImportRequestsUI();
 
         Scene scene = itemsList.getScene();
@@ -273,85 +313,22 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
         }
     }
 
-    @FXML
-    private void onReject() {
-        if (current == null) {
-            return;
-        }
-
-        String note = noteArea.getText() == null ? "" : noteArea.getText().trim();
-
-        System.out.println("Nội dung chức năng: Từ chối yêu cầu "
-                + current.code()
-                + ", ghi chú: "
-                + note);
-
-        current = current.withStatus("rejected");
-        render();
-    }
-
-    @FXML
-    private void onSaveDraft() {
-        if (current == null) {
-            return;
-        }
-
-        System.out.println("Nội dung chức năng: Lưu nháp xử lý yêu cầu "
-                + current.code()
-                + ", site: "
-                + siteComboBox.getValue()
-                + ", supplier: "
-                + supplierComboBox.getValue());
-    }
-
-    @FXML
-    private void onConfirmAllocation() {
-        if (current == null) {
-            return;
-        }
-
-        if (currentProposals == null || currentProposals.isEmpty()) {
-            System.out.println("Nội dung chức năng: Không có đề xuất phân bổ nào hợp lệ.");
-            return;
-        }
-
-        System.out.println("Nội dung chức năng: Xác nhận phân bổ yêu cầu "
-                + current.code()
-                + " lưu vào Database...");
-
-        long currentUserId = 3; 
-        boolean success = service.confirmAllocation(currentRequestId, currentProposals, currentUserId);
-        if (success) {
-            System.out.println("Phân bổ thành công!");
-            current = current.withStatus("allocated");
-            render();
-        } else {
-            System.out.println("Phân bổ thất bại (Lỗi Database)!");
-        }
+    private record OptionRow(AllocationProposalDTO option, TextField field) {
     }
 
     private record ImportRequestDetail(
             String code,
             String createdDate,
             String createdBy,
-            String priority,
             String status,
             List<ImportRequestItemRow> items
     ) {
         private ImportRequestDetail withStatus(String newStatus) {
-            return new ImportRequestDetail(
-                    code,
-                    createdDate,
-                    createdBy,
-                    priority,
-                    newStatus,
-                    items
-            );
+            return new ImportRequestDetail(code, createdDate, createdBy, newStatus, items);
         }
     }
 
     private record ImportRequestItemRow(
-            String code,
             String name,
             int quantity,
             String unit,

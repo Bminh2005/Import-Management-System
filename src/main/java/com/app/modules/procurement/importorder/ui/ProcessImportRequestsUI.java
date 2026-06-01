@@ -26,17 +26,13 @@ import java.util.List;
 /**
  * UI Class cho màn "Xử lý Yêu cầu nhập hàng".
  * Kế thừa ScrollPane và nạp FXML thông qua fx:root.
+ * Chỉ hiển thị các trường có thật trong database.
  */
 public class ProcessImportRequestsUI extends ScrollPane {
 
-    @FXML private Label pendingCountLabel;
-    @FXML private Label highPriorityCountLabel;
-    @FXML private Label totalItemsLabel;
-    @FXML private Label availableSitesLabel;
     @FXML private Label resultCountLabel;
 
     @FXML private TextField searchField;
-    @FXML private ComboBox<String> priorityFilter;
     @FXML private ComboBox<String> sortFilter;
 
     @FXML private VBox requestsList;
@@ -57,29 +53,18 @@ public class ProcessImportRequestsUI extends ScrollPane {
 
         setupFilters();
         loadData();
-        renderSummary();
         renderList();
     }
 
     private void setupFilters() {
-        priorityFilter.getItems().setAll(
-                "Tất cả",
-                "Ưu tiên cao",
-                "Ưu tiên trung bình",
-                "Ưu tiên thấp"
-        );
-        priorityFilter.getSelectionModel().select("Tất cả");
-
         sortFilter.getItems().setAll(
                 "Mới nhất",
                 "Cũ nhất",
-                "Ưu tiên cao trước",
                 "Nhiều mặt hàng trước"
         );
         sortFilter.getSelectionModel().select("Mới nhất");
 
         searchField.textProperty().addListener((obs, oldValue, newValue) -> renderList());
-        priorityFilter.valueProperty().addListener((obs, oldValue, newValue) -> renderList());
         sortFilter.valueProperty().addListener((obs, oldValue, newValue) -> renderList());
     }
 
@@ -91,26 +76,11 @@ public class ProcessImportRequestsUI extends ScrollPane {
                     r.code(),
                     r.createdDate(),
                     r.createdBy(),
+                    r.desiredDate(),
                     r.itemCount(),
-                    r.priority(),
                     r.status()
             ));
         }
-    }
-
-    private void renderSummary() {
-        long highPriorityCount = allRequests.stream()
-                .filter(request -> "high".equals(request.priority()))
-                .count();
-
-        int totalItems = allRequests.stream()
-                .mapToInt(PendingImportRequestRow::itemCount)
-                .sum();
-
-        pendingCountLabel.setText(String.valueOf(allRequests.size()));
-        highPriorityCountLabel.setText(String.valueOf(highPriorityCount));
-        totalItemsLabel.setText(String.valueOf(totalItems));
-        availableSitesLabel.setText("18");
     }
 
     private void renderList() {
@@ -135,10 +105,6 @@ public class ProcessImportRequestsUI extends ScrollPane {
                 ? ""
                 : searchField.getText().trim().toLowerCase();
 
-        String selectedPriority = priorityFilter.getValue() == null
-                ? "Tất cả"
-                : priorityFilter.getValue();
-
         List<PendingImportRequestRow> result = new ArrayList<>();
 
         for (PendingImportRequestRow request : allRequests) {
@@ -146,14 +112,7 @@ public class ProcessImportRequestsUI extends ScrollPane {
                     || request.code().toLowerCase().contains(keyword)
                     || request.createdBy().toLowerCase().contains(keyword);
 
-            boolean matchPriority = switch (selectedPriority) {
-                case "Ưu tiên cao" -> "high".equals(request.priority());
-                case "Ưu tiên trung bình" -> "medium".equals(request.priority());
-                case "Ưu tiên thấp" -> "low".equals(request.priority());
-                default -> true;
-            };
-
-            if (matchKeyword && matchPriority) {
+            if (matchKeyword) {
                 result.add(request);
             }
         }
@@ -167,22 +126,11 @@ public class ProcessImportRequestsUI extends ScrollPane {
 
         switch (sort) {
             case "Cũ nhất" -> requests.sort(Comparator.comparing(PendingImportRequestRow::createdDate));
-            case "Ưu tiên cao trước" -> requests.sort(
-                    Comparator.comparingInt(this::priorityRank));
             case "Nhiều mặt hàng trước" -> requests.sort(
                     Comparator.comparingInt(PendingImportRequestRow::itemCount).reversed());
             default -> requests.sort(
                     Comparator.comparing(PendingImportRequestRow::createdDate).reversed());
         }
-    }
-
-    private int priorityRank(PendingImportRequestRow request) {
-        return switch (request.priority()) {
-            case "high" -> 1;
-            case "medium" -> 2;
-            case "low" -> 3;
-            default -> 4;
-        };
     }
 
     private GridPane buildRequestRow(PendingImportRequestRow request) {
@@ -203,15 +151,16 @@ public class ProcessImportRequestsUI extends ScrollPane {
         userLabel.getStyleClass().add("request-user");
         row.add(userLabel, 2, 0);
 
+        Label desiredLabel = new Label(
+                request.desiredDate() == null || request.desiredDate().isBlank()
+                        ? "—"
+                        : request.desiredDate());
+        desiredLabel.getStyleClass().add("request-date");
+        row.add(desiredLabel, 3, 0);
+
         Label itemCountLabel = new Label(request.itemCount() + " mặt hàng");
         itemCountLabel.getStyleClass().add("request-items");
-        row.add(itemCountLabel, 3, 0);
-
-        Label priorityBadge = new Label(getPriorityLabel(request.priority()));
-        priorityBadge.getStyleClass().addAll("badge", getPriorityStyleClass(request.priority()));
-        HBox priorityBox = new HBox(priorityBadge);
-        priorityBox.setAlignment(Pos.CENTER_LEFT);
-        row.add(priorityBox, 4, 0);
+        row.add(itemCountLabel, 4, 0);
 
         Label statusBadge = new Label(getStatusLabel(request.status()));
         statusBadge.getStyleClass().addAll("badge", getStatusStyleClass(request.status()));
@@ -232,13 +181,13 @@ public class ProcessImportRequestsUI extends ScrollPane {
     }
 
     private void applyTableColumns(GridPane grid) {
-        addColumn(grid, 17);
+        addColumn(grid, 15);
+        addColumn(grid, 14);
         addColumn(grid, 16);
         addColumn(grid, 15);
-        addColumn(grid, 13);
         addColumn(grid, 14);
         addColumn(grid, 13);
-        addColumn(grid, 12);
+        addColumn(grid, 13);
     }
 
     private void addColumn(GridPane grid, double percent) {
@@ -247,45 +196,20 @@ public class ProcessImportRequestsUI extends ScrollPane {
         grid.getColumnConstraints().add(column);
     }
 
-    private String getPriorityLabel(String priority) {
-        return switch (priority) {
-            case "high" -> "Cao";
-            case "medium" -> "Trung bình";
-            case "low" -> "Thấp";
-            default -> "Không rõ";
-        };
-    }
-
-    private String getPriorityStyleClass(String priority) {
-        return switch (priority) {
-            case "high" -> "priority-high";
-            case "medium" -> "priority-medium";
-            case "low" -> "priority-low";
-            default -> "priority-low";
-        };
-    }
-
     private String getStatusLabel(String status) {
         return switch (status) {
             case "pending" -> "Chờ xử lý";
-            case "reviewing" -> "Đang xem";
+            case "processing" -> "Đang xử lý";
+            case "processed" -> "Đã xử lý";
             default -> "Không rõ";
         };
     }
 
     private String getStatusStyleClass(String status) {
         return switch (status) {
-            case "reviewing" -> "status-reviewing";
+            case "processing", "processed" -> "status-reviewing";
             default -> "status-pending";
         };
-    }
-
-    @FXML
-    private void onRefresh() {
-        System.out.println("Nội dung chức năng: Làm mới danh sách yêu cầu nhập hàng");
-        loadData();
-        renderSummary();
-        renderList();
     }
 
     @FXML
@@ -320,8 +244,8 @@ public class ProcessImportRequestsUI extends ScrollPane {
             String code,
             String createdDate,
             String createdBy,
+            String desiredDate,
             int itemCount,
-            String priority,
             String status
     ) {
     }

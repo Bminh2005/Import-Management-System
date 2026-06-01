@@ -43,40 +43,6 @@
             </VBox>
         </HBox>
 
-        <!-- Summary cards -->
-        <GridPane hgap="18" vgap="18">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="25"/>
-            </columnConstraints>
-
-            <VBox styleClass="card summary-card" GridPane.columnIndex="0" spacing="8">
-                <Label text="Yêu cầu đang chờ" styleClass="summary-title"/>
-                <Label fx:id="pendingCountLabel" text="0" styleClass="summary-value"/>
-                <Label text="Cần phân bổ site" styleClass="summary-description"/>
-            </VBox>
-
-            <VBox styleClass="card summary-card" GridPane.columnIndex="1" spacing="8">
-                <Label text="Ưu tiên cao" styleClass="summary-title"/>
-                <Label fx:id="highPriorityCountLabel" text="0" styleClass="summary-value warning"/>
-                <Label text="Cần xử lý sớm" styleClass="summary-description"/>
-            </VBox>
-
-            <VBox styleClass="card summary-card" GridPane.columnIndex="2" spacing="8">
-                <Label text="Tổng mặt hàng" styleClass="summary-title"/>
-                <Label fx:id="totalItemsLabel" text="0" styleClass="summary-value"/>
-                <Label text="Trong các yêu cầu chờ" styleClass="summary-description"/>
-            </VBox>
-
-            <VBox styleClass="card summary-card" GridPane.columnIndex="3" spacing="8">
-                <Label text="Site khả dụng" styleClass="summary-title"/>
-                <Label fx:id="availableSitesLabel" text="0" styleClass="summary-value success"/>
-                <Label text="Có thể nhận đơn" styleClass="summary-description"/>
-            </VBox>
-        </GridPane>
-
         <!-- Filter panel -->
         <VBox styleClass="card filter-card" spacing="14">
             <HBox alignment="CENTER_LEFT" spacing="12">
@@ -85,13 +51,6 @@
                     <TextField fx:id="searchField"
                                promptText="Nhập mã yêu cầu, tên khách hàng hoặc mặt hàng..."
                                styleClass="search-field"/>
-                </VBox>
-
-                <VBox spacing="6">
-                    <Label text="Mức ưu tiên" styleClass="filter-label"/>
-                    <ComboBox fx:id="priorityFilter"
-                              prefWidth="170"
-                              styleClass="filter-combo"/>
                 </VBox>
 
                 <VBox spacing="6">
@@ -115,21 +74,17 @@
                 </VBox>
 
                 <Region HBox.hgrow="ALWAYS"/>
-
-                <Button text="Làm mới"
-                        styleClass="outline-button"
-                        onAction="#onRefresh"/>
             </HBox>
 
             <GridPane styleClass="request-table-header">
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="17"/>
+                    <ColumnConstraints percentWidth="15"/>
+                    <ColumnConstraints percentWidth="14"/>
                     <ColumnConstraints percentWidth="16"/>
                     <ColumnConstraints percentWidth="15"/>
-                    <ColumnConstraints percentWidth="13"/>
                     <ColumnConstraints percentWidth="14"/>
                     <ColumnConstraints percentWidth="13"/>
-                    <ColumnConstraints percentWidth="12"/>
+                    <ColumnConstraints percentWidth="13"/>
                 </columnConstraints>
 
                 <Label text="MÃ YÊU CẦU"
@@ -141,10 +96,10 @@
                 <Label text="NGƯỜI TẠO"
                        styleClass="table-header-label"
                        GridPane.columnIndex="2"/>
-                <Label text="SỐ MẶT HÀNG"
+                <Label text="NGÀY MONG MUỐN"
                        styleClass="table-header-label"
                        GridPane.columnIndex="3"/>
-                <Label text="ƯU TIÊN"
+                <Label text="SỐ MẶT HÀNG"
                        styleClass="table-header-label"
                        GridPane.columnIndex="4"/>
                 <Label text="TRẠNG THÁI"
@@ -166,7 +121,7 @@
                   managed="false">
                 <Label text="Không có yêu cầu phù hợp"
                        styleClass="empty-title"/>
-                <Label text="Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc ưu tiên"
+                <Label text="Thử thay đổi từ khóa tìm kiếm"
                        styleClass="empty-description"/>
             </VBox>
         </VBox>
