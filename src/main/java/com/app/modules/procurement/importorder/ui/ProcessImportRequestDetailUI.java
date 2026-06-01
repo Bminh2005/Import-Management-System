@@ -214,7 +214,7 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
     private String getStatusLabel(String status) {
         return switch (status) {
             case "allocated", "processed" -> "Đã phân bổ";
-            case "rejected" -> "Đã từ chối";
+            case "cancelled" -> "Đã hủy";
             case "processing" -> "Đang xử lý";
             default -> "Chờ xử lý";
         };
@@ -223,7 +223,7 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
     private String getStatusStyleClass(String status) {
         return switch (status) {
             case "allocated", "processed" -> "status-allocated";
-            case "rejected" -> "status-rejected";
+            case "cancelled" -> "status-rejected";
             default -> "status-pending";
         };
     }
@@ -292,13 +292,18 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
     }
 
     @FXML
-    private void onReject() {
+    private void onCancel() {
         if (current == null) {
             return;
         }
-        current = current.withStatus("rejected");
-        render();
-        showMessage("Đã đánh dấu từ chối yêu cầu.", true);
+        boolean ok = service.cancelRequest(currentRequestId);
+        if (ok) {
+            current = current.withStatus("cancelled");
+            render();
+            showMessage("Đã hủy yêu cầu (không tạo đơn). Yêu cầu sẽ không còn trong danh sách chờ xử lý.", false);
+        } else {
+            showMessage("Hủy yêu cầu thất bại (lỗi Database).", true);
+        }
     }
 
     @FXML

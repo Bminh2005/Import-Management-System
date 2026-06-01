@@ -96,9 +96,9 @@
         <HBox spacing="12" alignment="CENTER_LEFT">
             <Label fx:id="messageLabel" text="" wrapText="true" HBox.hgrow="ALWAYS"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Từ chối"
+            <Button text="Hủy yêu cầu"
                     styleClass="danger-button"
-                    onAction="#onReject"/>
+                    onAction="#onCancel"/>
             <Button text="Xác nhận phân bổ"
                     styleClass="primary-button"
                     onAction="#onConfirmAllocation"/>
