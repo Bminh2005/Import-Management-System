@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.importassignment.controllers.MerchandiseManagementController"
+            styleClass="content-pane">
+
+    <top>
+        <VBox spacing="16" styleClass="header-section">
+            <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+            <!-- Page Header -->
+            <HBox alignment="CENTER_LEFT">
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="%merchandise.title" styleClass="page-title"/>
+                    <Label text="%merchandise.subtitle" styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="%merchandise.addNew" styleClass="btn-primary" onAction="#onAddNew">
+                    <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+                </Button>
+            </HBox>
+
+            <!-- Search Bar -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="🔍"/>
+                <TextField fx:id="searchField" promptText="%action.search"
+                          HBox.hgrow="ALWAYS" styleClass="search-field">
+                    <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                </TextField>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox spacing="0" BorderPane.alignment="CENTER">
+            <padding><Insets top="0" right="24" bottom="24" left="24"/></padding>
+
+            <!-- Table -->
+            <VBox HBox.hgrow="ALWAYS" spacing="0">
+                <TableView fx:id="merchandiseTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="codeColumn" text="%merchandise.code" prefWidth="120"/>
+                        <TableColumn fx:id="nameColumn" text="%merchandise.name" prefWidth="250"/>
+                        <TableColumn fx:id="unitColumn" text="%merchandise.unit" prefWidth="80"/>
+                        <TableColumn fx:id="categoryColumn" text="%merchandise.category" prefWidth="120"/>
+                        <TableColumn fx:id="statusColumn" text="%merchandise.status" prefWidth="120"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+
+            <!-- Details Panel (Expandable) -->
+            <VBox fx:id="detailsPanel" spacing="16" styleClass="details-panel"
+                  prefWidth="350" minWidth="350">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Chi tiết Mặt hàng" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                    <Button text="✕" onAction="#onCloseDetails" styleClass="btn-close"/>
+                </HBox>
+
+                <Separator/>
+
+                <VBox spacing="12">
+                    <VBox spacing="4">
+                        <Label text="%merchandise.code" styleClass="detail-label"/>
+                        <Label fx:id="detailCodeLabel" styleClass="detail-value-code"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="%merchandise.name" styleClass="detail-label"/>
+                        <Label fx:id="detailNameLabel" styleClass="detail-value" wrapText="true"/>
+                    </VBox>
+
+                    <HBox spacing="20">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="%merchandise.unit" styleClass="detail-label"/>
+                            <Label fx:id="detailUnitLabel" styleClass="detail-value"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="%merchandise.category" styleClass="detail-label"/>
+                            <Label fx:id="detailCategoryLabel" styleClass="detail-value"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="4">
+                        <Label text="%merchandise.price" styleClass="detail-label"/>
+                        <Label fx:id="detailPriceLabel" styleClass="detail-value-price"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="%merchandise.supplier" styleClass="detail-label"/>
+                        <Label fx:id="detailSupplierLabel" styleClass="detail-value"/>
+                    </VBox>
+
+                    <Separator/>
+
+                    <VBox spacing="4">
+                        <Label text="%merchandise.description" styleClass="detail-label"/>
+                        <Label fx:id="detailDescriptionLabel" styleClass="detail-value"
+                              wrapText="true"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.importassignment.controllers.SalesDashboardController"
+      spacing="24" styleClass="dashboard-container">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <!-- Header -->
+    <VBox spacing="8">
+        <Label text="%dashboard.title" styleClass="page-title"/>
+        <Label text="%dashboard.subtitle" styleClass="page-subtitle"/>
+    </VBox>
+
+    <!-- Metrics Cards -->
+    <GridPane hgap="24" vgap="24">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="25"/>
+            <ColumnConstraints percentWidth="25"/>
+            <ColumnConstraints percentWidth="25"/>
+            <ColumnConstraints percentWidth="25"/>
+        </columnConstraints>
+
+        <!-- Card 1: Total Merchandise -->
+        <VBox styleClass="metric-card" spacing="8" GridPane.columnIndex="0">
+            <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+            <HBox alignment="CENTER_LEFT">
+                <Label text="%dashboard.metrics.totalMerchandise" styleClass="metric-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="📦" styleClass="metric-icon"/>
+            </HBox>
+            <Label fx:id="totalMerchandiseLabel" text="48" styleClass="metric-value-blue"/>
+            <Label text="5 mặt hàng mới tuần này" styleClass="metric-detail"/>
+        </VBox>
+
+        <!-- Card 2: Pending Requests -->
+        <VBox styleClass="metric-card" spacing="8" GridPane.columnIndex="1">
+            <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+            <HBox alignment="CENTER_LEFT">
+                <Label text="%dashboard.metrics.pendingRequests" styleClass="metric-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="⏳" styleClass="metric-icon"/>
+            </HBox>
+            <Label fx:id="pendingRequestsLabel" text="12" styleClass="metric-value-yellow"/>
+            <Label text="↑ 3 yêu cầu hôm nay" styleClass="metric-detail-green"/>
+        </VBox>
+
+        <!-- Card 3: This Month -->
+        <VBox styleClass="metric-card" spacing="8" GridPane.columnIndex="2">
+            <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+            <HBox alignment="CENTER_LEFT">
+                <Label text="%dashboard.metrics.thisMonth" styleClass="metric-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="📅" styleClass="metric-icon"/>
+            </HBox>
+            <Label fx:id="thisMonthLabel" text="28" styleClass="metric-value-purple"/>
+            <Label text="Tháng 5/2024" styleClass="metric-detail"/>
+        </VBox>
+
+        <!-- Card 4: Approved -->
+        <VBox styleClass="metric-card" spacing="8" GridPane.columnIndex="3">
+            <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+            <HBox alignment="CENTER_LEFT">
+                <Label text="%dashboard.metrics.approved" styleClass="metric-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="✅" styleClass="metric-icon"/>
+            </HBox>
+            <Label fx:id="approvedLabel" text="24" styleClass="metric-value-green"/>
+            <Label text="Tỷ lệ: 85.7%" styleClass="metric-detail-green"/>
+        </VBox>
+    </GridPane>
+
+    <!-- Quick Actions -->
+    <VBox spacing="16">
+        <Label text="%dashboard.quickActions" styleClass="section-title"/>
+        <GridPane hgap="16">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+            </columnConstraints>
+
+            <Button fx:id="createRequestButton" text="%dashboard.actions.newRequest"
+                    styleClass="btn-primary" onAction="#onCreateRequest"
+                    maxWidth="Infinity" GridPane.columnIndex="0">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            </Button>
+
+            <Button fx:id="addMerchandiseButton" text="%dashboard.actions.addMerchandise"
+                    styleClass="btn-secondary" onAction="#onAddMerchandise"
+                    maxWidth="Infinity" GridPane.columnIndex="1">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            </Button>
+
+            <Button fx:id="viewAllButton" text="%dashboard.actions.viewAll"
+                    styleClass="btn-secondary" onAction="#onViewAll"
+                    maxWidth="Infinity" GridPane.columnIndex="2">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            </Button>
+        </GridPane>
+    </VBox>
+
+    <!-- Recent Requests Table -->
+    <VBox spacing="16" VBox.vgrow="ALWAYS">
+        <Label text="%dashboard.recentRequests" styleClass="section-title"/>
+
+        <TableView fx:id="recentRequestsTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="codeColumn" text="Mã Yêu cầu" prefWidth="150"/>
+                <TableColumn fx:id="dateColumn" text="Ngày Tạo" prefWidth="120"/>
+                <TableColumn fx:id="itemCountColumn" text="Số Mặt hàng" prefWidth="120"/>
+                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="150"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+    <StackPane fx:id="contentContainer" visible="false" managed="false"/>
+
+</VBox>

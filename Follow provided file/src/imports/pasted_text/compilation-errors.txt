@@ -1,0 +1,112 @@
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project import-assignment-system: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/OrdersListController.java:[229,43] incompatible types: java.lang.String cannot be converted to java.time.LocalDate
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/OrdersListController.java:[230,14] cannot find symbol
+[ERROR]   symbol:   method setPriority(java.lang.String)
+[ERROR]   location: variable order of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/OrdersListController.java:[231,14] cannot find symbol
+[ERROR]   symbol:   method setCompletion(int)
+[ERROR]   location: variable order of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/OrdersListController.java:[308,49] cannot find symbol
+[ERROR]   symbol:   method getOrderId()
+[ERROR]   location: variable selected of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[83,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[84,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[85,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[88,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[89,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[90,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[93,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[94,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[95,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[98,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[99,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[100,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/services/MockDataService.java:[101,22] no suitable constructor found for RequestItem(com.importassignment.models.Merchandise,int,java.time.LocalDate)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.importassignment.models.RequestItem.RequestItem(int,com.importassignment.models.Merchandise,int,java.time.LocalDate) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[157,57] incompatible types: java.lang.String cannot be converted to java.time.LocalDate
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[158,57] incompatible types: java.lang.String cannot be converted to java.time.LocalDate
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[159,57] incompatible types: java.lang.String cannot be converted to java.time.LocalDate
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[160,57] incompatible types: java.lang.String cannot be converted to java.time.LocalDate
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[161,57] incompatible types: java.lang.String cannot be converted to java.time.LocalDate
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[192,49] cannot find symbol
+[ERROR]   symbol:   method getOrderId()
+[ERROR]   location: variable order of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[194,29] cannot find symbol
+[ERROR]   symbol:   method getDate()
+[ERROR]   location: variable order of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[196,29] cannot find symbol
+[ERROR]   symbol:   method getSite()
+[ERROR]   location: variable order of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/DashboardController.java:[197,36] cannot find symbol
+[ERROR]   symbol:   method getTotalItems()
+[ERROR]   location: variable order of type com.importassignment.models.Order
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/SidebarController.java:[127,29] cannot find symbol
+[ERROR]   symbol:   class FXMLLoader
+[ERROR]   location: class com.importassignment.controllers.SidebarController
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/SidebarController.java:[127,53] cannot find symbol
+[ERROR]   symbol:   class FXMLLoader
+[ERROR]   location: class com.importassignment.controllers.SidebarController
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/CreateImportRequestDialogController.java:[235,13] cannot find symbol
+[ERROR]   symbol:   class HBox
+[ERROR]   location: class com.importassignment.controllers.CreateImportRequestDialogController.RequestItemCard
+[ERROR] /C:/Users/binhm/Downloads/javafx-sample/src/main/java/com/importassignment/controllers/CreateImportRequestDialogController.java:[235,31] cannot find symbol
+[ERROR]   symbol:   class HBox
+[ERROR]   location: class com.importassignment.controllers.CreateImportRequestDialogController.RequestItemCard
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

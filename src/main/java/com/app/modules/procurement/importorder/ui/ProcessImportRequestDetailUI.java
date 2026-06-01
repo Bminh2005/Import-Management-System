@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import com.app.modules.procurement.importorder.dto.AllocationProposalDTO;
+import com.app.modules.procurement.importorder.service.ImportOrderService;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,6 +43,9 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
     @FXML private TextField expectedOrderDateField;
     @FXML private TextArea noteArea;
 
+    private final ImportOrderService service = new ImportOrderService();
+    private List<AllocationProposalDTO> currentProposals = new ArrayList<>();
+    private long currentRequestId;
     private ImportRequestDetail current;
 
     public ProcessImportRequestDetailUI() {
@@ -80,70 +85,48 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
      * Nạp dữ liệu yêu cầu theo mã.
      */
     public void loadRequest(String requestCode) {
-        this.current = buildMockRequest(requestCode);
-        render();
-    }
+        try {
+            long reqId = Long.parseLong(requestCode.replace("REQ-", "").replace("REQ", ""));
+            this.currentRequestId = reqId;
+            com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestSummary reqSummary = service.getRequestById(reqId);
+            if (reqSummary == null) {
+                System.out.println("Không tìm thấy yêu cầu: " + requestCode);
+                return;
+            }
 
-    private ImportRequestDetail buildMockRequest(String requestCode) {
-        String createdBy = switch (requestCode) {
-            case "REQ-2024-005" -> "Trần Thị Bình";
-            case "REQ-2024-006" -> "Lê Quốc Huy";
-            case "REQ-2024-007" -> "Phạm Minh Châu";
-            case "REQ-2024-008" -> "Hoàng Hải Nam";
-            default -> "Nguyễn Văn An";
-        };
+            List<com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestDetailItem> dbItems = service.getRequestDetails(reqId);
+            List<ImportRequestItemRow> items = new ArrayList<>();
+            for (com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestDetailItem item : dbItems) {
+                items.add(new ImportRequestItemRow(
+                        "MD-" + item.merchandiseDetailId(),
+                        item.merchandiseName(),
+                        item.quantity(),
+                        item.unit(),
+                        reqSummary.desiredDate(),
+                        item.merchandiseDetailId()
+                ));
+            }
 
-        String createdDate = switch (requestCode) {
-            case "REQ-2024-006" -> "2024-05-09";
-            case "REQ-2024-007" -> "2024-05-08";
-            case "REQ-2024-008" -> "2024-05-07";
-            default -> "2024-05-10";
-        };
+            this.current = new ImportRequestDetail(
+                    reqSummary.code(),
+                    reqSummary.createdDate(),
+                    reqSummary.createdBy(),
+                    reqSummary.priority(),
+                    reqSummary.status(),
+                    items
+            );
 
-        String priority = switch (requestCode) {
-            case "REQ-2024-007" -> "low";
-            case "REQ-2024-005", "REQ-2024-008" -> "medium";
-            default -> "high";
-        };
+            this.currentProposals = service.proposeAllocation(reqId);
 
-        List<ImportRequestItemRow> items = new ArrayList<>();
-        items.add(new ImportRequestItemRow(
-                "MH-001",
-                "Tai nghe Bluetooth chống ồn",
-                120,
-                "cái",
-                "2024-05-20"
-        ));
-        items.add(new ImportRequestItemRow(
-                "MH-002",
-                "Bàn phím cơ RGB",
-                80,
-                "cái",
-                "2024-05-22"
-        ));
-        items.add(new ImportRequestItemRow(
-                "MH-003",
-                "Chuột gaming không dây",
-                150,
-                "cái",
-                "2024-05-25"
-        ));
-        items.add(new ImportRequestItemRow(
-                "MH-004",
-                "Màn hình 27 inch 2K",
-                40,
-                "cái",
-                "2024-05-28"
-        ));
+            if (!currentProposals.isEmpty()) {
+                siteComboBox.getSelectionModel().select(currentProposals.get(0).getSiteName());
+                supplierComboBox.getSelectionModel().select("Global Supplier Co.");
+            }
 
-        return new ImportRequestDetail(
-                requestCode,
-                createdDate,
-                createdBy,
-                priority,
-                "pending",
-                items
-        );
+            render();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void render() {
@@ -181,6 +164,7 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
         GridPane row = new GridPane();
         row.getStyleClass().add("item-row");
         row.setHgap(12);
+        row.setVgap(4);
         applyItemColumns(row);
 
         Label codeLabel = new Label(item.code());
@@ -204,7 +188,29 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
         row.add(dateLabel, 4, 0);
         GridPane.setHalignment(dateLabel, HPos.LEFT);
 
+        AllocationProposalDTO prop = findProposalForMerchandise(item.merchandiseDetailId());
+        if (prop != null) {
+            String deliveryLabelText = prop.getDeliveryType().equals("SHIP") ? "Đường biển (Tối ưu)" : "Đường hàng không";
+            Label propLabel = new Label("Đề xuất phân bổ: " + prop.getSiteName() + " (" + deliveryLabelText + ") | SL: " + prop.getAllocatedQuantity() + " | Dự kiến giao: " + prop.getExpectedDeliveryDate());
+            propLabel.setStyle("-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-padding: 2 0 0 0;");
+            row.add(propLabel, 1, 1, 4, 1);
+        } else {
+            Label propLabel = new Label("Đề xuất phân bổ: Không tìm thấy site phù hợp có tồn kho");
+            propLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-padding: 2 0 0 0;");
+            row.add(propLabel, 1, 1, 4, 1);
+        }
+
         return row;
+    }
+
+    private AllocationProposalDTO findProposalForMerchandise(long mdId) {
+        if (currentProposals == null) return null;
+        for (AllocationProposalDTO prop : currentProposals) {
+            if (prop.getMerchandiseDetailId() == mdId) {
+                return prop;
+            }
+        }
+        return null;
     }
 
     private void applyItemColumns(GridPane grid) {
@@ -304,31 +310,24 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
             return;
         }
 
-        String selectedSite = siteComboBox.getValue();
-        String selectedSupplier = supplierComboBox.getValue();
-        String expectedDate = expectedOrderDateField.getText();
-
-        if (selectedSite == null || selectedSite.isBlank()) {
-            System.out.println("Nội dung chức năng: Vui lòng chọn site nhận đơn");
-            return;
-        }
-
-        if (selectedSupplier == null || selectedSupplier.isBlank()) {
-            System.out.println("Nội dung chức năng: Vui lòng chọn nhà cung cấp");
+        if (currentProposals == null || currentProposals.isEmpty()) {
+            System.out.println("Nội dung chức năng: Không có đề xuất phân bổ nào hợp lệ.");
             return;
         }
 
         System.out.println("Nội dung chức năng: Xác nhận phân bổ yêu cầu "
                 + current.code()
-                + " đến site "
-                + selectedSite
-                + ", nhà cung cấp "
-                + selectedSupplier
-                + ", ngày dự kiến "
-                + expectedDate);
+                + " lưu vào Database...");
 
-        current = current.withStatus("allocated");
-        render();
+        long currentUserId = 3; 
+        boolean success = service.confirmAllocation(currentRequestId, currentProposals, currentUserId);
+        if (success) {
+            System.out.println("Phân bổ thành công!");
+            current = current.withStatus("allocated");
+            render();
+        } else {
+            System.out.println("Phân bổ thất bại (Lỗi Database)!");
+        }
     }
 
     private record ImportRequestDetail(
@@ -356,7 +355,8 @@ public class ProcessImportRequestDetailUI extends ScrollPane {
             String name,
             int quantity,
             String unit,
-            String requiredDate
+            String requiredDate,
+            long merchandiseDetailId
     ) {
     }
 }

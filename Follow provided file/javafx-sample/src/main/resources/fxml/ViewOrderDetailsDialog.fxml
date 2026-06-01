@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.importassignment.controllers.ViewOrderDetailsDialogController"
+      spacing="20" styleClass="dialog-content" prefWidth="700" prefHeight="600">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <!-- Header -->
+    <VBox spacing="8">
+        <Label fx:id="titleLabel" text="Chi tiết Đơn hàng" styleClass="dialog-title"/>
+        <Label text="Thông tin chi tiết về đơn hàng và mặt hàng" styleClass="page-subtitle"/>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Order Info Section -->
+    <VBox spacing="16">
+        <Label text="Thông tin Đơn hàng" styleClass="section-title"/>
+
+        <GridPane hgap="24" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33"/>
+                <ColumnConstraints percentWidth="33"/>
+                <ColumnConstraints percentWidth="34"/>
+            </columnConstraints>
+
+            <!-- Row 1 -->
+            <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Mã đơn hàng" styleClass="info-label"/>
+                <Label fx:id="orderCodeLabel" text="-" styleClass="info-value"/>
+            </VBox>
+
+            <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Ngày tạo" styleClass="info-label"/>
+                <Label fx:id="orderDateLabel" text="-" styleClass="info-value"/>
+            </VBox>
+
+            <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <Label text="Trạng thái" styleClass="info-label"/>
+                <HBox>
+                    <Label fx:id="statusLabel" text="-" styleClass="status-badge"/>
+                </HBox>
+            </VBox>
+
+            <!-- Row 2 -->
+            <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label text="Mã yêu cầu gốc" styleClass="info-label"/>
+                <Label fx:id="requestCodeLabel" text="-" styleClass="info-value"/>
+            </VBox>
+
+            <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="Site được phân" styleClass="info-label"/>
+                <Label fx:id="siteLabel" text="-" styleClass="info-value"/>
+            </VBox>
+
+            <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                <Label text="Tổng giá trị" styleClass="info-label"/>
+                <Label fx:id="totalValueLabel" text="-" styleClass="info-value" style="-fx-text-fill: #2563EB; -fx-font-weight: bold;"/>
+            </VBox>
+        </GridPane>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Order Items Section -->
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <Label text="Danh sách Mặt hàng" styleClass="section-title"/>
+
+        <TableView fx:id="orderItemsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="itemCodeColumn" text="Mã hàng" prefWidth="100"/>
+                <TableColumn fx:id="itemNameColumn" text="Tên mặt hàng" prefWidth="180"/>
+                <TableColumn fx:id="itemQuantityColumn" text="Số lượng" prefWidth="80"/>
+                <TableColumn fx:id="itemUnitColumn" text="Đơn vị" prefWidth="70"/>
+                <TableColumn fx:id="itemUnitPriceColumn" text="Đơn giá" prefWidth="100"/>
+                <TableColumn fx:id="itemTotalPriceColumn" text="Thành tiền" prefWidth="120"/>
+                <TableColumn fx:id="itemDeliveryDateColumn" text="Ngày nhận" prefWidth="100"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+    <!-- Footer Actions -->
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <padding>
+            <Insets top="12"/>
+        </padding>
+
+        <Button text="Đóng" styleClass="btn-secondary" onAction="#onClose">
+            <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+        </Button>
+    </HBox>
+
+</VBox>

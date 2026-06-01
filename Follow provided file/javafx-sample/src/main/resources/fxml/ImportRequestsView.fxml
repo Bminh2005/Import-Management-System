@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.importassignment.controllers.ImportRequestsViewController"
+      spacing="24" styleClass="content-pane">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="%importRequests.title" styleClass="page-title"/>
+            <Label text="%importRequests.subtitle" styleClass="page-subtitle"/>
+        </VBox>
+
+        <Button text="%importRequests.createNew" styleClass="btn-primary" onAction="#onCreateNew">
+            <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+            <graphic>
+                <Label text="+" style="-fx-font-size: 18;"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Requests Table -->
+    <VBox VBox.vgrow="ALWAYS" spacing="0">
+        <TableView fx:id="requestsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="codeColumn" text="%importRequests.requestId" prefWidth="150"/>
+                <TableColumn fx:id="dateColumn" text="%importRequests.createdDate" prefWidth="120"/>
+                <TableColumn fx:id="itemCountColumn" text="%importRequests.itemCount" prefWidth="120"/>
+                <TableColumn fx:id="statusColumn" text="%importRequests.status" prefWidth="150"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+</VBox>

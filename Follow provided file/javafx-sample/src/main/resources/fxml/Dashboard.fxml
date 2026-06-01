@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.importassignment.controllers.DashboardController"
+      styleClass="dashboard"
+      spacing="24">
+
+    <padding>
+        <Insets top="32" bottom="32" left="32" right="32"/>
+    </padding>
+
+    <!-- Page Header -->
+    <VBox spacing="8">
+        <Label text="%dashboard.title" styleClass="page-title"/>
+        <Label text="%dashboard.welcome" styleClass="page-subtitle"/>
+    </VBox>
+
+    <!-- Metrics Cards Grid -->
+    <GridPane fx:id="metricsGrid" hgap="24" vgap="24">
+        <!-- 4 metric cards in a row -->
+    </GridPane>
+
+    <!-- Quick Actions -->
+    <VBox spacing="16" styleClass="card">
+        <padding>
+            <Insets top="24" bottom="24" left="24" right="24"/>
+        </padding>
+
+        <Label text="%dashboard.quickActions" styleClass="section-title"/>
+
+        <HBox spacing="16">
+            <Button text="%dashboard.quickActions.newOrder"
+                    styleClass="primary-button"
+                    onAction="#onCreateNewOrder"
+                    HBox.hgrow="ALWAYS"
+                    maxWidth="Infinity"/>
+
+            <Button text="%dashboard.quickActions.checkInventory"
+                    styleClass="secondary-button"
+                    onAction="#onCheckInventory"
+                    HBox.hgrow="ALWAYS"
+                    maxWidth="Infinity"/>
+
+            <Button text="%dashboard.quickActions.viewReports"
+                    styleClass="outline-button"
+                    onAction="#onViewReports"
+                    HBox.hgrow="ALWAYS"
+                    maxWidth="Infinity"/>
+        </HBox>
+    </VBox>
+
+    <!-- Recent Orders Table -->
+    <VBox spacing="16" styleClass="card" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="24" bottom="24" left="24" right="24"/>
+        </padding>
+
+        <HBox alignment="CENTER_LEFT">
+            <Label text="%dashboard.recentOrders" styleClass="section-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Hyperlink text="Xem tất cả →" onAction="#onViewAllOrders"/>
+        </HBox>
+
+        <TableView fx:id="recentOrdersTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="%orders.id" prefWidth="150" fx:id="orderIdColumn"/>
+                <TableColumn text="%orders.date" prefWidth="150" fx:id="dateColumn"/>
+                <TableColumn text="%orders.status" prefWidth="150" fx:id="statusColumn"/>
+                <TableColumn text="Site" prefWidth="150" fx:id="siteColumn"/>
+                <TableColumn text="%orders.totalItems" prefWidth="100" fx:id="itemsColumn"/>
+                <TableColumn text="%orders.actions" prefWidth="150" fx:id="actionsColumn"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

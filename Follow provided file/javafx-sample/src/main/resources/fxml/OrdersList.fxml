@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.importassignment.controllers.OrdersListController"
+      styleClass="orders-list"
+      spacing="24">
+
+    <padding>
+        <Insets top="32" bottom="32" left="32" right="32"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <VBox VBox.vgrow="ALWAYS">
+            <Label text="%orders.title" styleClass="page-title"/>
+            <Label text="%orders.subtitle" styleClass="page-subtitle"/>
+        </VBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Selected count badge -->
+        <HBox fx:id="selectedBadge" visible="false" styleClass="selected-badge" spacing="8" alignment="CENTER">
+            <Label fx:id="selectedCountLabel" text="0 đã chọn"/>
+            <Button text="✕" styleClass="clear-button" onAction="#clearSelection"/>
+        </HBox>
+
+        <Button text="%orders.new"
+                styleClass="primary-button"
+                onAction="#onCreateOrder">
+            <graphic>
+                <Label text="➕" style="-fx-font-size: 14px;"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Filters Section -->
+    <VBox spacing="16" styleClass="card">
+        <padding>
+            <Insets top="24" bottom="24" left="24" right="24"/>
+        </padding>
+
+        <!-- Search and Actions Bar -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <TextField fx:id="searchField"
+                      promptText="%action.search"
+                      prefWidth="400"
+                      styleClass="search-field"/>
+
+            <Button text="📅 %filter.dateRange" styleClass="filter-button"/>
+            <Button text="🔍 %action.filter" styleClass="filter-button"/>
+            <Button text="📤 %action.export" styleClass="filter-button"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="🔄" styleClass="icon-button" onAction="#refreshData"/>
+        </HBox>
+
+        <!-- Status Filter Chips -->
+        <HBox spacing="8" fx:id="statusFilters">
+            <!-- Filter chips will be added programmatically -->
+        </HBox>
+    </VBox>
+
+    <!-- Orders Table -->
+    <VBox spacing="0" styleClass="card" VBox.vgrow="ALWAYS">
+        <TableView fx:id="ordersTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="selectColumn" prefWidth="50" minWidth="50" maxWidth="50" sortable="false"/>
+                <TableColumn text="%orders.id" fx:id="orderIdColumn" prefWidth="150"/>
+                <TableColumn text="%orders.date" fx:id="dateColumn" prefWidth="150"/>
+                <TableColumn text="%orders.totalItems" fx:id="itemsColumn" prefWidth="100"/>
+                <TableColumn text="%orders.status" fx:id="statusColumn" prefWidth="150"/>
+                <TableColumn text="%orders.priority" fx:id="priorityColumn" prefWidth="120"/>
+                <TableColumn text="%orders.deliveryRange" fx:id="deliveryColumn" prefWidth="150"/>
+                <TableColumn text="%orders.assignedSites" fx:id="sitesColumn" prefWidth="120"/>
+                <TableColumn text="%orders.completion" fx:id="completionColumn" prefWidth="150"/>
+                <TableColumn text="%orders.actions" fx:id="actionsColumn" prefWidth="150" sortable="false"/>
+            </columns>
+        </TableView>
+
+        <!-- Pagination Footer -->
+        <HBox styleClass="table-footer" spacing="20" alignment="CENTER">
+            <padding>
+                <Insets top="16" bottom="16" left="24" right="24"/>
+            </padding>
+
+            <Label fx:id="paginationLabel" text="Hiển thị 1-5 của 24 đơn hàng"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="8">
+                <Button text="◄ Trước" styleClass="pagination-button" fx:id="prevButton"/>
+                <Button text="1" styleClass="pagination-button active"/>
+                <Button text="2" styleClass="pagination-button"/>
+                <Button text="3" styleClass="pagination-button"/>
+                <Button text="Sau ►" styleClass="pagination-button" fx:id="nextButton"/>
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <!-- Context Menu -->
+    <ContextMenu fx:id="tableContextMenu">
+        <items>
+            <MenuItem text="👁 Xem Chi tiết" onAction="#onViewDetails"/>
+            <MenuItem text="✏️ Sửa Đơn hàng" onAction="#onEditOrder"/>
+            <MenuItem text="📋 Nhân bản" onAction="#onDuplicateOrder"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="🗑️ Hủy Đơn hàng" onAction="#onCancelOrder" styleClass="danger-menu-item"/>
+        </items>
+    </ContextMenu>
+</VBox>

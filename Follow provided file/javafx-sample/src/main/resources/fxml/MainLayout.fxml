@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.importassignment.controllers.MainLayoutController"
+            styleClass="root">
+
+    <!-- Left Sidebar -->
+    <left>
+        <fx:include source="Sidebar.fxml" fx:id="sidebar"/>
+    </left>
+
+    <!-- Center Content Area -->
+    <center>
+        <VBox styleClass="main-content">
+            <!-- Header Bar -->
+            <HBox styleClass="header-bar" spacing="20" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField"
+                          promptText="%action.search"
+                          styleClass="search-field"
+                          prefWidth="400"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Language Switcher -->
+                <ComboBox fx:id="languageComboBox"
+                         styleClass="language-combo"
+                         onAction="#onLanguageChange"/>
+
+                <!-- Notifications -->
+                <Button fx:id="notificationButton"
+                       styleClass="icon-button"
+                       text="🔔"/>
+
+                <!-- User Profile -->
+                <MenuButton text="👤 User" styleClass="user-menu">
+                    <items>
+                        <MenuItem text="Profile"/>
+                        <MenuItem text="%settings.general"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem text="Logout"/>
+                    </items>
+                </MenuButton>
+            </HBox>
+
+            <!-- Content Container -->
+            <StackPane fx:id="contentContainer" VBox.vgrow="ALWAYS">
+                <!-- Dynamic content loaded here -->
+            </StackPane>
+        </VBox>
+    </center>
+</BorderPane>

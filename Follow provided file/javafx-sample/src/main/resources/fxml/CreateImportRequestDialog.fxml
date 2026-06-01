@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.importassignment.controllers.CreateImportRequestDialogController"
+            prefWidth="900" prefHeight="700" styleClass="dialog-pane">
+
+    <top>
+        <VBox spacing="12" styleClass="dialog-header">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            <Label text="%request.dialog.title" styleClass="dialog-title"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="16" BorderPane.alignment="CENTER">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <!-- Empty State -->
+            <VBox fx:id="emptyStateLabel" spacing="12" alignment="CENTER"
+                  VBox.vgrow="ALWAYS" styleClass="empty-state">
+                <Label text="📦" style="-fx-font-size: 48;"/>
+                <Label text="%request.dialog.noItems" styleClass="empty-state-text"/>
+            </VBox>
+
+            <!-- Items Container (ScrollPane) -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="items-scroll">
+                <VBox fx:id="itemsContainer" spacing="16">
+                    <padding><Insets top="4" right="4" bottom="4" left="4"/></padding>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Add Item Button -->
+            <Button text="%request.dialog.addItem" onAction="#onAddItem"
+                    maxWidth="Infinity" styleClass="btn-add-item">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                <graphic>
+                    <Label text="+" style="-fx-font-size: 18;"/>
+                </graphic>
+            </Button>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="dialog-footer">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <Label fx:id="itemCountLabel" text="Tổng: 0 mặt hàng" styleClass="item-count-label"
+                   HBox.hgrow="ALWAYS"/>
+
+            <Button text="%action.cancel" onAction="#onCancel" styleClass="btn-secondary">
+                <padding><Insets top="10" right="24" bottom="10" left="24"/></padding>
+            </Button>
+
+            <Button fx:id="saveDraftButton" text="%request.dialog.saveDraft"
+                    onAction="#onSaveDraft" styleClass="btn-secondary-blue">
+                <padding><Insets top="10" right="24" bottom="10" left="24"/></padding>
+            </Button>
+
+            <Button fx:id="sendRequestButton" text="%request.dialog.sendRequest"
+                    onAction="#onSendRequest" styleClass="btn-primary" defaultButton="true">
+                <padding><Insets top="10" right="24" bottom="10" left="24"/></padding>
+                <graphic>
+                    <Label text="📤" style="-fx-font-size: 14;"/>
+                </graphic>
+            </Button>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.importassignment.controllers.SalesMainLayoutController"
+            styleClass="main-layout">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" prefWidth="280" styleClass="sidebar">
+            <!-- Logo -->
+            <VBox spacing="8" styleClass="sidebar-header">
+                <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                <Label text="🛒 Import System" styleClass="sidebar-logo"/>
+                <Label text="Assignment" styleClass="sidebar-subtitle"/>
+            </VBox>
+
+            <!-- Navigation Menu -->
+            <VBox spacing="4" VBox.vgrow="ALWAYS" styleClass="sidebar-nav">
+                <padding><Insets top="24" right="12" bottom="12" left="12"/></padding>
+
+                <Button fx:id="dashboardButton" text="🏠  Trang Chủ"
+                        onAction="#onDashboardClick" maxWidth="Infinity"
+                        styleClass="sidebar-btn">
+                    <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                </Button>
+
+                <Button fx:id="merchandiseButton" text="📦  Quản lý Mặt hàng"
+                        onAction="#onMerchandiseClick" maxWidth="Infinity"
+                        styleClass="sidebar-btn">
+                    <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                </Button>
+
+                <Button fx:id="requestsButton" text="📋  Yêu cầu Nhập hàng"
+                        onAction="#onRequestsClick" maxWidth="Infinity"
+                        styleClass="sidebar-btn">
+                    <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                </Button>
+            </VBox>
+
+            <!-- User Role Badge -->
+            <VBox spacing="8" styleClass="sidebar-footer">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                <VBox spacing="4" styleClass="role-badge">
+                    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                    <Label text="Vai trò hiện tại:" styleClass="role-label"/>
+                    <Label fx:id="roleLabel" text="Bộ phận Bán hàng" styleClass="role-value"/>
+                </VBox>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <VBox>
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="16" styleClass="top-header">
+                <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
+
+                <!-- Search Field -->
+                <HBox spacing="8" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                    <Label text="🔍"/>
+                    <TextField fx:id="searchField" promptText="Tìm kiếm (Ctrl+F)"
+                              HBox.hgrow="ALWAYS" styleClass="header-search">
+                        <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                    </TextField>
+                </HBox>
+
+                <!-- Language Selector -->
+                <ComboBox fx:id="languageComboBox" prefWidth="150" styleClass="language-combo">
+                    <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                </ComboBox>
+
+                <!-- Notifications -->
+                <Button text="🔔" styleClass="btn-notification">
+                    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                </Button>
+
+                <!-- User Avatar -->
+                <Label text="BH" styleClass="user-avatar"/>
+            </HBox>
+
+            <!-- Content Area -->
+            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS">
+                <!-- Views will be loaded here -->
+            </StackPane>
+        </VBox>
+    </center>
+
+    <stylesheets>
+        <URL value="@../css/sales-application.css"/>
+        <URL value="@../css/sales-layout.css"/>
+    </stylesheets>
+
+</BorderPane>

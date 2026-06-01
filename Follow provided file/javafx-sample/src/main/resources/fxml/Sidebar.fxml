@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.importassignment.controllers.SidebarController"
+      styleClass="sidebar"
+      prefWidth="280"
+      spacing="0">
+
+    <!-- Logo Section -->
+    <VBox styleClass="sidebar-header" alignment="CENTER" spacing="8">
+        <padding>
+            <Insets top="20" bottom="20" left="20" right="20"/>
+        </padding>
+        <Label text="🌍" style="-fx-font-size: 32px;"/>
+        <Label text="Import System" styleClass="app-title"/>
+        <Label text="Assignment" styleClass="app-subtitle"/>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Navigation Menu -->
+    <VBox fx:id="navigationMenu" styleClass="navigation-menu" VBox.vgrow="ALWAYS" spacing="4">
+        <padding>
+            <Insets top="12" bottom="12" left="12" right="12"/>
+        </padding>
+
+        <!-- Menu items will be added programmatically -->
+    </VBox>
+
+    <Separator/>
+
+    <!-- User Role Badge -->
+    <VBox styleClass="role-badge" alignment="CENTER" spacing="4">
+        <padding>
+            <Insets top="16" bottom="16" left="16" right="16"/>
+        </padding>
+        <Label text="Vai trò hiện tại" styleClass="role-label"/>
+        <Label fx:id="currentRoleLabel" text="Bộ phận Bán hàng" styleClass="role-value"/>
+    </VBox>
+
+    <!-- Collapse/Expand Button -->
+    <Button fx:id="toggleButton"
+            text="◄"
+            styleClass="toggle-button"
+            onAction="#toggleSidebar"/>
+</VBox>

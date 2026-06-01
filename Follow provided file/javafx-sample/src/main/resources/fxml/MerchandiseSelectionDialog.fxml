@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.importassignment.controllers.MerchandiseSelectionDialogController"
+            prefWidth="1100" prefHeight="700" styleClass="dialog-pane">
+
+    <top>
+        <VBox spacing="16" styleClass="dialog-header">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <Label text="%select.dialog.title" styleClass="dialog-title"/>
+
+            <!-- Search and Filter Row -->
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <!-- Search Field -->
+                <HBox spacing="8" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                    <Label text="🔍"/>
+                    <TextField fx:id="searchField" promptText="%select.dialog.search"
+                              HBox.hgrow="ALWAYS" styleClass="search-field">
+                        <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                    </TextField>
+                </HBox>
+
+                <!-- Category Filter -->
+                <ComboBox fx:id="categoryFilter" prefWidth="200" styleClass="filter-combo">
+                    <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                </ComboBox>
+            </HBox>
+
+            <Label fx:id="resultCountLabel" text="Hiển thị 10 trong 10 mặt hàng"
+                   styleClass="result-count"/>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox spacing="0" BorderPane.alignment="CENTER">
+            <!-- Table -->
+            <VBox HBox.hgrow="ALWAYS" spacing="0">
+                <padding><Insets top="0" right="20" bottom="20" left="20"/></padding>
+
+                <TableView fx:id="merchandiseTable" VBox.vgrow="ALWAYS" styleClass="selection-table">
+                    <columns>
+                        <TableColumn fx:id="codeColumn" text="%merchandise.code" prefWidth="100"/>
+                        <TableColumn fx:id="nameColumn" text="%merchandise.name" prefWidth="250"/>
+                        <TableColumn fx:id="categoryColumn" text="%merchandise.category" prefWidth="120"/>
+                        <TableColumn fx:id="unitColumn" text="%merchandise.unit" prefWidth="80"/>
+                        <TableColumn fx:id="priceColumn" text="%merchandise.price" prefWidth="130"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+
+            <!-- Details Side Panel -->
+            <VBox fx:id="detailsPanel" spacing="12" styleClass="side-details-panel"
+                  prefWidth="320" minWidth="320">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Chi tiết" styleClass="details-title" HBox.hgrow="ALWAYS"/>
+                    <Button text="✕" onAction="#onCloseDetails" styleClass="btn-close-small"/>
+                </HBox>
+
+                <Separator/>
+
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="details-scroll">
+                    <VBox spacing="12">
+                        <VBox spacing="4">
+                            <Label text="%merchandise.code" styleClass="detail-label-small"/>
+                            <Label fx:id="detailCodeLabel" styleClass="detail-value-code-small"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="%merchandise.name" styleClass="detail-label-small"/>
+                            <Label fx:id="detailNameLabel" styleClass="detail-value-small"
+                                  wrapText="true"/>
+                        </VBox>
+
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="%merchandise.category" styleClass="detail-label-small"/>
+                                <Label fx:id="detailCategoryLabel" styleClass="detail-value-small"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="%merchandise.unit" styleClass="detail-label-small"/>
+                                <Label fx:id="detailUnitLabel" styleClass="detail-value-small"/>
+                            </VBox>
+                        </HBox>
+
+                        <VBox spacing="4">
+                            <Label text="%merchandise.price" styleClass="detail-label-small"/>
+                            <Label fx:id="detailPriceLabel" styleClass="detail-value-price-small"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="%merchandise.supplier" styleClass="detail-label-small"/>
+                            <Label fx:id="detailSupplierLabel" styleClass="detail-value-small"
+                                  wrapText="true"/>
+                        </VBox>
+
+                        <Separator/>
+
+                        <VBox spacing="4">
+                            <Label text="%merchandise.description" styleClass="detail-label-small"/>
+                            <Label fx:id="detailDescriptionLabel" styleClass="detail-value-small"
+                                  wrapText="true"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="12" alignment="CENTER_RIGHT" styleClass="dialog-footer">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <Button text="%action.cancel" onAction="#onCancel" styleClass="btn-secondary">
+                <padding><Insets top="10" right="24" bottom="10" left="24"/></padding>
+            </Button>
+
+            <Button fx:id="selectButton" text="%merchandise.select" onAction="#onSelect"
+                    styleClass="btn-primary" defaultButton="true">
+                <padding><Insets top="10" right="24" bottom="10" left="24"/></padding>
+            </Button>
+        </HBox>
+    </bottom>
+
+</BorderPane>
