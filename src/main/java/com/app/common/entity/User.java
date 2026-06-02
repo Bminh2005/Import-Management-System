@@ -4,31 +4,52 @@ public class User {
     long id;
     String username;
     String password;
-    String email;
-    String phone;
-    String address;
     String role;
+    String fullname;
 
-    public User(long id, String username, String password, String email, String phone, String address, String role) {
+
+    public User(long id, String username, String password, String role, String fullname) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
         this.role = role;
     }
 
-    public User(String username, String role, String password, long id) {
+    public User(String role, String username,String password, String fullname) {
+        this.role = role;
         this.username = username;
-        this.role = role;
         this.password = password;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
         this.id = id;
     }
 
-    public User(String role, String password, long id) {
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
         this.role = role;
-        this.password = password;
-        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
