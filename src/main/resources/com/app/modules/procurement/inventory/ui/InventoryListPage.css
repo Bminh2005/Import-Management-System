@@ -1,0 +1,189 @@
+/* ============================================================
+   InventoryListPage.css — style riêng cho màn "Mặt hàng Tồn kho"
+   của Bộ phận Đặt hàng Quốc tế: search box, chip lọc danh mục,
+   bảng danh sách, badge danh mục, thẻ site khi mở rộng.
+   Style chung (card / page-title / btn-*) lấy từ common.css.
+   ============================================================ */
+
+/* ---------- Ô tìm kiếm ---------- */
+.search-box {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-min-height: 52px;
+}
+
+.search-icon-emoji {
+    -fx-font-size: 18px;
+    -fx-text-fill: #9CA3AF;
+}
+
+.search-field-inner {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10 0;
+    -fx-font-size: 15px;
+    -fx-prompt-text-fill: #9CA3AF;
+}
+
+.search-field-inner:focused {
+    -fx-background-color: transparent;
+}
+
+/* ---------- Chip lọc danh mục ---------- */
+.chip {
+    -fx-background-color: white;
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 22;
+    -fx-background-radius: 8px;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.chip:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.chip:selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-border-color: -primary-color;
+}
+
+.chip:selected:hover {
+    -fx-background-color: -primary-dark;
+    -fx-border-color: -primary-dark;
+}
+
+/* ---------- Hàng header và hàng dữ liệu ---------- */
+.list-header {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 16 24;
+}
+
+.col-header {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+
+.list-row {
+    -fx-padding: 20 24;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: white;
+}
+
+.list-row:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.cell-code {
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-primary;
+}
+
+.cell-name {
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-primary;
+}
+
+.package-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9CA3AF;
+}
+
+/* ---------- Badge danh mục ---------- */
+.category-badge {
+    -fx-background-color: #F3E8FF;
+    -fx-text-fill: #6B21A8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 14;
+    -fx-background-radius: 999px;
+}
+
+.total-stock-value {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+}
+
+.site-count-pill {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 14;
+    -fx-background-radius: 999px;
+}
+
+/* ---------- Nút "Xem chi tiết / Thu gọn" ---------- */
+.detail-toggle {
+    -fx-background-color: transparent;
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 4 0;
+    -fx-border-width: 0;
+}
+
+.detail-toggle:hover {
+    -fx-underline: true;
+}
+
+/* ---------- Vùng mở rộng ---------- */
+.expansion-area {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 16 24 20 24;
+}
+
+.expansion-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+/* ---------- Thẻ site ---------- */
+.site-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 12 16;
+}
+
+.site-card-code {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+
+.site-card-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+
+.site-card-stock {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+}
+
+.site-card-unit {
+    -fx-font-size: 10px;
+    -fx-text-fill: -text-secondary;
+}

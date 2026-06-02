@@ -1,0 +1,73 @@
+/* Thanh nền Header */
+.header-bg {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 1px;
+}
+
+/* Hộp tìm kiếm */
+.header-search-box {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 8px;
+}
+
+.header-search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 14px;
+}
+
+.header-search-field:focused {
+    -fx-border-color: transparent;
+}
+
+/* Các thành phần tương tác bên phải */
+.header-action-btn {
+    -fx-cursor: hand;
+}
+
+/* Chữ ngôn ngữ */
+.lang-text {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* Chấm đỏ số hiệu thông báo */
+.badge-notify {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-min-width: 16px;
+    -fx-max-width: 16px;
+    -fx-min-height: 16px;
+    -fx-max-height: 16px;
+    -fx-background-radius: 50%;
+    -fx-alignment: center;
+}
+
+/* Khối Avatar tròn xanh lục */
+.header-avatar {
+    -fx-background-color: #007A87; /* Màu xanh Teal chuẩn thẫm theo ảnh mẫu */
+    -fx-min-width: 32px;
+    -fx-max-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-height: 32px;
+    -fx-background-radius: 50%;
+    -fx-alignment: center;
+}
+
+/* Tên & chức vụ User */
+.user-name {
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 13px;
+}
+
+.user-role {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 11px;
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="VBox" stylesheets="@SidebarStyle.css" styleClass="sidebar" prefWidth="250.0" spacing="10"
+         xmlns="http://javafx.com/javafx/17"
+         xmlns:fx="http://javafx.com/fxml/1"
+>
+
+    <!-- Logo & Tên hệ thống -->
+    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20;">
+        <Label text="🌐" style="-fx-font-size: 24px; -fx-text-fill: white;"/>
+        <VBox alignment="CENTER_LEFT">
+            <Label fx:id="systemName" text="Hệ thống Nhập hàng" styleClass="sidebar-logo-text"/>
+            <Label fx:id="departmentName" text="Bộ phận Bán hàng" style="-fx-text-fill: #cbd5e1; -fx-font-size: 12px;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Menu Items -->
+    <VBox fx:id="menuItems" spacing="5" VBox.vgrow="ALWAYS">
+        <!--        &lt;!&ndash; Item 1 (Active) &ndash;&gt;-->
+        <!--        <HBox styleClass="nav-item, active" alignment="CENTER_LEFT">-->
+        <!--            <Label text="🏠" style="-fx-text-fill: white; -fx-padding: 0 10 0 0;"/>-->
+        <!--            <Label text="Trang Chủ Bán Hàng" styleClass="nav-text" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>-->
+        <!--            <Label text="Ctrl+1" styleClass="nav-shortcut"/>-->
+        <!--        </HBox>-->
+
+        <!--        &lt;!&ndash; Item 2 &ndash;&gt;-->
+        <!--        <HBox styleClass="nav-item" alignment="CENTER_LEFT">-->
+        <!--            <Label text="📦" style="-fx-text-fill: white; -fx-padding: 0 10 0 0;"/>-->
+        <!--            <Label text="Quản lý Mặt hàng" styleClass="nav-text" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>-->
+        <!--            <Label text="Ctrl+2" styleClass="nav-shortcut"/>-->
+        <!--        </HBox>-->
+
+        <!--        &lt;!&ndash; Item 3 &ndash;&gt;-->
+        <!--        <HBox styleClass="nav-item" alignment="CENTER_LEFT">-->
+        <!--            <Label text="📄" style="-fx-text-fill: white; -fx-padding: 0 10 0 0;"/>-->
+        <!--            <Label text="Yêu cầu Nhập hàng" styleClass="nav-text" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>-->
+        <!--            <Label text="Ctrl+3" styleClass="nav-shortcut"/>-->
+        <!--        </HBox>-->
+    </VBox>
+
+    <!-- Khu vực Footer Sidebar (Vai trò hiện tại) -->
+    <VBox style="-fx-padding: 20; -fx-background-color: rgba(0,0,0,0.1);" spacing="10">
+        <VBox style="-fx-background-color: #3b66d1; -fx-background-radius: 8; -fx-padding: 10;">
+            <Label text="Vai trò hiện tại" style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;"/>
+            <Label fx:id="currentRole" text="Bộ phận Bán hàng" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+        </VBox>
+        <Button fx:id="logoutButton" text="Đăng xuất"
+                style="-fx-background-color: transparent; -fx-border-color: #475569; -fx-border-radius: 4; -fx-text-fill: #94a3b8;"
+                maxWidth="Infinity"/>
+        <HBox fx:id="toggleButton" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+            <Label fx:id="toggleLabel" text="&lt; Thu Gọn" style="-fx-text-fill: #94a3b8; -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+</fx:root>

@@ -1,0 +1,166 @@
+/* ============================================================
+   EditRequestPage.css — style riêng cho màn "Chỉnh sửa Yêu cầu":
+   nút back, khối Mặt hàng bị từ chối / hủy, chip mã hàng,
+   icon thao tác (thùng rác), input nhúng trong bảng.
+   Style chung (card / page-title / btn-*) lấy từ common.css.
+   ============================================================ */
+
+/* ---------- Nút quay lại (mũi tên trái) ---------- */
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #111827;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 2 10;
+    -fx-background-radius: 8px;
+}
+
+.back-button:hover {
+    -fx-background-color: #E5E7EB;
+}
+
+/* ---------- Nút có icon (Thêm mặt hàng, Lưu thay đổi) ---------- */
+.btn-icon-text {
+    -fx-graphic-text-gap: 8;
+    -fx-content-display: LEFT;
+}
+
+/* ---------- Bảng chỉnh sửa: bỏ hover/selected gây nhiễu ---------- */
+.edit-table .table-row-cell:hover,
+.edit-table .table-row-cell:selected,
+.edit-table .table-row-cell:selected:hover {
+    -fx-background-color: white;
+}
+
+.edit-table .table-cell {
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* ---------- Cell input (số lượng + ngày) ---------- */
+.edit-cell-field {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-background-insets: 0;
+    -fx-padding: 6 10;
+    -fx-font-size: 13px;
+    -fx-text-fill: #111827;
+}
+
+.edit-cell-field:focused {
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.18), 4, 0, 0, 0);
+}
+
+.edit-cell-field .text-field {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.edit-cell-field .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 6;
+}
+
+.edit-cell-field .arrow-button .arrow {
+    -fx-background-color: #6B7280;
+}
+
+/* ---------- Icon xóa (thùng rác) ---------- */
+.icon-delete {
+    -fx-background-color: transparent;
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-padding: 6 10;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+}
+
+.icon-delete:hover {
+    -fx-background-color: #FEE2E2;
+}
+
+/* ---------- Icon-only cho bảng đơn hàng ---------- */
+.icon-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 6 10;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+}
+
+.icon-btn:hover {
+    -fx-background-color: #F1F5F9;
+}
+
+/* ---------- Mặt hàng bị từ chối ---------- */
+.rejected-row {
+    -fx-background-color: #FEF2F2;
+    -fx-border-color: #FECACA;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.rejected-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.rejected-sub {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.rejected-reason-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+}
+
+.code-chip {
+    -fx-background-color: #E5E7EB;
+    -fx-text-fill: #374151;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8;
+    -fx-background-radius: 6px;
+}
+
+.rejected-badge-overseas {
+    -fx-background-color: #FEF3C7;
+    -fx-text-fill: #92400E;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10;
+    -fx-background-radius: 10px;
+}
+
+.rejected-badge-user {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #991B1B;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10;
+    -fx-background-radius: 10px;
+}
+
+/* ---------- Nút "Hủy yêu cầu" dạng link đỏ ---------- */
+.btn-link-danger {
+    -fx-background-color: transparent;
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10 16;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+}
+
+.btn-link-danger:hover {
+    -fx-background-color: #FEE2E2;
+}

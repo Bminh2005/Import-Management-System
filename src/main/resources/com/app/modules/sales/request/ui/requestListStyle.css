@@ -1,0 +1,186 @@
+/* Layout chung */
+.main-content {
+    -fx-background-color: #f8fafc;
+}
+
+.main-title {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+}
+
+/* Nút chính */
+.btn-primary {
+    -fx-background-color: #1d4ed8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #1e40af;
+}
+
+/* Thẻ bọc ngoài (Card) */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+/* Ô tìm kiếm */
+.search-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 12px;
+    -fx-font-size: 14px;
+}
+
+.search-field:focused {
+    -fx-border-color: #3b82f6;
+}
+
+/* Bộ lọc dạng nhãn (Pills) */
+.filter-pill {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.filter-pill:selected {
+    -fx-background-color: #1d4ed8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Định dạng Bảng dữ liệu */
+.custom-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.custom-table .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.custom-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 45px;
+}
+
+.custom-table .column-header .label {
+    -fx-text-fill: #64748b;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER;
+}
+
+.custom-table .column-header.actions-column-header .label {
+    -fx-alignment: CENTER;
+}
+
+.custom-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.custom-table .table-cell {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 8px;
+}
+
+.custom-table .table-cell.actions-cell {
+    -fx-alignment: CENTER;
+    -fx-padding: 12px 8px;
+}
+
+/* Số lượng hàng căn giữa vòng tròn nhẹ như mẫu */
+.quantity-badge {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 50%;
+    -fx-padding: 4px 8px;
+}
+
+/* Trạng thái Badges */
+.badge {
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.badge-pending {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #d97706;
+}
+
+/* Chờ xử lý */
+.badge-process {
+    -fx-background-color: #e0f2fe;
+    -fx-text-fill: #0284c7;
+}
+
+/* Đang xử lý */
+.badge-completed {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #16a34a;
+}
+
+/* Hoàn thành */
+.badge-draft {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #4b5563;
+}
+
+/* Bản nháp */
+
+/* Nút icon thao tác (mắt xem chi tiết) */
+.icon-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.icon-btn:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Phân trang */
+.pagination-info {
+    -fx-text-fill: #64748b;
+}
+
+.btn-page {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 12px;
+    -fx-text-fill: #334155;
+    -fx-cursor: hand;
+}
+
+.btn-page.page-active {
+    -fx-background-color: #1d4ed8;
+    -fx-border-color: #1d4ed8;
+    -fx-text-fill: white;
+}
