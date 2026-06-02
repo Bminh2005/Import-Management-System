@@ -28,4 +28,8 @@ public class SalesSidebar extends Sidebar {
     public SidebarItem getImportRequestItem() {
         return importRequest;
     }
+
+    public SidebarItem getProductManagerItem() {
+        return productManager;
+    }
 }

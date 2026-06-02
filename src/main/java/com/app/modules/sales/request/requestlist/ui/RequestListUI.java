@@ -48,6 +48,7 @@ public class RequestListUI extends VBox {
     @FXML private Button btnPrev;
     @FXML private Button btnNext;
     @FXML private HBox pageButtonsBox;
+    @FXML private Button btnCreateRequest;
 
     private final RequestService service;
     private ObservableList<RequestListRow> allRows = FXCollections.observableArrayList();
@@ -60,6 +61,7 @@ public class RequestListUI extends VBox {
 
     private Consumer<String> onViewDetail;
     private Consumer<String> onEditRequest;
+    private Runnable createRequestAction;
 
     public RequestListUI() {
         this(new RequestService());
@@ -69,6 +71,9 @@ public class RequestListUI extends VBox {
         this.service = service;
         FxmlUiHelper.loadSelf(this, "/com/app/modules/sales/request/ui/RequestListPage.fxml");
         setupTable();
+        if (btnCreateRequest != null) {
+            btnCreateRequest.setOnAction(e -> handleCreateRequest());
+        }
         txtSearch.textProperty().addListener((o, a, b) -> {
             currentPage = 0;
             refreshView();
@@ -82,6 +87,10 @@ public class RequestListUI extends VBox {
 
     public void setOnEditRequest(Consumer<String> callback) {
         this.onEditRequest = callback;
+    }
+
+    public void setOnCreateRequest(Runnable callback) {
+        this.createRequestAction = callback;
     }
 
     public void reload() {
@@ -338,11 +347,9 @@ public class RequestListUI extends VBox {
     }
 
     @FXML
-    private void onCreateRequest() {
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("Tạo yêu cầu");
-        info.setHeaderText(null);
-        info.setContentText("Chức năng tạo yêu cầu mới sẽ triển khai ở use case riêng.");
-        info.showAndWait();
+    private void handleCreateRequest() {
+        if (createRequestAction != null) {
+            createRequestAction.run();
+        }
     }
 }

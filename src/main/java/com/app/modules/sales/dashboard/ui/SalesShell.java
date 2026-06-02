@@ -1,6 +1,10 @@
 package com.app.modules.sales.dashboard.ui;
 
 import com.app.common.ui.MainLayoutUI;
+import com.app.modules.procurement.product.ui.MerchandiseListUI;
+import com.app.modules.sales.request.createrequest.controller.CreateRequestController;
+import com.app.modules.sales.request.createrequest.ui.CreateImportRequestUI;
+import com.app.modules.sales.request.editrequest.ui.EditRequestController;
 import com.app.modules.sales.request.editrequest.ui.EditRequestUI;
 import com.app.modules.sales.request.requestdetail.ui.RequestDetailUI;
 import com.app.modules.sales.request.requestlist.ui.RequestListUI;
@@ -19,20 +23,22 @@ public class SalesShell {
         this.sidebar = layout.getSalesSidebar();
         sidebar.bindNavigation(
                 this::showDashboard,
-                this::showProductsPlaceholder,
+                this::showProductList,
                 this::showRequestList);
     }
 
     public void showDashboard() {
-        layout.setPage(new SalesDashboardUI());
+        SalesDashboardUI dashboard = new SalesDashboardUI();
+        dashboard.setActionOnCreateNewRequest(this::showCreateRequest);
+        dashboard.setActionOnViewAllRequests(this::showRequestList);
+        dashboard.setActionOnAddNewProduct(this::showProductList);
+        layout.setPage(dashboard);
     }
 
-    public void showProductsPlaceholder() {
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("Quản lý Mặt hàng");
-        info.setHeaderText(null);
-        info.setContentText("Màn quản lý mặt hàng (module procurement/product) chưa gắn vào sidebar Sales.");
-        info.showAndWait();
+    /** Màn quản lý mặt hàng (procurement/product). */
+    public void showProductList() {
+        sidebar.selectMenu(sidebar.getProductManagerItem());
+        layout.setPage(new MerchandiseListUI());
     }
 
     public void showRequestList() {
@@ -40,7 +46,18 @@ public class SalesShell {
         RequestListUI list = new RequestListUI();
         list.setOnViewDetail(this::showRequestDetail);
         list.setOnEditRequest(this::showRequestEdit);
+        list.setOnCreateRequest(this::showCreateRequest);
         layout.setPage(list);
+    }
+
+    /** Màn tạo yêu cầu nhập hàng mới (createrequest). */
+    public void showCreateRequest() {
+        sidebar.selectMenu(sidebar.getImportRequestItem());
+        CreateRequestController controller = new CreateRequestController();
+        CreateImportRequestUI view = controller.getView();
+        view.setCancelButtonAction(this::showRequestList);
+        controller.setOnCreated(this::showRequestList);
+        layout.setPage(view);
     }
 
     /** @return false nếu không tải được yêu cầu từ DB */
@@ -60,8 +77,9 @@ public class SalesShell {
     public void showRequestEdit(String code) {
         sidebar.selectMenu(sidebar.getImportRequestItem());
         EditRequestUI edit = new EditRequestUI();
-        edit.setOnBack(() -> showRequestDetail(code));
-        edit.setOnSaved(savedCode -> showRequestDetail(savedCode));
+        new EditRequestController(edit);
+        edit.setOnBack(this::showRequestList);
+        edit.setOnSaved(savedCode -> showRequestList());
         layout.setPage(edit);
         try {
             edit.loadRequest(code);

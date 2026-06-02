@@ -17,8 +17,7 @@
             <Label text="Yêu cầu Nhập hàng" styleClass="main-title"/>
             <Label text="Quản lý yêu cầu nhập hàng của bạn" styleClass="subtitle"/>
         </VBox>
-        <Button text="+ Tạo Yêu cầu Mới" styleClass="btn-primary" fx:id="btnCreateRequest"
-                onAction="#onCreateRequest"/>
+        <Button text="+ Tạo Yêu cầu Mới" styleClass="btn-primary" fx:id="btnCreateRequest"/>
     </HBox>
 
     <VBox styleClass="card" spacing="16">

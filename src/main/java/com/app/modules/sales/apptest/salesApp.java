@@ -15,8 +15,14 @@ public class salesApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         MainLayoutUI root = new MainLayoutUI();
-        new SalesShell(root);
-        Scene scene = new Scene(root);
+        SalesShell shell = new SalesShell(root);
+        shell.showDashboard();
+        Scene scene = new Scene(root, 1280, 860);
+        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/components/common.css").toExternalForm());
+        stage.setTitle("Hệ thống Quản lý Nhập khẩu - Sales");
+        stage.setMinWidth(1100);
+        stage.setMinHeight(720);
         stage.setScene(scene);
         stage.show();
     }
