@@ -1,5 +1,6 @@
 package com.app.modules.procurement.dashboard.ui;
 
+import com.app.auth.security.CurrentUserSession;
 import com.app.common.ui.components.Sidebar;
 import com.app.common.ui.components.SidebarItem;
 
