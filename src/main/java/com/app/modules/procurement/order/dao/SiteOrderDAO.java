@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import com.app.modules.procurement.order.model.SiteOrderItem;
 
 public class SiteOrderDAO {
     private static final String BASE_ORDER_SQL = "SELECT o.id, o.created_at, o.site_id, s.site_name, "
+            + "s.site_address, s.delivery_by_ship, s.delivery_by_air, "
             + "o.expected_delivery_date, o.user_id, u.username, o.request_id, o.status, o.delivery "
             + "FROM \"Order\" o "
             + "JOIN \"Site\" s ON o.site_id = s.id "
@@ -75,7 +77,11 @@ public class SiteOrderDAO {
                 orderStmt.setLong(1, order.getSiteId());
                 orderStmt.setDate(2, Date.valueOf(order.getExpectedDeliveryDate()));
                 orderStmt.setLong(3, order.getUserId());
-                orderStmt.setLong(4, order.getRequestId());
+                if (order.getRequestId() > 0) {
+                    orderStmt.setLong(4, order.getRequestId());
+                } else {
+                    orderStmt.setNull(4, Types.BIGINT);
+                }
                 orderStmt.setString(5, order.getStatus().name());
                 orderStmt.setString(6, order.getDelivery().name());
                 try (ResultSet rs = orderStmt.executeQuery()) {
@@ -106,6 +112,106 @@ public class SiteOrderDAO {
             throw new RuntimeException("Lỗi khi lưu Order", e);
         }
         return -1;
+    }
+
+    public List<Long> replaceRefusedOrder(long sourceOrderId, Map<SiteOrder, List<SiteOrderItem>> replacementOrders) {
+        if (sourceOrderId <= 0 || replacementOrders == null || replacementOrders.isEmpty()) {
+            return List.of();
+        }
+        List<Long> createdIds = new ArrayList<>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                for (Map.Entry<SiteOrder, List<SiteOrderItem>> entry : replacementOrders.entrySet()) {
+                    List<SiteOrderItem> items = entry.getValue();
+                    if (items == null || items.isEmpty()) {
+                        continue;
+                    }
+                    createdIds.add(insertOrder(conn, entry.getKey(), items));
+                }
+                if (!createdIds.isEmpty()) {
+                    deleteOrder(conn, sourceOrderId);
+                }
+                conn.commit();
+                return createdIds;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi thay thế Order bị hủy", e);
+        }
+    }
+
+    private long insertOrder(Connection conn, SiteOrder order, List<SiteOrderItem> items) throws SQLException {
+        try (PreparedStatement orderStmt = conn.prepareStatement(INSERT_ORDER_SQL)) {
+            orderStmt.setLong(1, order.getSiteId());
+            orderStmt.setDate(2, Date.valueOf(order.getExpectedDeliveryDate()));
+            orderStmt.setLong(3, order.getUserId());
+            if (order.getRequestId() > 0) {
+                orderStmt.setLong(4, order.getRequestId());
+            } else {
+                orderStmt.setNull(4, Types.BIGINT);
+            }
+            orderStmt.setString(5, order.getStatus().name());
+            orderStmt.setString(6, order.getDelivery().name());
+            try (ResultSet rs = orderStmt.executeQuery()) {
+                if (rs.next()) {
+                    long orderId = rs.getLong("id");
+                    insertOrderItems(conn, orderId, items);
+                    return orderId;
+                }
+            }
+        }
+        throw new SQLException("Không lấy được id Order vừa tạo");
+    }
+
+    private void insertOrderItems(Connection conn, long orderId, List<SiteOrderItem> items) throws SQLException {
+        try (PreparedStatement itemStmt = conn.prepareStatement(INSERT_ORDER_DETAIL_SQL)) {
+            for (SiteOrderItem item : items) {
+                itemStmt.setLong(1, orderId);
+                itemStmt.setLong(2, item.getMerchandiseDetailId());
+                itemStmt.setLong(3, item.getQuantity());
+                itemStmt.setString(4, item.getStatus() == null ? OrderStatus.PENDING.name() : item.getStatus().name());
+                itemStmt.setString(5, item.getRefusedReason());
+                itemStmt.addBatch();
+            }
+            itemStmt.executeBatch();
+        }
+    }
+
+    private void deleteOrder(Connection conn, long orderId) throws SQLException {
+        try (PreparedStatement detailStmt = conn.prepareStatement(
+                "DELETE FROM \"OrderDetail\" WHERE order_id = ?")) {
+            detailStmt.setLong(1, orderId);
+            detailStmt.executeUpdate();
+        }
+        try (PreparedStatement orderStmt = conn.prepareStatement(
+                "DELETE FROM \"Order\" WHERE id = ?")) {
+            orderStmt.setLong(1, orderId);
+            orderStmt.executeUpdate();
+        }
+    }
+
+    public void deleteById(long orderId) {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement detailStmt = conn.prepareStatement(
+                    "DELETE FROM \"OrderDetail\" WHERE order_id = ?")) {
+                detailStmt.setLong(1, orderId);
+                detailStmt.executeUpdate();
+            }
+            try (PreparedStatement orderStmt = conn.prepareStatement(
+                    "DELETE FROM \"Order\" WHERE id = ?")) {
+                orderStmt.setLong(1, orderId);
+                orderStmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi xóa Order", e);
+        }
     }
 
     public void updateStatus(long orderId, OrderStatus status) {
@@ -232,11 +338,15 @@ public class SiteOrderDAO {
         order.setCreatedAt(createdAt != null ? createdAt.toLocalDateTime() : LocalDateTime.now());
         order.setSiteId(rs.getLong("site_id"));
         order.setSiteName(rs.getString("site_name"));
+        order.setSiteAddress(rs.getString("site_address"));
+        order.setDeliveryByShip(rs.getLong("delivery_by_ship"));
+        order.setDeliveryByAir(rs.getLong("delivery_by_air"));
         Date expected = rs.getDate("expected_delivery_date");
         order.setExpectedDeliveryDate(expected != null ? expected.toLocalDate() : LocalDate.now());
         order.setUserId(rs.getLong("user_id"));
         order.setOrdererName(rs.getString("username"));
-        order.setRequestId(rs.getLong("request_id"));
+        long requestId = rs.getLong("request_id");
+        order.setRequestId(rs.wasNull() ? 0 : requestId);
         order.setStatus(parseOrderStatus(rs.getString("status")));
         order.setDelivery(parseDelivery(rs.getString("delivery")));
         return order;

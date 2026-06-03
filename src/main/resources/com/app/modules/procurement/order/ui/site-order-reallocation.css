@@ -1,148 +1,157 @@
-/* ============================================================
-   site-order-reallocation.css
-   Style cho màn Phân bổ lại Đơn bị hủy.
-   ============================================================ */
+@import url("site-order-shared.css");
 
-.nav-bar {
-    -fx-alignment: CENTER_LEFT;
+.top-stack {
+    -fx-background-color: -color-surface;
 }
 
-.progress-label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #6b7280;
+.top-bar {
+    -fx-padding: 12 28;
+    -fx-border-color: transparent transparent -color-border transparent;
+    -fx-border-width: 0 0 1 0;
 }
 
-.progress-bar-main {
-    -fx-accent: #2563eb;
-}
-
-.alert-refused {
-    -fx-background-color: #fef2f2;
-    -fx-border-color: #fecaca;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-padding: 16;
-}
-
-.stat-cards-row {
+.header-panel {
+    -fx-padding: 18 28 22 28;
     -fx-spacing: 16;
 }
 
-.stat-card {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 18px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 4);
-}
-
-.stat-card-blue {
-    -fx-border-color: #3b82f6;
-    -fx-border-width: 0 0 0 4;
-}
-
-.stat-card-green {
-    -fx-border-color: #10b981;
-    -fx-border-width: 0 0 0 4;
-}
-
-.stat-card-purple {
-    -fx-border-color: #8b5cf6;
-    -fx-border-width: 0 0 0 4;
-}
-
-.item-cards-container {
-    -fx-padding: 8 0 0 0;
-}
-
-.item-card {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 16;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 4);
-}
-
-.item-card-header {
-    -fx-spacing: 8;
-}
-
-.item-name {
-    -fx-font-weight: bold;
-    -fx-font-size: 15px;
-}
-
-.item-code-badge {
-    -fx-background-color: #e0e7ff;
-    -fx-text-fill: #3730a3;
-    -fx-background-radius: 6px;
-    -fx-padding: 3 10;
+.desired-date-label,
+.progress-label {
     -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-primary;
 }
 
-.badge-pill {
-    -fx-background-radius: 999px;
-    -fx-padding: 4 10;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
+.main-progress > .track,
+.item-progress > .track {
+    -fx-background-color: #dce5ef;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
 }
 
-.badge-orange {
-    -fx-background-color: #ffedd5;
-    -fx-text-fill: #9a3412;
+.main-progress > .bar,
+.item-progress > .bar {
+    -fx-background-color: -color-primary;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
 }
 
-.badge-green {
-    -fx-background-color: #d1fae5;
-    -fx-text-fill: #065f46;
+.alert-cancelled {
+    -fx-background-color: -color-danger-soft;
+    -fx-border-color: #efb4b4;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 13 15;
 }
 
-.item-qty-row {
-    -fx-spacing: 8;
-    -fx-alignment: CENTER_LEFT;
+.alert-icon-badge {
+    -fx-background-color: -color-danger;
+    -fx-text-fill: white;
+    -fx-background-radius: 999;
+    -fx-min-width: 28;
+    -fx-min-height: 28;
+    -fx-alignment: center;
+    -fx-font-weight: 800;
 }
 
-.item-progress-row {
-    -fx-spacing: 8;
-    -fx-alignment: CENTER_LEFT;
-}
-
-.percent-label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #374151;
-    -fx-font-weight: bold;
-}
-
-.item-progress-bar {
-    -fx-pref-height: 8px;
-    -fx-accent: #2563eb;
-}
-
-.alloc-sub-table {
-    -fx-padding: 12 0 0 0;
-}
-
-.alloc-table {
-    -fx-pref-height: 140px;
-}
-
-.empty-alloc {
-    -fx-text-fill: #6b7280;
+.alert-title {
+    -fx-font-weight: 800;
+    -fx-text-fill: #9b2424;
     -fx-font-size: 13px;
 }
 
-.btn-allocate-site {
-    -fx-background-color: #2563eb;
-    -fx-text-fill: white;
-    -fx-background-radius: 8px;
-    -fx-padding: 12 16;
+.alert-body {
+    -fx-text-fill: #7f1d1d;
+    -fx-font-size: 12px;
 }
 
-.btn-success {
-    -fx-background-color: #059669;
-    -fx-text-fill: white;
-    -fx-background-radius: 8px;
-    -fx-padding: 12 16;
+.stat-mini {
+    -fx-padding: 14 16;
+}
+
+.stat-mini-highlight {
+    -fx-background-color: -color-success-soft;
+    -fx-border-color: #9fdec8;
+}
+
+.stat-mini-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -color-text-muted;
+}
+
+.stat-mini-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -color-text;
+}
+
+.stat-mini-highlight .stat-mini-value {
+    -fx-text-fill: -color-success;
+}
+
+.stat-mini-text {
+    -fx-font-size: 14px;
+}
+
+.center-wrap,
+.items-scroll,
+.items-scroll > .viewport {
+    -fx-background-color: -color-bg;
+    -fx-background: -color-bg;
+    -fx-border-color: transparent;
+}
+
+.list-header {
+    -fx-padding: 16 28 8 28;
+}
+
+.items-container {
+    -fx-padding: 0 28 24 28;
+}
+
+.empty-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8a5a12;
+    -fx-background-color: -color-warning-soft;
+    -fx-background-radius: 8;
+    -fx-border-color: #f0d38a;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-padding: 10 14;
+}
+
+.item-card {
+    -fx-border-color: #b9d6ff;
+    -fx-border-width: 1;
+}
+
+.item-index {
+    -fx-background-color: -color-primary-soft;
+    -fx-text-fill: -color-primary;
+    -fx-font-weight: 800;
+    -fx-padding: 5 9;
+    -fx-background-radius: 999;
+}
+
+.code-badge {
+    -fx-background-color: #eef3f8;
+    -fx-text-fill: #475569;
+    -fx-border-color: -color-border;
+    -fx-border-width: 1;
+}
+
+.pct-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -color-primary;
 }
 
 .footer-bar {
-    -fx-padding: 14 0 0 0;
+    -fx-background-color: -color-surface;
+    -fx-padding: 15 28;
+    -fx-border-color: -color-border transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 12, 0, 0, -3);
 }

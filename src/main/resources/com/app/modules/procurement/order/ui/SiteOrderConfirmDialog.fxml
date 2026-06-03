@@ -1,63 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.app.modules.procurement.order.ui.SiteOrderConfirmDialogController"
-      spacing="18"
-      styleClass="main-content site-order-confirm-dialog">
+      stylesheets="@site-order-confirm-dialog.css"
+      styleClass="dialog-root"
+      prefWidth="720"
+      minHeight="560"
+      spacing="0">
 
-    <stylesheets>
-        <URL value="@../../../../common/ui/components/components.css"/>
-        <URL value="@site-order-confirm-dialog.css"/>
-    </stylesheets>
+    <VBox styleClass="dialog-header" spacing="14">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblDialogTitle" text="Xác nhận đơn đặt hàng mới"
+                       styleClass="dialog-title"/>
+                <Label fx:id="lblDialogSubtitle"
+                       text="Kiểm tra các đơn thay thế trước khi lưu vào danh sách đơn đặt hàng."
+                       styleClass="dialog-subtitle" wrapText="true"/>
+            </VBox>
+            <Button text="X" styleClass="btn-close"
+                    onAction="#handleClose"/>
+        </HBox>
 
-    <padding>
-        <Insets top="24" right="24" bottom="24" left="24"/>
-    </padding>
+        <HBox styleClass="summary-bar" spacing="10" fillHeight="true">
+            <VBox styleClass="header-stat" HBox.hgrow="ALWAYS">
+                <Label text="ĐƠN BỊ HỦY" styleClass="header-stat-label"/>
+                <Label fx:id="lblStatValue1" text="-" styleClass="header-stat-value"/>
+            </VBox>
+            <VBox styleClass="header-stat" HBox.hgrow="ALWAYS">
+                <Label text="SỐ ĐƠN MỚI" styleClass="header-stat-label"/>
+                <Label fx:id="lblOrderCount" text="0 đơn" styleClass="header-stat-value"/>
+            </VBox>
+            <VBox styleClass="header-stat" HBox.hgrow="ALWAYS">
+                <Label text="TỔNG GIÁ TRỊ" styleClass="header-stat-label"/>
+                <Label fx:id="lblTotalValue" text="0 đ"
+                       styleClass="header-stat-value header-stat-money"/>
+            </VBox>
+        </HBox>
+        <Label fx:id="lblSiteExplain" text="" styleClass="site-explain" wrapText="true"/>
+    </VBox>
 
-    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="dialog-header-blue">
-        <VBox spacing="6">
-            <Label fx:id="lblDialogTitle" text="Xác nhận Đơn Đặt Hàng" styleClass="dialog-title"/>
-            <Label fx:id="lblDialogSubtitle" text="Xem trước các đơn hàng sẽ được gửi tới Site" styleClass="dialog-subtitle"/>
-        </VBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="✕" styleClass="btn-close" onAction="#handleClose"/>
-    </HBox>
-
-    <HBox spacing="12" styleClass="header-stats">
-        <VBox styleClass="header-stat-card" spacing="6">
-            <Label fx:id="lblStatLabel1" text="YÊU CẦU GỐC" styleClass="header-stat-label"/>
-            <Label fx:id="lblStatValue1" text="REQ-000" styleClass="header-stat-value"/>
-        </VBox>
-        <VBox styleClass="header-stat-card" spacing="6">
-            <Label text="SỐ ĐƠN SẼ TẠO" styleClass="header-stat-label"/>
-            <Label fx:id="lblOrderCount" text="0 đơn" styleClass="header-stat-value"/>
-        </VBox>
-        <VBox styleClass="header-stat-card" spacing="6">
-            <Label text="TỔNG GIÁ TRỊ" styleClass="header-stat-label"/>
-            <Label fx:id="lblTotalValue" text="0 đ" styleClass="header-stat-value"/>
-        </VBox>
-    </HBox>
-
-    <ScrollPane fitToWidth="true" styleClass="screen-scroll">
-        <VBox fx:id="orderCardsContainer" spacing="16"/>
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                styleClass="dialog-scroll" prefHeight="400">
+        <VBox fx:id="orderCardsContainer"
+              styleClass="orders-container"
+              spacing="12"/>
     </ScrollPane>
 
-    <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="dialog-footer">
-        <Button fx:id="btnBack" text="Quay lại chỉnh sửa" styleClass="btn-secondary" onAction="#handleBack"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="btnConfirm" text="✓ Xác nhận & Tạo N đơn mới" styleClass="btn-confirm" onAction="#handleConfirm"/>
+    <HBox styleClass="dialog-footer" spacing="12" alignment="CENTER_RIGHT">
+        <Button fx:id="btnBack" text="Quay lại chỉnh sửa"
+                styleClass="btn-ghost"
+                onAction="#handleBack"/>
+        <Button fx:id="btnConfirm"
+                text="Xác nhận và tạo đơn mới"
+                styleClass="btn-confirm"
+                onAction="#handleConfirm"/>
     </HBox>
 </VBox>

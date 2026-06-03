@@ -1,0 +1,202 @@
+/* Shared order UI foundation */
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Arial", sans-serif;
+    -color-bg: #f5f7fb;
+    -color-surface: #ffffff;
+    -color-surface-muted: #f8fafc;
+    -color-border: #dbe3ee;
+    -color-border-strong: #b9c6d8;
+    -color-text: #132033;
+    -color-text-secondary: #536173;
+    -color-text-muted: #8290a3;
+    -color-primary: #2457c5;
+    -color-primary-hover: #1d469e;
+    -color-primary-soft: #e9f0ff;
+    -color-success: #087f5b;
+    -color-success-soft: #e7f8f1;
+    -color-warning: #b7791f;
+    -color-warning-soft: #fff6df;
+    -color-danger: #c53030;
+    -color-danger-soft: #fff0f0;
+}
+
+.page-root {
+    -fx-background-color: -color-bg;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-text;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-text;
+}
+
+.info-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.info-value {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #334155;
+}
+
+.card,
+.panel,
+.section-card,
+.meta-card,
+.stat-card,
+.stat-mini {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -color-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.055), 14, 0, 0, 4);
+}
+
+.badge,
+.status-pill,
+.code-badge,
+.count-badge,
+.score-badge {
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.badge {
+    -fx-border-width: 1;
+}
+
+.badge-yellow,
+.pill-yellow,
+.badge-pending {
+    -fx-background-color: -color-warning-soft;
+    -fx-text-fill: #8a5a12;
+    -fx-border-color: #f0d38a;
+}
+
+.badge-blue,
+.pill-blue {
+    -fx-background-color: #e8f2ff;
+    -fx-text-fill: #1856a8;
+    -fx-border-color: #b9d6ff;
+}
+
+.badge-green,
+.pill-green,
+.badge-done {
+    -fx-background-color: -color-success-soft;
+    -fx-text-fill: #056348;
+    -fx-border-color: #9fdec8;
+}
+
+.badge-red,
+.pill-red {
+    -fx-background-color: -color-danger-soft;
+    -fx-text-fill: #9b2424;
+    -fx-border-color: #efb4b4;
+}
+
+.btn-primary,
+.btn-success,
+.btn-confirm,
+.btn-process,
+.btn-realloc {
+    -fx-background-color: -color-primary;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+    -fx-padding: 9 16;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover,
+.btn-process:hover,
+.btn-realloc:hover {
+    -fx-background-color: -color-primary-hover;
+}
+
+.btn-success,
+.btn-confirm {
+    -fx-background-color: -color-success;
+}
+
+.btn-success:hover,
+.btn-confirm:hover {
+    -fx-background-color: #066f4f;
+}
+
+.btn-ghost,
+.btn-view,
+.btn-link {
+    -fx-background-color: white;
+    -fx-text-fill: #334155;
+    -fx-border-color: -color-border-strong;
+    -fx-border-width: 1;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+    -fx-padding: 8 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.btn-ghost:hover,
+.btn-view:hover,
+.btn-link:hover {
+    -fx-background-color: -color-surface-muted;
+    -fx-border-color: #94a3b8;
+}
+
+.btn-back-nav {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -color-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 7 4;
+    -fx-cursor: hand;
+}
+
+.btn-back-nav:hover {
+    -fx-text-fill: -color-primary-hover;
+}
+
+.btn-close {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-text-fill: white;
+    -fx-background-radius: 7;
+    -fx-border-color: rgba(255, 255, 255, 0.28);
+    -fx-border-radius: 7;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.30);
+}
+
+.table-empty {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-text-muted;
+}

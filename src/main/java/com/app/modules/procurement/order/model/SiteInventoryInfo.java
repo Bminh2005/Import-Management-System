@@ -1,5 +1,7 @@
 package com.app.modules.procurement.order.model;
 
+import java.time.LocalDate;
+
 public class SiteInventoryInfo {
     private long siteId;
     private String siteName;
@@ -9,6 +11,7 @@ public class SiteInventoryInfo {
     private long availableQuantity;
     private double price;
     private int score;
+    private LocalDate estimatedDelivery;
 
     public SiteInventoryInfo() {
     }
@@ -75,5 +78,13 @@ public class SiteInventoryInfo {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public LocalDate getEstimatedDelivery() {
+        return estimatedDelivery;
+    }
+
+    public void setEstimatedDelivery(LocalDate estimatedDelivery) {
+        this.estimatedDelivery = estimatedDelivery;
     }
 }

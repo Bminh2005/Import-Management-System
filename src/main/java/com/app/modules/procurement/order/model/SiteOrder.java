@@ -10,6 +10,9 @@ public class SiteOrder {
     private LocalDateTime createdAt;
     private long siteId;
     private String siteName;
+    private String siteAddress;
+    private long deliveryByShip;
+    private long deliveryByAir;
     private LocalDate expectedDeliveryDate;
     private long userId;
     private String ordererName;
@@ -62,6 +65,35 @@ public class SiteOrder {
 
     public void setSiteName(String siteName) {
         this.siteName = siteName;
+    }
+
+    public String getSiteAddress() {
+        return siteAddress;
+    }
+
+    public void setSiteAddress(String siteAddress) {
+        this.siteAddress = siteAddress;
+    }
+
+    public long getDeliveryByShip() {
+        return deliveryByShip;
+    }
+
+    public void setDeliveryByShip(long deliveryByShip) {
+        this.deliveryByShip = deliveryByShip;
+    }
+
+    public long getDeliveryByAir() {
+        return deliveryByAir;
+    }
+
+    public void setDeliveryByAir(long deliveryByAir) {
+        this.deliveryByAir = deliveryByAir;
+    }
+
+    /** {@code request_id} trong DB có thể NULL — khi đó giá trị là 0. */
+    public boolean hasLinkedRequest() {
+        return requestId > 0;
     }
 
     public LocalDate getExpectedDeliveryDate() {

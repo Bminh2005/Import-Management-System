@@ -1,0 +1,87 @@
+@import url("site-order-shared.css");
+
+.success-container {
+    -fx-padding: 48 32 34 32;
+    -fx-max-width: 660;
+}
+
+.success-icon {
+    -fx-font-size: 22px;
+    -fx-font-weight: 900;
+    -fx-text-fill: white;
+    -fx-background-color: -color-success;
+    -fx-background-radius: 999;
+    -fx-min-width: 82;
+    -fx-min-height: 82;
+    -fx-max-width: 82;
+    -fx-max-height: 82;
+    -fx-alignment: center;
+}
+
+.success-title {
+    -fx-font-size: 23px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -color-success;
+}
+
+.success-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-text-secondary;
+    -fx-text-alignment: center;
+    -fx-max-width: 560;
+}
+
+.summary-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: -color-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 16, 0, 0, 5);
+    -fx-padding: 24;
+    -fx-min-width: 540;
+}
+
+.summary-item {
+    -fx-padding: 8 16;
+}
+
+.summary-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: -color-text-muted;
+    -fx-font-weight: 800;
+}
+
+.summary-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+}
+
+.summary-value-blue { -fx-text-fill: -color-primary; }
+.summary-value-purple { -fx-text-fill: #6b46c1; }
+.summary-value-green { -fx-text-fill: -color-success; -fx-font-size: 16px; }
+
+.summary-separator {
+    -fx-background-color: -color-border;
+}
+
+.order-ids-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -color-text;
+}
+
+.order-ids-list {
+    -fx-font-size: 13px;
+    -fx-text-fill: #334155;
+    -fx-font-family: "Consolas", monospace;
+}
+
+.removed-order-note {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-text-muted;
+}
+
+.success-actions {
+    -fx-padding: 16 0 0 0;
+}

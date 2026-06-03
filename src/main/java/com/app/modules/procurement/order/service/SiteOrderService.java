@@ -1,7 +1,11 @@
 package com.app.modules.procurement.order.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +15,7 @@ import com.app.modules.procurement.order.dao.SiteOrderDAO;
 import com.app.modules.procurement.order.model.DeliveryType;
 import com.app.modules.procurement.order.model.ImportRequestInfo;
 import com.app.modules.procurement.order.model.OrderStatus;
+import com.app.modules.procurement.order.model.ReallocationResult;
 import com.app.modules.procurement.order.model.RequestDetailItem;
 import com.app.modules.procurement.order.model.SiteAllocationEntry;
 import com.app.modules.procurement.order.model.SiteInventoryInfo;
@@ -32,45 +37,112 @@ public class SiteOrderService {
         return orderDAO.getAll();
     }
 
-    public List<SiteOrder> getOrdersByStatus(OrderStatus status) {
-        return orderDAO.getByStatus(status);
-    }
-
     public SiteOrder getOrderById(long orderId) {
         return orderDAO.getById(orderId);
     }
 
-    public int countByStatus(OrderStatus status) {
-        return orderDAO.countByStatus(status);
+    /**
+     * Site đủ điều kiện: tồn kho >= số lượng cần, giao tàu (hôm nay + ship days) trước ngày mong muốn.
+     * Sắp xếp: ship nhanh trước, tồn kho lớn trước.
+     */
+    public List<SiteInventoryInfo> getEligibleSitesForReallocation(long merchandiseDetailId,
+                                                                   long requiredQuantity,
+                                                                   LocalDate desiredDate) {
+        List<SiteInventoryInfo> candidates = inventoryDAO.getAvailableSitesForItem(merchandiseDetailId);
+        LocalDate today = LocalDate.now();
+        List<SiteInventoryInfo> eligible = new ArrayList<>();
+        for (SiteInventoryInfo site : candidates) {
+            if (site.getAvailableQuantity() < requiredQuantity) {
+                continue;
+            }
+            long shipDays = Math.max(0, site.getDeliveryByShip());
+            LocalDate estimated = today.plusDays(shipDays);
+            site.setEstimatedDelivery(estimated);
+            if (desiredDate != null && !estimated.isBefore(desiredDate)) {
+                continue;
+            }
+            eligible.add(site);
+        }
+        eligible.sort(Comparator
+                .comparingLong(SiteInventoryInfo::getDeliveryByShip)
+                .thenComparing(Comparator.comparingLong(SiteInventoryInfo::getAvailableQuantity).reversed()));
+        return eligible;
     }
 
-    public List<SiteInventoryInfo> getAvailableSitesForItem(long merchandiseDetailId) {
-        return inventoryDAO.getAvailableSitesForItem(merchandiseDetailId);
+    public List<RequestDetailItem> getReallocationLineItems(SiteOrder order) {
+        if (order == null || order.getStatus() != OrderStatus.REFUSED) {
+            return List.of();
+        }
+        List<RequestDetailItem> lines = new ArrayList<>();
+        for (SiteOrderItem item : order.getItems()) {
+            lines.add(new RequestDetailItem(
+                    item.getId(),
+                    item.getMerchandiseDetailId(),
+                    item.getMerchandiseName(),
+                    item.getUnit(),
+                    item.getQuantity(),
+                    item.getPrice()));
+        }
+        return lines;
     }
 
-    public List<RequestDetailItem> getRequestDetails(long requestId) {
-        return requestDAO.getRequestDetails(requestId);
+    public ImportRequestInfo resolveRequestContext(SiteOrder order) {
+        if (order == null) {
+            return null;
+        }
+        if (order.hasLinkedRequest()) {
+            ImportRequestInfo info = getRequestInfo(order.getRequestId());
+            if (info != null) {
+                return info;
+            }
+        }
+        String desired = order.getExpectedDeliveryDate() != null
+                ? order.getExpectedDeliveryDate().toString()
+                : null;
+        return new ImportRequestInfo(0, order.getUserId(), order.getOrdererName(), desired);
     }
 
     public ImportRequestInfo getRequestInfo(long requestId) {
+        if (requestId <= 0) {
+            return null;
+        }
         return requestDAO.findRequestById(requestId).orElse(null);
     }
 
-    public long saveOrder(SiteOrder order, List<SiteOrderItem> items) {
-        return orderDAO.save(order, items);
+    public LocalDate resolveDesiredDate(ImportRequestInfo requestContext, SiteOrder sourceOrder) {
+        if (requestContext != null && requestContext.getDesiredDate() != null) {
+            try {
+                return LocalDate.parse(requestContext.getDesiredDate());
+            } catch (DateTimeParseException ignored) {
+                // fall through
+            }
+        }
+        if (sourceOrder != null && sourceOrder.getExpectedDeliveryDate() != null) {
+            return sourceOrder.getExpectedDeliveryDate();
+        }
+        return LocalDate.now().plusDays(7);
     }
 
-    public int createOrdersFromAllocation(long requestId, long userId,
-                                          LocalDate expectedDate,
-                                          Map<Long, List<SiteAllocationEntry>> allocationMap) {
-        int created = 0;
+    public ReallocationResult finalizeReallocation(SiteOrder sourceOrder,
+                                                   ImportRequestInfo requestContext,
+                                                   Map<Long, List<SiteAllocationEntry>> allocationMap) {
+        if (sourceOrder == null || allocationMap == null || allocationMap.isEmpty()) {
+            return new ReallocationResult(List.of());
+        }
+        long requestId = sourceOrder.hasLinkedRequest()
+                ? sourceOrder.getRequestId()
+                : requestContext != null ? requestContext.getRequestId() : 0;
+        long userId = sourceOrder.getUserId();
+        LocalDate expectedDate = resolveDesiredDate(requestContext, sourceOrder);
+        List<String> siteNames = new ArrayList<>();
+        Map<SiteOrder, List<SiteOrderItem>> replacementOrders = new LinkedHashMap<>();
+
         for (Map.Entry<Long, List<SiteAllocationEntry>> entry : allocationMap.entrySet()) {
-            long siteId = entry.getKey();
             List<SiteAllocationEntry> allocations = entry.getValue();
-            if (allocations.isEmpty()) {
+            if (allocations == null || allocations.isEmpty()) {
                 continue;
             }
-            SiteOrder order = new SiteOrder(siteId, requestId, userId,
+            SiteOrder order = new SiteOrder(entry.getKey(), requestId, userId,
                     expectedDate, OrderStatus.PENDING, DeliveryType.SHIP);
             List<SiteOrderItem> items = new ArrayList<>();
             for (SiteAllocationEntry allocation : allocations) {
@@ -84,14 +156,26 @@ public class SiteOrderService {
                 item.setQuantity(allocation.getQuantity());
                 item.setPrice(allocation.getPrice());
                 item.setStatus(OrderStatus.PENDING);
-                item.setRefusedReason(null);
                 items.add(item);
             }
             if (!items.isEmpty()) {
-                orderDAO.save(order, items);
-                created++;
+                replacementOrders.put(order, items);
+                siteNames.add(allocations.get(0).getSiteName());
             }
         }
-        return created;
+
+        List<Long> createdIds = orderDAO.replaceRefusedOrder(sourceOrder.getId(), replacementOrders);
+        return new ReallocationResult(createdIds, siteNames);
+    }
+
+    public static String formatOrderCode(long orderId) {
+        return String.valueOf(orderId);
+    }
+
+    public static String formatDate(LocalDate date) {
+        if (date == null) {
+            return "—";
+        }
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

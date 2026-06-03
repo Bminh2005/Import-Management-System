@@ -2,8 +2,6 @@ package com.app.modules.procurement.order.ui;
 
 import java.net.URL;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,11 +11,15 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import com.app.modules.procurement.order.model.ImportRequestInfo;
+import com.app.modules.procurement.order.model.ReallocationResult;
 import com.app.modules.procurement.order.model.SiteAllocationEntry;
+import com.app.modules.procurement.order.model.SiteOrder;
 import com.app.modules.procurement.order.service.SiteOrderService;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -27,34 +29,40 @@ public class SiteOrderConfirmDialogController implements Initializable {
 
     @FXML private Label lblDialogTitle;
     @FXML private Label lblDialogSubtitle;
-    @FXML private Label lblStatLabel1;
     @FXML private Label lblStatValue1;
     @FXML private Label lblOrderCount;
     @FXML private Label lblTotalValue;
+    @FXML private Label lblSiteExplain;
     @FXML private VBox orderCardsContainer;
     @FXML private Button btnBack;
     @FXML private Button btnConfirm;
 
-    private final SiteOrderService service = new SiteOrderService();
+    private final SiteOrderService service = SiteOrderNavigator.service();
+    private SiteOrder sourceOrder;
     private ImportRequestInfo requestInfo;
+    private Scene ownerScene;
     private Map<Long, List<SiteAllocationEntry>> allocationsBySite = new LinkedHashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Objects.requireNonNull(lblDialogTitle);
         Objects.requireNonNull(lblDialogSubtitle);
-        Objects.requireNonNull(lblStatLabel1);
         Objects.requireNonNull(lblStatValue1);
         Objects.requireNonNull(lblOrderCount);
         Objects.requireNonNull(lblTotalValue);
+        Objects.requireNonNull(lblSiteExplain);
         Objects.requireNonNull(orderCardsContainer);
         Objects.requireNonNull(btnBack);
         Objects.requireNonNull(btnConfirm);
     }
 
-    public void setData(ImportRequestInfo requestInfo,
-                        Map<Long, List<SiteAllocationEntry>> allocationsByItem) {
+    public void setData(SiteOrder sourceOrder,
+                        ImportRequestInfo requestInfo,
+                        Map<Long, List<SiteAllocationEntry>> allocationsByItem,
+                        Scene ownerScene) {
+        this.sourceOrder = Objects.requireNonNull(sourceOrder);
         this.requestInfo = Objects.requireNonNull(requestInfo);
+        this.ownerScene = ownerScene;
         this.allocationsBySite = groupAllocationsBySite(allocationsByItem);
         renderPreview();
     }
@@ -64,8 +72,7 @@ public class SiteOrderConfirmDialogController implements Initializable {
         Map<Long, List<SiteAllocationEntry>> siteMap = new LinkedHashMap<>();
         for (List<SiteAllocationEntry> allocations : allocationsByItem.values()) {
             for (SiteAllocationEntry entry : allocations) {
-                siteMap.computeIfAbsent(entry.getSiteId(), key -> new ArrayList<>())
-                        .add(entry);
+                siteMap.computeIfAbsent(entry.getSiteId(), key -> new ArrayList<>()).add(entry);
             }
         }
         return siteMap;
@@ -78,39 +85,43 @@ public class SiteOrderConfirmDialogController implements Initializable {
                 .mapToDouble(entry -> entry.getQuantity() * entry.getPrice())
                 .sum();
 
-        lblStatValue1.setText("REQ-" + requestInfo.getRequestId());
+        lblStatValue1.setText(SiteOrderService.formatOrderCode(sourceOrder.getId()));
         lblOrderCount.setText(orderCount + " đơn");
         lblTotalValue.setText(formatMoney(totalValue));
-        btnConfirm.setText("✓ Xác nhận & Tạo " + orderCount + " đơn mới");
+        lblSiteExplain.setText("Mỗi Site sẽ nhận 1 đơn mới ở trạng thái Chưa xử lý. "
+                + "Đơn bị hủy sẽ được thay thế và xóa khỏi danh sách đơn đặt hàng.");
+        btnConfirm.setText("Xác nhận và tạo " + orderCount + " đơn mới");
 
         orderCardsContainer.getChildren().clear();
+        int idx = 1;
         for (List<SiteAllocationEntry> siteAllocations : allocationsBySite.values()) {
-            orderCardsContainer.getChildren().add(buildSiteCard(siteAllocations));
+            orderCardsContainer.getChildren().add(buildSiteCard(idx++, siteAllocations));
         }
     }
 
-    private VBox buildSiteCard(List<SiteAllocationEntry> siteAllocations) {
+    private VBox buildSiteCard(int index, List<SiteAllocationEntry> siteAllocations) {
         String siteName = siteAllocations.get(0).getSiteName();
-        long siteQuantity = siteAllocations.stream().mapToLong(SiteAllocationEntry::getQuantity).sum();
-        double siteAmount = siteAllocations.stream().mapToDouble(entry -> entry.getQuantity() * entry.getPrice()).sum();
+        double siteAmount = siteAllocations.stream()
+                .mapToDouble(entry -> entry.getQuantity() * entry.getPrice()).sum();
 
-        Label title = new Label(siteName);
-        title.getStyleClass().add("section-title");
-        Label summary = new Label(siteQuantity + " mặt hàng · " + formatMoney(siteAmount));
-        summary.getStyleClass().add("info-label");
+        Label title = new Label("Đơn #" + index + " -> " + siteName);
+        title.getStyleClass().add("preview-order-title");
+        Label summary = new Label(formatMoney(siteAmount));
+        summary.getStyleClass().add("preview-order-total");
 
         VBox itemRows = new VBox(6);
         for (SiteAllocationEntry entry : siteAllocations) {
-            Label row = new Label(entry.getMerchandiseName() + " — "
+            Label row = new Label(entry.getMerchandiseName() + " - "
                     + entry.getQuantity() + " " + entry.getUnit()
                     + " x " + formatMoney(entry.getPrice()));
             row.getStyleClass().add("info-label");
+            row.setWrapText(true);
             itemRows.getChildren().add(row);
         }
 
-        VBox card = new VBox(10, title, summary, itemRows);
+        VBox card = new VBox(8, title, summary, itemRows);
         card.getStyleClass().addAll("card", "order-preview-card");
-        card.setPadding(new javafx.geometry.Insets(16));
+        card.setPadding(new Insets(14));
         return card;
     }
 
@@ -121,14 +132,23 @@ public class SiteOrderConfirmDialogController implements Initializable {
 
     @FXML
     private void handleConfirm() {
-        LocalDate expectedDate = parseDesiredDate(requestInfo.getDesiredDate());
-        int created = service.createOrdersFromAllocation(
-                requestInfo.getRequestId(),
-                requestInfo.getUserId(),
-                expectedDate,
-                allocationsBySite);
-        System.out.println("Đã tạo " + created + " đơn hàng mới cho yêu cầu " + requestInfo.getRequestId());
-        closeWindow();
+        btnConfirm.setDisable(true);
+        try {
+            ReallocationResult result = service.finalizeReallocation(
+                    sourceOrder, requestInfo, allocationsBySite);
+            closeWindow();
+            SiteOrderUiAlerts.info("Tạo đơn thành công",
+                    "Đã tạo " + result.getCount()
+                            + " đơn đặt hàng mới ở trạng thái Chưa xử lý và xóa đơn bị hủy "
+                            + SiteOrderService.formatOrderCode(sourceOrder.getId()) + ".");
+            if (ownerScene != null) {
+                SiteOrderNavigator.showSuccess(ownerScene, result, sourceOrder.getId());
+            }
+        } catch (RuntimeException exception) {
+            btnConfirm.setDisable(false);
+            SiteOrderUiAlerts.warn("Không thể tạo đơn",
+                    "Dữ liệu chưa được lưu. Vui lòng kiểm tra kết nối DB và thử lại.");
+        }
     }
 
     @FXML
@@ -139,14 +159,6 @@ public class SiteOrderConfirmDialogController implements Initializable {
     private void closeWindow() {
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
-    }
-
-    private LocalDate parseDesiredDate(String text) {
-        try {
-            return LocalDate.parse(text);
-        } catch (DateTimeParseException ignored) {
-            return LocalDate.now().plusDays(5);
-        }
     }
 
     private String formatMoney(double value) {

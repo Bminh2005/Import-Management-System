@@ -1,6 +1,7 @@
 package com.app.modules.procurement.order.ui;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,15 @@ import java.util.function.Consumer;
 import com.app.modules.procurement.order.model.RequestDetailItem;
 import com.app.modules.procurement.order.model.SiteAllocationEntry;
 import com.app.modules.procurement.order.model.SiteInventoryInfo;
+import com.app.modules.procurement.order.service.SiteOrderService;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -30,11 +35,14 @@ public class SiteAllocationDialogController implements Initializable {
     @FXML private Label lblRequired;
     @FXML private Label lblAllocated;
     @FXML private Label lblRemaining;
+    @FXML private ProgressBar progressBar;
+    @FXML private Label lblSiteCount;
     @FXML private VBox siteCardsContainer;
     @FXML private Button btnCancel;
     @FXML private Button btnSave;
 
     private RequestDetailItem currentItem;
+    private LocalDate desiredDate;
     private List<SiteInventoryInfo> availableSites = new ArrayList<>();
     private final Map<Long, TextField> quantityFields = new HashMap<>();
     private Consumer<List<SiteAllocationEntry>> onSave;
@@ -46,22 +54,25 @@ public class SiteAllocationDialogController implements Initializable {
         Objects.requireNonNull(lblRequired);
         Objects.requireNonNull(lblAllocated);
         Objects.requireNonNull(lblRemaining);
+        Objects.requireNonNull(progressBar);
+        Objects.requireNonNull(lblSiteCount);
         Objects.requireNonNull(siteCardsContainer);
         Objects.requireNonNull(btnCancel);
         Objects.requireNonNull(btnSave);
     }
 
     public void setRequestData(RequestDetailItem item,
+                               LocalDate desiredDate,
                                List<SiteInventoryInfo> sites,
                                List<SiteAllocationEntry> existingAllocations,
                                Consumer<List<SiteAllocationEntry>> onSave) {
         this.currentItem = Objects.requireNonNull(item);
+        this.desiredDate = desiredDate;
         this.availableSites = List.copyOf(sites);
         this.onSave = Objects.requireNonNull(onSave);
 
-        lblDialogTitle.setText("Phân bổ Site cho " + item.getMerchandiseName());
+        lblDialogTitle.setText("Phân bổ Site cho MH" + item.getMerchandiseDetailId());
         lblMerchandiseName.setText(item.getMerchandiseName());
-        lblRequired.setText("Số lượng yêu cầu: " + item.getRequiredQuantity() + " " + item.getUnit());
 
         Map<Long, Long> prefill = new HashMap<>();
         if (existingAllocations != null) {
@@ -76,43 +87,86 @@ public class SiteAllocationDialogController implements Initializable {
     private void renderSiteCards(Map<Long, Long> prefill) {
         siteCardsContainer.getChildren().clear();
         quantityFields.clear();
-        for (SiteInventoryInfo site : availableSites) {
-            Label name = new Label(site.getSiteName());
-            name.getStyleClass().add("section-title");
-            Label detail = new Label("Còn: " + site.getAvailableQuantity() + " " + currentItem.getUnit()
-                    + " · Giá: " + formatMoney(site.getPrice()));
-            detail.getStyleClass().add("info-label");
-            TextField quantityField = new TextField();
-            quantityField.setPromptText("0");
-            quantityField.setPrefWidth(88);
-            long existingValue = prefill.getOrDefault(site.getSiteId(), 0L);
-            if (existingValue > 0) {
-                quantityField.setText(String.valueOf(existingValue));
-            }
-            quantityField.textProperty().addListener((obs, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")) {
-                    quantityField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-                updateSummary();
-            });
+        lblSiteCount.setText("Tìm thấy " + availableSites.size() + " Site có sẵn");
 
-            HBox row = new HBox(12, new VBox(4, name, detail), quantityField);
-            row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-            HBox.setHgrow(row.getChildren().get(0), Priority.ALWAYS);
-            row.getStyleClass().add("card");
-            row.setPadding(new javafx.geometry.Insets(14));
-            siteCardsContainer.getChildren().add(row);
-            quantityFields.put(site.getSiteId(), quantityField);
+        if (availableSites.isEmpty()) {
+            Label empty = new Label("Không có Site nào đủ tồn kho và giao kịp ngày "
+                    + SiteOrderService.formatDate(desiredDate) + ".");
+            empty.getStyleClass().add("empty-site-msg");
+            empty.setWrapText(true);
+            siteCardsContainer.getChildren().add(empty);
+            return;
+        }
+
+        for (SiteInventoryInfo site : availableSites) {
+            siteCardsContainer.getChildren().add(buildSiteCard(site, prefill));
         }
     }
 
+    private VBox buildSiteCard(SiteInventoryInfo site, Map<Long, Long> prefill) {
+        Label scoreBadge = new Label("Điểm: " + site.getScore() + "/100");
+        scoreBadge.getStyleClass().add("score-badge");
+
+        Label name = new Label(site.getSiteName());
+        name.getStyleClass().add("site-name");
+
+        Label location = new Label("📍 " + nullToDash(site.getSiteAddress()));
+        location.getStyleClass().add("info-label");
+
+        Label stock = new Label("TỒN KHO: " + site.getAvailableQuantity() + " " + currentItem.getUnit());
+        stock.getStyleClass().add("info-label");
+
+        Label price = new Label("ĐƠN GIÁ: " + formatMoney(site.getPrice()));
+        price.getStyleClass().add("info-label");
+
+        Label ship = new Label("🚢 Tàu · Giao dự kiến: "
+                + SiteOrderService.formatDate(site.getEstimatedDelivery()));
+        ship.getStyleClass().add("info-label-highlight");
+
+        TextField quantityField = new TextField();
+        quantityField.setPromptText("0");
+        quantityField.getStyleClass().add("qty-input");
+        long existingValue = prefill.getOrDefault(site.getSiteId(), 0L);
+        if (existingValue > 0) {
+            quantityField.setText(String.valueOf(existingValue));
+        }
+        quantityField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                quantityField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            updateSummary();
+        });
+
+        Label qtyLabel = new Label("Số lượng phân bổ:");
+        qtyLabel.getStyleClass().add("qty-label");
+        Label maxLabel = new Label("/ " + site.getAvailableQuantity());
+        maxLabel.getStyleClass().add("qty-max");
+
+        HBox qtyRow = new HBox(8, qtyLabel, quantityField, maxLabel);
+        qtyRow.setAlignment(Pos.CENTER_LEFT);
+
+        HBox header = new HBox(12, name, new VBox(), scoreBadge);
+        header.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(header.getChildren().get(1), Priority.ALWAYS);
+
+        VBox card = new VBox(10, header, location, stock, price, ship, qtyRow);
+        card.getStyleClass().add("site-card");
+        card.setPadding(new Insets(16));
+        quantityFields.put(site.getSiteId(), quantityField);
+        return card;
+    }
+
     private void updateSummary() {
-        long allocated = quantityFields.entrySet().stream()
-                .mapToLong(entry -> parseLong(entry.getValue().getText()))
+        long required = currentItem.getRequiredQuantity();
+        long allocated = quantityFields.values().stream()
+                .mapToLong(field -> parseLong(field.getText()))
                 .sum();
-        long remaining = currentItem.getRequiredQuantity() - allocated;
-        lblAllocated.setText("Đã phân bổ: " + allocated);
-        lblRemaining.setText("Còn lại: " + Math.max(0, remaining));
+        long remaining = required - allocated;
+        lblRequired.setText(required + " " + currentItem.getUnit());
+        lblAllocated.setText(allocated + " " + currentItem.getUnit());
+        lblRemaining.setText(Math.max(0, remaining) + " " + currentItem.getUnit());
+        double progress = required == 0 ? 0 : Math.min(1.0, (double) allocated / required);
+        progressBar.setProgress(progress);
     }
 
     @FXML
@@ -122,16 +176,25 @@ public class SiteAllocationDialogController implements Initializable {
 
     @FXML
     private void handleSave() {
-        long allocated = quantityFields.entrySet().stream()
-                .mapToLong(entry -> parseLong(entry.getValue().getText()))
+        long required = currentItem.getRequiredQuantity();
+        long allocated = quantityFields.values().stream()
+                .mapToLong(field -> parseLong(field.getText()))
                 .sum();
 
         if (allocated <= 0) {
-            System.out.println("Vui lòng nhập số lượng phân bổ lớn hơn 0.");
+            SiteOrderUiAlerts.warn("Chưa chọn Site",
+                    "Vui lòng nhập số lượng phân bổ cho ít nhất một Site.");
             return;
         }
-        if (allocated > currentItem.getRequiredQuantity()) {
-            System.out.println("Số lượng phân bổ không thể lớn hơn yêu cầu.");
+        if (allocated > required) {
+            SiteOrderUiAlerts.warn("Phân bổ thừa",
+                    "Tổng số lượng phân bổ (" + allocated + ") vượt quá yêu cầu (" + required + ").");
+            return;
+        }
+        if (allocated < required) {
+            SiteOrderUiAlerts.warn("Phân bổ chưa đủ",
+                    "Bạn mới phân bổ " + allocated + "/" + required + ". "
+                            + "Vui lòng phân bổ đủ số lượng trước khi lưu.");
             return;
         }
 
@@ -142,7 +205,8 @@ public class SiteAllocationDialogController implements Initializable {
                 continue;
             }
             if (quantity > site.getAvailableQuantity()) {
-                System.out.println("Số lượng phân bổ cho site " + site.getSiteName() + " vượt quá tồn kho.");
+                SiteOrderUiAlerts.warn("Vượt tồn kho",
+                        "Site " + site.getSiteName() + " chỉ còn " + site.getAvailableQuantity() + ".");
                 return;
             }
             SiteAllocationEntry entry = new SiteAllocationEntry();
@@ -179,5 +243,9 @@ public class SiteAllocationDialogController implements Initializable {
 
     private String formatMoney(double value) {
         return String.format("%,.0f đ", value).replace(',', '.');
+    }
+
+    private static String nullToDash(String value) {
+        return value == null || value.isBlank() ? "—" : value;
     }
 }

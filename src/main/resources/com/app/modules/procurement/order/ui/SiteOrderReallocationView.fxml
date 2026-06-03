@@ -1,74 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.app.modules.procurement.order.ui.SiteOrderReallocationController"
-      spacing="22"
-      styleClass="main-content site-order-reallocation">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.app.modules.procurement.order.ui.SiteOrderReallocationController"
+            stylesheets="@site-order-reallocation.css"
+            styleClass="page-root">
 
-    <stylesheets>
-        <URL value="@../../../../common/ui/components/components.css"/>
-        <URL value="@site-order-reallocation.css"/>
-    </stylesheets>
+    <top>
+        <VBox styleClass="top-stack" spacing="0">
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
+                <Button fx:id="btnBack" text="← Quay lại"
+                        styleClass="btn-back-nav"
+                        onAction="#handleBack"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnPreviewTop"
+                        text="📋 Xem trước &amp; Xác nhận"
+                        styleClass="btn-success"
+                        visible="false" managed="false"
+                        onAction="#handleOpenConfirmDialogTop"/>
+            </HBox>
 
-    <padding>
-        <Insets top="28" right="32" bottom="28" left="32"/>
-    </padding>
+            <VBox styleClass="header-panel" spacing="16">
+                <VBox spacing="6">
+                    <Label fx:id="lblTitle" text="Phân bổ lại Đơn"
+                           styleClass="page-title"/>
+                    <Label text="Tìm Site mới để phân bổ lại đơn hàng bị hủy"
+                           styleClass="page-subtitle" wrapText="true"/>
+                    <Label fx:id="lblDesiredDate" text=""
+                           styleClass="desired-date-label"/>
+                </VBox>
 
-    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="nav-bar">
-        <Button fx:id="btnBack" text="←" styleClass="btn-back" onAction="#handleBack"/>
-        <VBox spacing="4">
-            <Label fx:id="lblTitle" text="Phân bổ lại Đơn #DH000" styleClass="page-title"/>
-            <Label text="Tìm Site mới để phân bổ lại đơn hàng bị hủy" styleClass="page-subtitle"/>
+                <HBox styleClass="alert-cancelled" spacing="12" alignment="CENTER_LEFT">
+                    <Label text="!" styleClass="alert-icon-badge"/>
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblCancelledSite" text=""
+                               styleClass="alert-title" wrapText="true"/>
+                        <Label fx:id="lblCancelReason" text=""
+                               styleClass="alert-body" wrapText="true"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="12" fillHeight="true">
+                    <VBox styleClass="stat-mini" HBox.hgrow="ALWAYS">
+                        <Label text="📦 TỔNG MẶT HÀNG" styleClass="stat-mini-label"/>
+                        <Label fx:id="lblTotalItems" text="0" styleClass="stat-mini-value"/>
+                    </VBox>
+                    <VBox styleClass="stat-mini stat-mini-highlight" HBox.hgrow="ALWAYS">
+                        <Label text="✓ ĐÃ PHÂN BỔ" styleClass="stat-mini-label"/>
+                        <Label fx:id="lblAllocated" text="0 / 0" styleClass="stat-mini-value"/>
+                    </VBox>
+                    <VBox styleClass="stat-mini" HBox.hgrow="ALWAYS">
+                        <Label text="👤 NGƯỜI ĐẶT" styleClass="stat-mini-label"/>
+                        <Label fx:id="lblOrderer" text="—" styleClass="stat-mini-value stat-mini-text"/>
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label fx:id="lblProgress" text="Tiến độ 0%"
+                           styleClass="progress-label"/>
+                    <ProgressBar fx:id="progressBar" progress="0"
+                                 prefWidth="200" prefHeight="8"
+                                 styleClass="main-progress" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
         </VBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <VBox alignment="CENTER_RIGHT" spacing="6">
-            <Label fx:id="lblProgress" text="Tiến độ 0%" styleClass="progress-label"/>
-            <ProgressBar fx:id="progressBar" progress="0" prefWidth="160" styleClass="progress-bar-main"/>
-        </VBox>
-    </HBox>
+    </top>
 
-    <HBox styleClass="alert-refused" spacing="12">
-        <Label text="⚠"/>
-        <VBox spacing="4">
-            <Label fx:id="lblCancelledSite" text="Đơn hàng bị hủy bởi: SITE01 – Site ABC" styleClass="alert-title"/>
-            <Label fx:id="lblCancelReason" text="Hàng hết tồn kho tại site cũ" styleClass="alert-body" wrapText="true"/>
+    <center>
+        <VBox spacing="0" styleClass="center-wrap">
+            <HBox styleClass="list-header" alignment="CENTER_LEFT">
+                <Label text="Danh sách mặt hàng cần phân bổ" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <Label fx:id="lblEmptyState" text="Không có mặt hàng để phân bổ lại."
+                   styleClass="empty-hint" wrapText="true"
+                   visible="false" managed="false"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="items-scroll">
+                <VBox fx:id="itemCardsContainer"
+                      styleClass="items-container"
+                      spacing="12"/>
+            </ScrollPane>
         </VBox>
-    </HBox>
+    </center>
 
-    <HBox spacing="16" styleClass="stat-cards-row">
-        <VBox styleClass="card stat-card stat-card-blue" spacing="8">
-            <Label text="TỔNG MẶT HÀNG" styleClass="stat-label"/>
-            <Label fx:id="lblTotalItems" text="0" styleClass="stat-value"/>
-        </VBox>
-        <VBox styleClass="card stat-card stat-card-green" spacing="8">
-            <Label text="ĐÃ PHÂN BỔ" styleClass="stat-label"/>
-            <Label fx:id="lblAllocated" text="0/0" styleClass="stat-value"/>
-        </VBox>
-        <VBox styleClass="card stat-card stat-card-purple" spacing="8">
-            <Label text="NGƯỜI ĐẶT" styleClass="stat-label"/>
-            <Label fx:id="lblOrderer" text="Nguyễn Văn A" styleClass="stat-value"/>
-        </VBox>
-    </HBox>
-
-    <ScrollPane fitToWidth="true" styleClass="screen-scroll">
-        <VBox fx:id="itemCardsContainer" spacing="12" styleClass="item-cards-container"/>
-    </ScrollPane>
-
-    <HBox fx:id="footerBar" styleClass="footer-bar" alignment="CENTER_LEFT" spacing="12" visible="false" managed="false">
-        <Button fx:id="btnCancel" text="Hủy" styleClass="btn-secondary" onAction="#handleCancel"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="btnPreview" text="Xem trước & Xác nhận →" styleClass="btn-primary" onAction="#handleOpenConfirmDialog"/>
-    </HBox>
-</VBox>
+    <bottom>
+        <HBox fx:id="footerBar" styleClass="footer-bar"
+              alignment="CENTER_RIGHT" spacing="12"
+              visible="false" managed="false">
+            <Button fx:id="btnCancel" text="Quay lại"
+                    styleClass="btn-ghost"
+                    onAction="#handleCancel"/>
+            <Button fx:id="btnPreview"
+                    text="📋 Xem trước &amp; Xác nhận"
+                    styleClass="btn-success"
+                    onAction="#handleOpenConfirmDialog"/>
+        </HBox>
+    </bottom>
+</BorderPane>
