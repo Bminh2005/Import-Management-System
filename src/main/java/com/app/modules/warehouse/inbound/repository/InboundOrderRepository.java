@@ -78,6 +78,7 @@ public class InboundOrderRepository {
                        od.merchandise_detail_id,
                        ('MD-' || od.merchandise_detail_id) AS product_code,
                        COALESCE(m.merchandise_name, 'N/A') AS product_name,
+                       COALESCE(md.unit, '') AS unit,
                        COALESCE(od.quantity, 0) AS ordered_quantity,
                        COALESCE(od.actual_quantity, od.quantity, 0) AS actual_quantity,
                        COALESCE(od.refused_reason, '') AS discrepancy_reason
@@ -100,6 +101,7 @@ public class InboundOrderRepository {
                             resultSet.getLong("merchandise_detail_id"),
                             resultSet.getString("product_code"),
                             resultSet.getString("product_name"),
+                            resultSet.getString("unit"),
                             resultSet.getInt("ordered_quantity"),
                             resultSet.getInt("actual_quantity"),
                             resultSet.getString("discrepancy_reason")

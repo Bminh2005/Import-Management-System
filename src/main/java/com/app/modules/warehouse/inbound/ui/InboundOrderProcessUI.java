@@ -43,6 +43,7 @@ public class InboundOrderProcessUI extends BorderPane {
     @FXML private TableView<InboundOrderItemResponse> itemTable;
     @FXML private TableColumn<InboundOrderItemResponse, String> itemCodeColumn;
     @FXML private TableColumn<InboundOrderItemResponse, String> itemNameColumn;
+    @FXML private TableColumn<InboundOrderItemResponse, String> unitColumn;
     @FXML private TableColumn<InboundOrderItemResponse, Integer> orderedQuantityColumn;
     @FXML private TableColumn<InboundOrderItemResponse, InboundOrderItemResponse> actualQuantityColumn;
     @FXML private TableColumn<InboundOrderItemResponse, InboundOrderItemResponse> differenceColumn;
@@ -255,6 +256,10 @@ public class InboundOrderProcessUI extends BorderPane {
 
     public TableColumn<InboundOrderItemResponse, String> getItemNameColumn() {
         return itemNameColumn;
+    }
+
+    public TableColumn<InboundOrderItemResponse, String> getUnitColumn() {
+        return unitColumn;
     }
 
     public TableColumn<InboundOrderItemResponse, Integer> getOrderedQuantityColumn() {

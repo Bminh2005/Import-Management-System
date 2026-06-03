@@ -25,6 +25,8 @@ public class InboundOrderProcessTableController {
         view.getItemCodeColumn().setCellFactory(column -> new CodeCell());
         view.getItemNameColumn().setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getProductName()));
+        view.getUnitColumn().setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getUnit()));
         view.getOrderedQuantityColumn().setCellValueFactory(data ->
                 new SimpleIntegerProperty(data.getValue().getOrderedQuantity()).asObject());
 

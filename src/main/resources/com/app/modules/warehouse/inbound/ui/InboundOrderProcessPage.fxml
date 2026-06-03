@@ -95,12 +95,13 @@
                     </HBox>
                     <TableView fx:id="itemTable" editable="false" prefHeight="330.0" styleClass="data-table inbound-items-table">
                         <columns>
-                            <TableColumn fx:id="itemCodeColumn" prefWidth="120.0" text="MÃ HÀNG"/>
-                            <TableColumn fx:id="itemNameColumn" prefWidth="260.0" text="TÊN MẶT HÀNG"/>
-                            <TableColumn fx:id="orderedQuantityColumn" prefWidth="120.0" text="SL ĐẶT"/>
-                            <TableColumn fx:id="actualQuantityColumn" prefWidth="145.0" text="SL THỰC TẾ"/>
-                            <TableColumn fx:id="differenceColumn" prefWidth="140.0" text="CHÊNH LỆCH"/>
-                            <TableColumn fx:id="reasonColumn" prefWidth="360.0" text="LÝ DO SAI LỆCH"/>
+                            <TableColumn fx:id="itemCodeColumn" prefWidth="110.0" text="MÃ HÀNG"/>
+                            <TableColumn fx:id="itemNameColumn" prefWidth="240.0" text="TÊN MẶT HÀNG"/>
+                            <TableColumn fx:id="unitColumn" prefWidth="90.0" text="ĐƠN VỊ"/>
+                            <TableColumn fx:id="orderedQuantityColumn" prefWidth="110.0" text="SL ĐẶT"/>
+                            <TableColumn fx:id="actualQuantityColumn" prefWidth="130.0" text="SL THỰC TẾ"/>
+                            <TableColumn fx:id="differenceColumn" prefWidth="130.0" text="CHÊNH LỆCH"/>
+                            <TableColumn fx:id="reasonColumn" prefWidth="340.0" text="LÝ DO SAI LỆCH"/>
                         </columns>
                     </TableView>
                 </VBox>

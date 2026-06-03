@@ -6,6 +6,7 @@ public class InboundOrderItemResponse {
     private long merchandiseDetailId;
     private String productCode;
     private String productName;
+    private String unit;
     private int orderedQuantity;
     private int actualQuantity;
     private String discrepancyReason;
@@ -21,6 +22,7 @@ public class InboundOrderItemResponse {
         this.merchandiseDetailId = merchandiseDetailId;
         this.productCode = productCode;
         this.productName = productName;
+        this.unit = "";
         this.orderedQuantity = orderedQuantity;
         this.actualQuantity = actualQuantity;
         this.discrepancyReason = "";
@@ -32,6 +34,15 @@ public class InboundOrderItemResponse {
         this(orderDetailId, orderId, merchandiseDetailId, productCode, productName,
                 orderedQuantity, actualQuantity);
         this.discrepancyReason = discrepancyReason;
+    }
+
+    public InboundOrderItemResponse(long orderDetailId, long orderId, long merchandiseDetailId,
+                                    String productCode, String productName, String unit,
+                                    int orderedQuantity, int actualQuantity, String discrepancyReason) {
+        this(orderDetailId, orderId, merchandiseDetailId, productCode, productName,
+                orderedQuantity, actualQuantity);
+        this.unit = unit == null ? "" : unit;
+        this.discrepancyReason = discrepancyReason == null ? "" : discrepancyReason;
     }
 
     public long getOrderDetailId() {
@@ -72,6 +83,14 @@ public class InboundOrderItemResponse {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public int getOrderedQuantity() {
