@@ -7,6 +7,7 @@ import com.app.auth.security.CurrentUserSession;
 import com.app.common.entity.User;
 import com.app.common.exception.BusinessException;
 import com.app.common.navigator.Navigator;
+import com.app.modules.sales.dashboard.ui.SalesMainUI;
 import javafx.scene.Parent;
 
 public class LoginController {
@@ -50,6 +51,9 @@ public class LoginController {
             } else {
                 CurrentUserSession.login(user.getId(), loginInfo.getUsername(), loginInfo.getRole(), user.getFullname());
                 loginUI.showToastNotification("Đăng nhập thành công UserID: " + CurrentUserSession.getCurrentUserId(), true);
+                if ("SALES".equalsIgnoreCase(loginInfo.getRole())) {
+                    Navigator.getInstance().navigateTo(new SalesMainUI());
+                }
             }
         } catch (BusinessException e) {
             loginUI.showToastNotification(e.getMessage(), false);

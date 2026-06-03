@@ -16,21 +16,26 @@
          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
          fitToWidth="true" styleClass="screen-scroll">
     <stylesheets>
-        <URL value="@../../../../../common/ui/components/common.css"/>
+        <URL value="@../../../../common/ui/components/common.css"/>
         <URL value="@RequestDetailPage.css"/>
     </stylesheets>
 
     <VBox styleClass="main-content" spacing="24">
         <padding>
-            <Insets top="32" right="32" bottom="32" left="32"/>
+            <Insets top="28" right="32" bottom="32" left="32"/>
         </padding>
 
-        <!-- Tiêu đề trang -->
-        <VBox spacing="4">
-            <Label text="Chi tiết Yêu cầu Nhập hàng" styleClass="page-title"/>
-            <Label text="Thông tin chi tiết về yêu cầu và các đơn hàng liên quan"
-                   styleClass="page-subtitle"/>
-        </VBox>
+        <!-- Tiêu đề trang + nút Quay lại -->
+        <HBox spacing="14" alignment="CENTER_LEFT">
+            <Button fx:id="backButton" text="←" styleClass="back-button"
+                    onAction="#handleBackClick"/>
+            <VBox spacing="4">
+                <Label fx:id="titleLabel" text="Chi tiết Yêu cầu Nhập hàng"
+                       styleClass="page-title"/>
+                <Label text="Thông tin chi tiết về yêu cầu và các đơn hàng liên quan"
+                       styleClass="page-subtitle"/>
+            </VBox>
+        </HBox>
 
         <!-- Thẻ thông tin yêu cầu -->
         <VBox styleClass="card" spacing="16">
@@ -39,7 +44,7 @@
             </padding>
             <Label text="Thông tin Yêu cầu" styleClass="section-title"/>
 
-            <GridPane hgap="24" vgap="12">
+            <GridPane hgap="24" vgap="14">
                 <columnConstraints>
                     <ColumnConstraints percentWidth="25"/>
                     <ColumnConstraints percentWidth="25"/>
@@ -88,7 +93,7 @@
                 <Insets top="20" right="24" bottom="20" left="24"/>
             </padding>
             <Label text="Danh sách Mặt hàng" styleClass="section-title"/>
-            <TableView fx:id="itemsTable" styleClass="data-table" prefHeight="240">
+            <TableView fx:id="itemsTable" styleClass="data-table" prefHeight="260">
                 <columns>
                     <TableColumn fx:id="codeColumn" text="Mã hàng" prefWidth="100"/>
                     <TableColumn fx:id="nameColumn" text="Tên mặt hàng" prefWidth="220"/>
@@ -96,7 +101,7 @@
                     <TableColumn fx:id="unitColumn" text="Đơn vị" prefWidth="80"/>
                     <TableColumn fx:id="deliveryDateColumn" text="Ngày nhận mong muốn"
                                  prefWidth="160"/>
-                    <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="110"/>
+                    <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -155,14 +160,5 @@
                 </columnResizePolicy>
             </TableView>
         </VBox>
-
-        <!-- Nút thao tác cuối trang -->
-        <HBox spacing="12" alignment="CENTER_RIGHT">
-            <padding>
-                <Insets top="8"/>
-            </padding>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Đóng" styleClass="btn-secondary" onAction="#onClose"/>
-        </HBox>
     </VBox>
 </fx:root>

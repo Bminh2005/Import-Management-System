@@ -17,4 +17,19 @@ public class SalesSidebar extends Sidebar {
         this.addMenuItem(productManager);
         this.addMenuItem(importRequest);
     }
+
+    /** Gắn điều hướng thật (gọi từ {@link SalesShell}). */
+    public void bindNavigation(Runnable onDashboard, Runnable onProducts, Runnable onImportRequests) {
+        bindItemAction(dashboard, onDashboard);
+        bindItemAction(productManager, onProducts);
+        bindItemAction(importRequest, onImportRequests);
+    }
+
+    public SidebarItem getImportRequestItem() {
+        return importRequest;
+    }
+
+    public SidebarItem getProductManagerItem() {
+        return productManager;
+    }
 }

@@ -1,19 +1,24 @@
 package com.app.modules.sales.request.service;
 
+import com.app.modules.sales.request.dto.OrderDetailResponse;
 import com.app.modules.sales.request.dto.RequestResponse;
 import com.app.modules.sales.request.dto.UpdateRequestDTO;
+import com.app.modules.sales.request.entity.OrderItem;
+import com.app.modules.sales.request.entity.RelatedOrder;
 import com.app.modules.sales.request.entity.Request;
 import com.app.modules.sales.request.entity.RequestItem;
 import com.app.modules.sales.request.repository.RequestRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * Service cho Request: chứa business logic và điều phối workflow
- * giữa UI và Repository theo đúng quy ước trong README.
- *
- * UI chỉ gọi service, service gọi repository — không bao giờ
- * UI chạm thẳng repository hoặc viết SQL.
+ * giữa UI và Repository. Theo quy ước README: UI chỉ gọi service,
+ * service gọi repository - không bao giờ UI chạm thẳng repository.
  */
 public class RequestService {
 
@@ -27,7 +32,7 @@ public class RequestService {
         this.repository = repository;
     }
 
-    /** Lấy chi tiết yêu cầu nhập hàng theo mã, dùng cho 2 màn hình Xem / Sửa. */
+    /** Lấy chi tiết yêu cầu nhập hàng (cho 2 màn Xem / Sửa). */
     public RequestResponse getRequestDetail(String code) {
         Request request = repository.findById(code)
                 .orElseThrow(() -> new NoSuchElementException(
@@ -36,54 +41,101 @@ public class RequestService {
     }
 
     /**
-     * Lưu thay đổi từ màn hình Chỉnh sửa.
-     * Áp danh sách item mới (đã thêm/xóa/sửa) vào entity rồi ghi xuống repository.
+     * Lưu thay đổi từ màn Chỉnh sửa: đồng bộ toàn bộ danh sách item
+     * trong DTO xuống DB theo kiểu upsert.
      */
     public RequestResponse updateRequest(UpdateRequestDTO dto) {
         Request request = repository.findById(dto.getCode())
                 .orElseThrow(() -> new NoSuchElementException(
                         "Không tìm thấy yêu cầu " + dto.getCode()));
 
-        request.getItems().setAll(dto.getItems());
-        repository.save(request);
-        return new RequestResponse(request);
+        Set<String> keep = new HashSet<>();
+        int pos = 0;
+        for (RequestItem item : dto.getItems()) {
+            repository.insertItem(dto.getCode(), item, pos++);
+            keep.add(item.getCode());
+        }
+        for (RequestItem old : request.getItems()) {
+            if (!keep.contains(old.getCode())) {
+                repository.deleteItem(dto.getCode(), old.getCode());
+            }
+        }
+
+        // Ngày nhận lưu ở cấp yêu cầu (schema chỉ có 1 desired_date / yêu cầu).
+        for (RequestItem item : dto.getItems()) {
+            String date = item.getDeliveryDate();
+            if (date != null && !date.isBlank()) {
+                repository.updateItemDeliveryDate(dto.getCode(), item.getCode(), date);
+                break;
+            }
+        }
+
+        Request fresh = repository.findById(dto.getCode())
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Không tìm thấy yêu cầu " + dto.getCode()));
+        return new RequestResponse(fresh);
     }
 
-    /** Cập nhật số lượng / ngày nhận cho 1 mặt hàng trong yêu cầu. */
     public void updateItemQuantity(String code, String itemCode, int newQuantity) {
-        repository.findById(code).ifPresent(req ->
-                req.getItems().stream()
-                        .filter(i -> i.getCode().equals(itemCode))
-                        .findFirst()
-                        .ifPresent(i -> i.setQuantity(newQuantity)));
+        repository.updateItemQuantity(code, itemCode, newQuantity);
     }
 
     public void updateItemDeliveryDate(String code, String itemCode, String date) {
-        repository.findById(code).ifPresent(req ->
-                req.getItems().stream()
-                        .filter(i -> i.getCode().equals(itemCode))
-                        .findFirst()
-                        .ifPresent(i -> i.setDeliveryDate(date)));
+        repository.updateItemDeliveryDate(code, itemCode, date);
     }
 
-    /** Xóa 1 mặt hàng khỏi yêu cầu. */
     public void removeItem(String code, String itemCode) {
-        repository.findById(code).ifPresent(req ->
-                req.getItems().removeIf(i -> i.getCode().equals(itemCode)));
+        repository.deleteItem(code, itemCode);
+    }
+
+    /**
+     * Danh sách sản phẩm khả dụng cho yêu cầu hiện tại:
+     * master list (tất cả sản phẩm từng có) trừ các mã đã có trong
+     * yêu cầu hiện tại.
+     */
+    public List<RequestItem> listAvailableProducts(String currentRequestCode) {
+        Set<String> excluded = new HashSet<>();
+        repository.findById(currentRequestCode).ifPresent(req ->
+                req.getItems().forEach(i -> excluded.add(i.getCode())));
+        List<RequestItem> result = new ArrayList<>();
+        for (RequestItem p : repository.findAllProducts()) {
+            if (!excluded.contains(p.getCode())) result.add(p);
+        }
+        return result;
     }
 
     /** Thêm 1 mặt hàng vào yêu cầu (gọi từ popup "Thêm mặt hàng"). */
     public void addItem(String code, RequestItem item) {
-        repository.findById(code).ifPresent(req -> req.getItems().add(item));
+        Request request = repository.findById(code)
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Không tìm thấy yêu cầu " + code));
+        int position = request.getItems().size();
+        repository.insertItem(code, item, position);
     }
 
-    /** Hủy toàn bộ yêu cầu kèm lý do (đổi trạng thái sang cancelled). */
-    public void cancelRequest(String code, String reason) {
-        repository.findById(code).ifPresent(req -> {
-            req.setStatus("cancelled");
-            repository.save(req);
-            System.out.println("[RequestService] Đã hủy yêu cầu " + code
-                    + " - Lý do: " + reason);
-        });
+    /**
+     * Lấy chi tiết 1 đơn hàng quốc tế (cho popup "Chi tiết Đơn hàng").
+     * DB hiện chưa có bảng order_items: items được dựng từ
+     * item_count mặt hàng đầu của yêu cầu gốc.
+     */
+    public OrderDetailResponse getOrderDetail(String orderCode) {
+        RequestRepository.RelatedOrderWithRequest wrap = repository.findRelatedOrder(orderCode)
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Không tìm thấy đơn hàng " + orderCode));
+
+        RelatedOrder order = wrap.getOrder();
+        List<RequestItem> requestItems = repository.findRequestItems(wrap.getRequestCode());
+
+        List<OrderItem> items = new ArrayList<>();
+        int limit = Math.min(order.getItemCount(), requestItems.size());
+        for (int i = 0; i < limit; i++) {
+            RequestItem src = requestItems.get(i);
+            items.add(new OrderItem(src.getCode(), src.getName(),
+                    src.getQuantity(), src.getUnit()));
+        }
+
+        return new OrderDetailResponse(
+                order.getCode(), order.getOrderDate(), order.getStatus(),
+                wrap.getRequestCode(), order.getSite(), items);
     }
 }

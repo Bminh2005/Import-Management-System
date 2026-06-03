@@ -1,0 +1,89 @@
+/* ============================================================
+   EnterItemInfoDialogPage.css — popup "Thêm vào yêu cầu"
+   (nhập số lượng + ngày mong muốn).
+   ============================================================ */
+
+.enter-dialog {
+    -primary-color: #2563EB;
+    -border-color: #E5E7EB;
+    -text-primary: #111827;
+    -text-secondary: #6B7280;
+
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 18, 0, 0, 4);
+}
+
+.dialog-header {
+    -fx-background-color: white;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.dialog-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.dialog-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.dialog-close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-padding: 4 10;
+    -fx-background-radius: 8px;
+}
+
+.dialog-close-btn:hover {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #111827;
+}
+
+.dialog-divider {
+    -fx-pref-height: 1px;
+    -fx-min-height: 1px;
+    -fx-background-color: -border-color;
+}
+
+.dialog-body {
+    -fx-background-color: white;
+}
+
+.form-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.form-required {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.form-field {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 13px;
+}
+
+.form-field:focused {
+    -fx-border-color: -primary-color;
+}
+
+.form-field .text-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.dialog-footer {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 0 0 12 12;
+}
