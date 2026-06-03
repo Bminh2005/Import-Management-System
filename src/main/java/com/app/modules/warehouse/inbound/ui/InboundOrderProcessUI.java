@@ -6,6 +6,7 @@ import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar;
 import com.app.modules.warehouse.common.ui.WarehouseStatusBadge;
 import com.app.modules.warehouse.inbound.dto.InboundOrderItemResponse;
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
+import com.app.modules.warehouse.inbound.integration.WarehouseOrderSyncResult;
 import com.app.modules.warehouse.inbound.service.InboundOrderService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -118,11 +119,10 @@ public class InboundOrderProcessUI extends BorderPane {
         }
 
         try {
-            inboundOrderService.confirmInboundOrder(inboundOrder.getOrderId(), inboundOrderItems,
-                    getProcessNote(), TEMP_INSPECTED_BY_USER_ID);
+            WarehouseOrderSyncResult syncResult = inboundOrderService.confirmInboundOrder(
+                    inboundOrder.getOrderId(), inboundOrderItems, getProcessNote(), TEMP_INSPECTED_BY_USER_ID);
             setInboundOrder(inboundOrderService.getOrderById(inboundOrder.getOrderId()));
-            showInfo("Xác nhận thành công",
-                    "Đơn nhập kho đã cập nhật trạng thái và cộng số lượng thực nhận vào tồn kho.");
+            showInboundSuccess(syncResult);
             System.out.println("Nội dung chức năng: Xác nhận nhập kho thành công");
         } catch (RuntimeException exception) {
             showError("Xác nhận thất bại", exception.getMessage());
@@ -236,6 +236,28 @@ public class InboundOrderProcessUI extends BorderPane {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void showWarning(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showInboundSuccess(WarehouseOrderSyncResult syncResult) {
+        String successMessage = "Đơn nhập kho đã cập nhật trạng thái và cộng số lượng thực nhận vào tồn kho.";
+        if (syncResult == null || syncResult.skipped()) {
+            showInfo("Xác nhận thành công", successMessage);
+            return;
+        }
+        if (syncResult.success()) {
+            showInfo("Xác nhận thành công", successMessage + "\n" + syncResult.message());
+            return;
+        }
+        showWarning("Nhập kho thành công, đồng bộ thất bại",
+                successMessage + "\n" + syncResult.message());
     }
 
     private void showError(String title, String content) {

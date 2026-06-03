@@ -2,6 +2,8 @@ package com.app.modules.warehouse.inbound.service;
 
 import com.app.modules.warehouse.inbound.dto.InboundOrderResponse;
 import com.app.modules.warehouse.inbound.dto.InboundOrderItemResponse;
+import com.app.modules.warehouse.inbound.integration.WarehouseOrderApiClient;
+import com.app.modules.warehouse.inbound.integration.WarehouseOrderSyncResult;
 import com.app.modules.warehouse.inbound.repository.InboundOrderRepository;
 
 import java.text.Normalizer;
@@ -10,6 +12,7 @@ import java.util.Locale;
 
 public class InboundOrderService {
     private final InboundOrderRepository inboundOrderRepository = new InboundOrderRepository();
+    private final WarehouseOrderApiClient warehouseOrderApiClient = new WarehouseOrderApiClient();
 
     public List<InboundOrderResponse> getRecentInboundOrders() {
         return inboundOrderRepository.findAll().stream()
@@ -51,11 +54,12 @@ public class InboundOrderService {
                 .orElseGet(this::getFirstProcessableOrder);
     }
 
-    public void confirmInboundOrder(long orderId, List<InboundOrderItemResponse> items,
-                                    String mismatchReason, long inspectedBy) {
+    public WarehouseOrderSyncResult confirmInboundOrder(long orderId, List<InboundOrderItemResponse> items,
+                                                        String mismatchReason, long inspectedBy) {
         validateItems(items, true);
         inboundOrderRepository.confirmInboundOrder(orderId, items,
                 resolveMismatchReason(items, mismatchReason), inspectedBy);
+        return warehouseOrderApiClient.postOrder(getOrderById(orderId), items);
     }
 
     public void saveDraft(long orderId, List<InboundOrderItemResponse> items) {
