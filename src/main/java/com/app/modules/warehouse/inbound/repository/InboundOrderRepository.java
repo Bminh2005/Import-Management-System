@@ -117,13 +117,16 @@ public class InboundOrderRepository {
     }
 
     public void confirmInboundOrder(long orderId, List<InboundOrderItemResponse> items,
-                                    String mismatchReason, long inspectedBy) {
+                                    String targetStatus, String mismatchReason, long inspectedBy) {
         ensureWarehouseSchema();
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Đơn nhập kho không có mặt hàng để xác nhận.");
         }
 
-        boolean hasMismatch = items.stream().anyMatch(InboundOrderItemResponse::hasMismatch);
+        boolean hasMismatch = STATUS_MISMATCH.equals(targetStatus);
+        if (!STATUS_IMPORTED.equals(targetStatus) && !STATUS_MISMATCH.equals(targetStatus)) {
+            throw new IllegalArgumentException("Trang thai xac nhan nhap kho khong hop le.");
+        }
         if (hasMismatch && (mismatchReason == null || mismatchReason.isBlank())) {
             throw new IllegalArgumentException("Bắt buộc nhập lý do sai lệch khi số lượng thực nhận không khớp.");
         }
@@ -138,7 +141,7 @@ public class InboundOrderRepository {
                 updateActualQuantities(connection, orderId, items);
                 updateInventory(connection, orderLock.siteId(), items);
                 updateOrderStatus(connection, orderId,
-                        hasMismatch ? STATUS_MISMATCH : STATUS_IMPORTED,
+                        targetStatus,
                         hasMismatch ? mismatchReason : "",
                         inspectedBy);
                 connection.commit();

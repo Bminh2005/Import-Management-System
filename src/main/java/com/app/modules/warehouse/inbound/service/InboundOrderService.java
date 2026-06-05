@@ -13,6 +13,7 @@ import java.util.Locale;
 public class InboundOrderService {
     private final InboundOrderRepository inboundOrderRepository = new InboundOrderRepository();
     private final WarehouseOrderApiClient warehouseOrderApiClient = new WarehouseOrderApiClient();
+    private final InboundOrderRules inboundOrderRules = new InboundOrderRules();
 
     public List<InboundOrderResponse> getRecentInboundOrders() {
         return inboundOrderRepository.findAll().stream()
@@ -56,47 +57,17 @@ public class InboundOrderService {
 
     public WarehouseOrderSyncResult confirmInboundOrder(long orderId, List<InboundOrderItemResponse> items,
                                                         String mismatchReason, long inspectedBy) {
-        validateItems(items, true);
+        inboundOrderRules.validateItems(items, true);
+        String targetStatus = inboundOrderRules.resolveStatus(items);
+        String resolvedMismatchReason = inboundOrderRules.resolveMismatchReason(items, mismatchReason);
         inboundOrderRepository.confirmInboundOrder(orderId, items,
-                resolveMismatchReason(items, mismatchReason), inspectedBy);
+                targetStatus, resolvedMismatchReason, inspectedBy);
         return warehouseOrderApiClient.postOrder(getOrderById(orderId), items);
     }
 
     public void saveDraft(long orderId, List<InboundOrderItemResponse> items) {
-        validateItems(items, false);
+        inboundOrderRules.validateItems(items, false);
         inboundOrderRepository.saveDraft(orderId, items);
-    }
-
-    private void validateItems(List<InboundOrderItemResponse> items, boolean requireMismatchReason) {
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Đơn nhập kho không có mặt hàng để xử lý.");
-        }
-        boolean hasNegativeQuantity = items.stream()
-                .anyMatch(item -> item.getActualQuantity() < 0);
-        if (hasNegativeQuantity) {
-            throw new IllegalArgumentException("Số lượng thực nhận không được âm.");
-        }
-        boolean hasMissingReason = requireMismatchReason && items.stream()
-                .anyMatch(item -> item.hasMismatch()
-                        && (item.getDiscrepancyReason() == null || item.getDiscrepancyReason().isBlank()));
-        if (hasMissingReason) {
-            throw new IllegalArgumentException("Mỗi mặt hàng sai lệch cần có lý do xử lý.");
-        }
-    }
-
-    private String resolveMismatchReason(List<InboundOrderItemResponse> items, String mismatchReason) {
-        boolean hasMismatch = items.stream().anyMatch(InboundOrderItemResponse::hasMismatch);
-        if (!hasMismatch) {
-            return "";
-        }
-        if (mismatchReason != null && !mismatchReason.isBlank()) {
-            return mismatchReason;
-        }
-        return items.stream()
-                .filter(InboundOrderItemResponse::hasMismatch)
-                .map(item -> item.getProductCode() + ": " + item.getDiscrepancyReason())
-                .reduce((left, right) -> left + "; " + right)
-                .orElse("");
     }
 
     private String mapStatusCode(String selectedStatus) {
