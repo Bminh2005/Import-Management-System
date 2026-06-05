@@ -1,12 +1,10 @@
 package com.app.common.ui.components;
 
+import com.app.common.util.FxmlUiHelper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-
-import java.io.IOException;
 
 public class WarehouseTopBarUI extends HBox {
     @FXML
@@ -18,18 +16,11 @@ public class WarehouseTopBarUI extends HBox {
     @FXML
     private Label roleLabel;
 
-    private String userName = "Nguyen Van A";
-    private String role = "Bo phan Quan ly Kho";
+    private String userName = "Nguyễn Văn A";
+    private String role = "Bộ phận Quản lý Kho";
 
     public WarehouseTopBarUI() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("WarehouseTopBar.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException exception) {
-            throw new IllegalStateException("Khong the tai WarehouseTopBar.fxml", exception);
-        }
+        FxmlUiHelper.loadSelf(this, "WarehouseTopBar.fxml");
     }
 
     @FXML
@@ -39,17 +30,17 @@ public class WarehouseTopBarUI extends HBox {
 
     @FXML
     private void onLanguageClick() {
-        System.out.println("Noi dung chuc nang: Doi ngon ngu");
+        System.out.println("Nội dung chức năng: Đổi ngôn ngữ");
     }
 
     @FXML
     private void onNotificationClick() {
-        System.out.println("Noi dung chuc nang: Xem thong bao");
+        System.out.println("Nội dung chức năng: Xem thông báo");
     }
 
     @FXML
     private void onUserMenuClick() {
-        System.out.println("Noi dung chuc nang: Mo menu nguoi dung");
+        System.out.println("Nội dung chức năng: Mở menu người dùng");
     }
 
     public String getSearchKeyword() {

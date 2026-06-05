@@ -37,8 +37,7 @@ public class Sidebar extends VBox {
     private boolean collapsed = false;
 
     public Sidebar() {
-        FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/app/common/ui/components/Sidebar.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/app/common/ui/components/Sidebar.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
@@ -59,7 +58,7 @@ public class Sidebar extends VBox {
         menuItems.getChildren().add(item);
 
         if (selected == null) {
-            setSelected(item);
+            setSelectedItem(item);
         }
 
         item.setOnAction(() -> {
@@ -72,7 +71,9 @@ public class Sidebar extends VBox {
         });
     }
 
-    /** Gắn lại hành động cho item đã thêm (dùng sau khi có MainLayout / navigator). */
+    /**
+     * Gắn lại hành động cho item đã thêm (dùng sau khi có MainLayout / navigator).
+     */
     public void bindItemAction(SidebarItem item, Runnable onNavigate) {
         item.setOnAction(() -> {
             setSelected(item);
@@ -89,25 +90,21 @@ public class Sidebar extends VBox {
         });
     }
 
-
     public void handleToggleButton() {
 
         collapsed = !collapsed;
 
-        double targetWidth =
-                collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
+        double targetWidth = collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
 
         Timeline timeline = new Timeline();
 
         KeyValue kv = new KeyValue(
                 prefWidthProperty(),
-                targetWidth
-        );
+                targetWidth);
 
         KeyFrame kf = new KeyFrame(
                 Duration.millis(150),
-                kv
-        );
+                kv);
 
         timeline.getKeyFrames().add(kf);
 
@@ -156,7 +153,7 @@ public class Sidebar extends VBox {
         setSelected(item);
     }
 
-    private void setSelected(SidebarItem item) {
+    protected void setSelectedItem(SidebarItem item) {
 
         // Bỏ chọn item cũ
         if (selected != null) {

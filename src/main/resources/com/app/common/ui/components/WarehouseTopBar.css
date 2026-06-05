@@ -1,0 +1,92 @@
+.warehouse-topbar {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #d8dde6 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.10), 6, 0, 0, 1);
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.topbar-search {
+    -fx-background-color: #f1f3f6;
+    -fx-background-radius: 8;
+}
+
+.topbar-search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 15px;
+    -fx-padding: 0;
+    -fx-prompt-text-fill: #8b94a3;
+    -fx-text-fill: #111827;
+}
+
+.topbar-search-field:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.topbar-action,
+.bell-button,
+.profile-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.topbar-action:hover,
+.bell-button:hover,
+.profile-button:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.topbar-action {
+    -fx-padding: 7 8;
+}
+
+.topbar-lang {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+}
+
+.bell-button {
+    -fx-min-height: 34;
+    -fx-min-width: 34;
+    -fx-pref-height: 34;
+    -fx-pref-width: 34;
+}
+
+.notification-badge {
+    -fx-alignment: center;
+    -fx-background-color: #dc2626;
+    -fx-background-radius: 999;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-min-height: 17;
+    -fx-min-width: 17;
+    -fx-text-fill: white;
+    -fx-translate-x: 6;
+    -fx-translate-y: -6;
+}
+
+.profile-button {
+    -fx-padding: 5 6 5 8;
+}
+
+.profile-avatar {
+    -fx-background-color: linear-gradient(to bottom right, #2563eb, #059669);
+    -fx-background-radius: 999;
+    -fx-min-height: 32;
+    -fx-min-width: 32;
+}
+
+.profile-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111827;
+}
+
+.profile-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+}

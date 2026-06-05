@@ -2,46 +2,48 @@ package com.app.common.ui.components;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
+
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-/**
- * Một TableCell dùng chung để chỉnh sửa trực tiếp giá trị số nguyên trong bảng.
- * Hoàn toàn generic, tuân thủ SOLID (SRP, OCP) và tránh sự phụ thuộc vào Model cụ thể.
- *
- * @param <S> Kiểu dữ liệu của dòng trong TableView.
- */
 public class IntegerEditCell<S> extends TableCell<S, S> {
     private final TextField field = new TextField();
     private final Function<S, Integer> getter;
     private final BiConsumer<S, Integer> setter;
-    private final boolean editable;
+    private final Runnable onChanged;
 
-    public IntegerEditCell(Function<S, Integer> getter, BiConsumer<S, Integer> setter, boolean editable) {
+    public IntegerEditCell(Function<S, Integer> getter, BiConsumer<S, Integer> setter, Runnable onChanged) {
         this.getter = getter;
         this.setter = setter;
-        this.editable = editable;
+        this.onChanged = onChanged;
         field.getStyleClass().add("edit-cell-field");
-        field.setPrefWidth(80);
-        field.focusedProperty().addListener((obs, oldF, newF) -> {
-            if (!newF) commitChange();
+        field.setPrefWidth(86);
+        field.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if (!newFocus) {
+                commitChange();
+            }
         });
-        field.setOnAction(e -> commitChange());
+        field.setOnAction(event -> commitChange());
     }
 
     private void commitChange() {
         S row = getItem();
-        if (row == null) return;
+        if (row == null) {
+            return;
+        }
         try {
             int value = Integer.parseInt(field.getText().trim());
-            if (value < 0) value = 0;
-            Integer oldVal = getter.apply(row);
-            if (oldVal != null && oldVal == value) return;
-            setter.accept(row, value);
-        } catch (NumberFormatException e) {
-            if (getItem() != null) {
-                field.setText(String.valueOf(getter.apply(row)));
+            if (value < 0) {
+                value = 0;
             }
+            setter.accept(row, value);
+            field.setText(String.valueOf(value));
+            if (onChanged != null) {
+                onChanged.run();
+            }
+            getTableView().refresh();
+        } catch (NumberFormatException exception) {
+            field.setText(String.valueOf(getter.apply(row)));
         }
     }
 
@@ -50,10 +52,10 @@ public class IntegerEditCell<S> extends TableCell<S, S> {
         super.updateItem(item, empty);
         if (empty || item == null) {
             setGraphic(null);
-        } else {
-            field.setText(String.valueOf(getter.apply(item)));
-            field.setDisable(!editable);
-            setGraphic(field);
+            return;
         }
+        field.setText(String.valueOf(getter.apply(item)));
+        setGraphic(field);
+        setText(null);
     }
 }
