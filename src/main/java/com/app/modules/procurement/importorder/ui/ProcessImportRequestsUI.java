@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import com.app.modules.procurement.importorder.service.ImportOrderService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,6 +42,7 @@ public class ProcessImportRequestsUI extends ScrollPane {
     @FXML private VBox requestsList;
     @FXML private Pane emptyContainer;
 
+    private final ImportOrderService service = new ImportOrderService();
     private final List<PendingImportRequestRow> allRequests = new ArrayList<>();
 
     public ProcessImportRequestsUI() {
@@ -83,51 +85,17 @@ public class ProcessImportRequestsUI extends ScrollPane {
 
     private void loadData() {
         allRequests.clear();
-
-        allRequests.add(new PendingImportRequestRow(
-                "REQ-2024-004",
-                "2024-05-10",
-                "Nguyễn Văn An",
-                8,
-                "high",
-                "pending"
-        ));
-
-        allRequests.add(new PendingImportRequestRow(
-                "REQ-2024-005",
-                "2024-05-10",
-                "Trần Thị Bình",
-                5,
-                "medium",
-                "pending"
-        ));
-
-        allRequests.add(new PendingImportRequestRow(
-                "REQ-2024-006",
-                "2024-05-09",
-                "Lê Quốc Huy",
-                12,
-                "high",
-                "reviewing"
-        ));
-
-        allRequests.add(new PendingImportRequestRow(
-                "REQ-2024-007",
-                "2024-05-08",
-                "Phạm Minh Châu",
-                3,
-                "low",
-                "pending"
-        ));
-
-        allRequests.add(new PendingImportRequestRow(
-                "REQ-2024-008",
-                "2024-05-07",
-                "Hoàng Hải Nam",
-                6,
-                "medium",
-                "pending"
-        ));
+        List<com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestSummary> dbRequests = service.getPendingRequests();
+        for (com.app.modules.procurement.importorder.repository.ImportOrderRepository.RequestSummary r : dbRequests) {
+            allRequests.add(new PendingImportRequestRow(
+                    r.code(),
+                    r.createdDate(),
+                    r.createdBy(),
+                    r.itemCount(),
+                    r.priority(),
+                    r.status()
+            ));
+        }
     }
 
     private void renderSummary() {
@@ -328,7 +296,12 @@ public class ProcessImportRequestsUI extends ScrollPane {
 
         Scene scene = requestsList.getScene();
         if (scene != null) {
-            scene.setRoot(root);
+            javafx.scene.Parent parentRoot = scene.getRoot();
+            if (parentRoot instanceof com.app.common.ui.MainLayoutUI) {
+                ((com.app.common.ui.MainLayoutUI) parentRoot).setPage(root);
+            } else {
+                scene.setRoot(root);
+            }
             ((Stage) scene.getWindow()).setTitle(
                     "Hệ thống Quản lý Nhập khẩu - Đặt hàng Quốc tế");
         }
@@ -342,7 +315,12 @@ public class ProcessImportRequestsUI extends ScrollPane {
 
         Scene scene = requestsList.getScene();
         if (scene != null) {
-            scene.setRoot(root);
+            javafx.scene.Parent parentRoot = scene.getRoot();
+            if (parentRoot instanceof com.app.common.ui.MainLayoutUI) {
+                ((com.app.common.ui.MainLayoutUI) parentRoot).setPage(root);
+            } else {
+                scene.setRoot(root);
+            }
             ((Stage) scene.getWindow()).setTitle(
                     "Hệ thống Quản lý Nhập khẩu - Xử lý yêu cầu " + requestCode);
         }
