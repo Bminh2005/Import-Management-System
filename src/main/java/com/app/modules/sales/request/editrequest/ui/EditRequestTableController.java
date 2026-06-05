@@ -65,7 +65,7 @@ public class EditRequestTableController {
                     item.setQuantity(val);
                     view.setDirty(true);
                 },
-                editable
+                ()->{}
         ));
 
         view.getDeliveryDateColumn().setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
@@ -104,7 +104,7 @@ public class EditRequestTableController {
                 }
             }
         });
-        
+
         view.getItemsTable().refresh();
     }
 }

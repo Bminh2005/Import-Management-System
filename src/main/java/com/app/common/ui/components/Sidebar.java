@@ -152,7 +152,17 @@ public class Sidebar extends VBox {
     public void selectMenu(SidebarItem item) {
         setSelected(item);
     }
+    private void setSelected(SidebarItem item) {
 
+        // Bỏ chọn item cũ
+        if (selected != null) {
+            selected.unactiveItem();
+        }
+
+        // Chọn item mới
+        selected = item;
+        selected.activeItem();
+    }
     protected void setSelectedItem(SidebarItem item) {
 
         // Bỏ chọn item cũ

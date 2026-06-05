@@ -1,6 +1,7 @@
 package com.app.modules.warehouse.dashboard.ui;
 
 import com.app.Ioms.navigation.WarehouseNavigation;
+import com.app.common.ui.IScreen;
 import com.app.common.util.FxmlUiHelper;
 import com.app.modules.warehouse.dashboard.dto.WarehouseDashboardSummary;
 import com.app.modules.warehouse.dashboard.service.WarehouseDashboardService;
@@ -12,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -20,7 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.SVGPath;
 
-public class WarehouseHomeUI extends BorderPane {
+public class WarehouseHomeUI extends BorderPane implements IScreen {
     private static final String CLOCK_ICON = "M12 20c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z";
     private static final String PACKAGE_ICON = "M21 8.5 12 3 3 8.5l9 5.2 9-5.2zM5 10.2v5.4l6 3.5v-5.4l-6-3.5zm14 0-6 3.5v5.4l6-3.5v-5.4z";
     private static final String TREND_ICON = "M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z";
@@ -182,5 +184,10 @@ public class WarehouseHomeUI extends BorderPane {
     public void setRecentOrders(ObservableList<InboundOrderResponse> recentOrders) {
         this.recentOrders = recentOrders;
         recentOrderTable.setItems(recentOrders);
+    }
+
+    @Override
+    public Parent getRoot() {
+        return this;
     }
 }
