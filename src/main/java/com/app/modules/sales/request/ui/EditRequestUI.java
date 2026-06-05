@@ -74,6 +74,7 @@ public class EditRequestUI extends ScrollPane {
         FxmlUiHelper.loadSelf(this, "EditRequestPage.fxml");
         itemsTable.setEditable(false);
         setupItemsTable();
+        setupOrdersTable();
     }
 
     public void setOnBack(Runnable callback) { this.onBack = callback; }
@@ -158,6 +159,18 @@ public class EditRequestUI extends ScrollPane {
         itemsTable.setItems(current.getItems());
         current.getItems().addListener((javafx.collections.ListChangeListener<RequestItem>)
                 c -> itemCountLabel.setText(String.valueOf(current.getItems().size())));
+    }
+
+    private void renderOrders(ObservableList<RelatedOrder> orders) {
+        ordersTable.setItems(orders);
+        int size = orders == null ? 0 : orders.size();
+        orderCountLabel.setText("(" + size + " đơn)");
+
+        boolean hasOrders = size > 0;
+        ordersTable.setVisible(hasOrders);
+        ordersTable.setManaged(hasOrders);
+        orderEmptyLabel.setVisible(!hasOrders);
+        orderEmptyLabel.setManaged(!hasOrders);
     }
 
     private void onDeleteItem(RequestItem item) {

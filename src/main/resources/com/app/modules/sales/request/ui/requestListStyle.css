@@ -88,6 +88,11 @@
     -fx-text-fill: #64748b;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
+    -fx-alignment: CENTER;
+}
+
+.custom-table .column-header.actions-column-header .label {
+    -fx-alignment: CENTER;
 }
 
 .custom-table .table-row-cell {
@@ -96,9 +101,14 @@
 }
 
 .custom-table .table-cell {
-    -fx-alignment: CENTER_LEFT;
+    -fx-alignment: CENTER;
     -fx-text-fill: #0f172a;
     -fx-font-size: 14px;
+    -fx-padding: 12px 8px;
+}
+
+.custom-table .table-cell.actions-cell {
+    -fx-alignment: CENTER;
     -fx-padding: 12px 8px;
 }
 
@@ -142,14 +152,16 @@
 
 /* Bản nháp */
 
-/* Thao tác nút Icon */
-.action-icon {
-    -fx-fill: #64748b;
+/* Nút icon thao tác (mắt xem chi tiết) */
+.icon-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 6px;
+    -fx-background-radius: 6px;
     -fx-cursor: hand;
 }
 
-.action-icon:hover {
-    -fx-fill: #1d4ed8;
+.icon-btn:hover {
+    -fx-background-color: #f1f5f9;
 }
 
 /* Phân trang */

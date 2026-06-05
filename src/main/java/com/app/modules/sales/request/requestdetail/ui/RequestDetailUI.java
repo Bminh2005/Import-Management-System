@@ -1,44 +1,42 @@
-package com.app.modules.sales.request.ui;
+package com.app.modules.sales.request.requestdetail.ui;
 
 import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
-import com.app.modules.sales.request.dto.RequestResponse;
+import com.app.modules.sales.request.requestdetail.dto.RequestResponse;
 import com.app.modules.sales.request.entity.RejectedItem;
 import com.app.modules.sales.request.entity.RelatedOrder;
 import com.app.modules.sales.request.entity.RequestItem;
-import com.app.modules.sales.request.service.RequestService;
+import com.app.modules.sales.request.requestdetail.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 
-import java.util.function.Consumer;
-
 /**
  * UI Class cho màn "Xem chi tiết Yêu cầu Nhập hàng".
  * Là 1 component nhúng vào trong MainLayoutUI (đã có sidebar + header).
  *
- * Caller có thể đăng ký:
- * - {@link #setOnBack(Runnable)} để xử lý nút "Quay lại / Đóng"
- * - {@link #setOnEdit(Consumer)} để chuyển sang màn "Chỉnh sửa"
+ * Caller có thể đăng ký {@link #setOnBack(Runnable)} cho nút ← trên header.
  *
  * Theo quy ước README: UI chỉ gọi service, không truy cập repository.
  */
-public class RequestDetailUI extends ScrollPane {
+public class RequestDetailUI extends BorderPane {
 
     // --- Header ---
+    @FXML private Button backButton;
     @FXML private Label titleLabel;
 
     // --- Info card ---
@@ -77,8 +75,7 @@ public class RequestDetailUI extends ScrollPane {
     private final RequestService service;
     private RequestResponse current;
 
-    private Runnable onBack;
-    private Consumer<String> onEdit;
+    private Runnable backAction;
 
     public RequestDetailUI() {
         this(new RequestService());
@@ -102,9 +99,6 @@ public class RequestDetailUI extends ScrollPane {
             backButton.setOnAction(e -> handleBackClick());
         }
     }
-
-    public void setOnBack(Runnable callback) { this.onBack = callback; }
-    public void setOnEdit(Consumer<String> callback) { this.onEdit = callback; }
 
     private void setupItemsTable() {
         codeColumn.setCellValueFactory(c -> c.getValue().codeProperty());
@@ -171,10 +165,30 @@ public class RequestDetailUI extends ScrollPane {
                 + "C21.27 7.61 17 4.5 12 4.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z";
     }
 
-    /** Nạp dữ liệu yêu cầu theo mã. */
-    public void loadRequest(String code) {
-        this.current = service.getRequestDetail(code);
-        render();
+    /**
+     * Nạp dữ liệu yêu cầu theo mã (id số trong bảng ImportRequest).
+     * @return true nếu tải thành công
+     */
+    public boolean loadRequest(String code) {
+        try {
+            this.current = service.getRequestDetail(code);
+            render();
+            return true;
+        } catch (Exception ex) {
+            this.current = null;
+            showLoadError(code, ex);
+            return false;
+        }
+    }
+
+    private void showLoadError(String code, Exception ex) {
+        String detail = ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Không tải được yêu cầu");
+        alert.setHeaderText("Mã yêu cầu: " + code);
+        alert.setContentText(detail + "\n\nKiểm tra kết nối Supabase trong PostgreSQLProvider "
+                + "và đảm bảo bản ghi tồn tại trong bảng ImportRequest.");
+        alert.showAndWait();
     }
 
     private void render() {
@@ -185,7 +199,9 @@ public class RequestDetailUI extends ScrollPane {
         createdDateLabel.setText(current.getCreatedDate());
         itemCountLabel.setText(String.valueOf(current.getItemCount()));
         createdByLabel.setText(current.getCreatedBy());
-        assignedToLabel.setText(current.getAssignedTo());
+        String assigned = current.getAssignedTo();
+        assignedToLabel.setText(assigned == null || assigned.isBlank()
+                ? "Chưa phân công" : assigned);
 
         statusLabel.setText(StatusStyle.requestStatusLabel(current.getStatus()));
         statusLabel.setStyle(StatusStyle.badgeStyle(current.getStatus()));
@@ -269,18 +285,13 @@ public class RequestDetailUI extends ScrollPane {
     }
 
     @FXML
-    private void onBack() {
+    private void handleBackClick() {
+        if (backAction != null) {
+            backAction.run();
+            return;
+        }
         System.out.println("Nội dung chức năng: Quay lại danh sách yêu cầu "
                 + (current != null ? current.getCode() : ""));
-        if (onBack != null) onBack.run();
-    }
-
-    @FXML
-    private void onEdit() {
-        if (current == null) return;
-        System.out.println("Nội dung chức năng: Chuyển sang Chỉnh sửa yêu cầu "
-                + current.getCode());
-        if (onEdit != null) onEdit.accept(current.getCode());
     }
 
 }

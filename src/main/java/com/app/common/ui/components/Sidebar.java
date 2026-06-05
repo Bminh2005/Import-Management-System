@@ -50,23 +50,36 @@ public class Sidebar extends VBox {
     }
 
     public void addMenuItem(SidebarItem item) {
-        // Lưu item
-        items.add(item);
+        addMenuItem(item, null);
+    }
 
-        // Add vào giao diện
+    /** Thêm menu; {@code onNavigate} chạy sau khi đổi trạng thái selected. */
+    public void addMenuItem(SidebarItem item, Runnable onNavigate) {
+        items.add(item);
         menuItems.getChildren().add(item);
 
-        // Nếu chưa có item nào được chọn
-        // thì chọn item đầu tiên
         if (selected == null) {
             setSelected(item);
         }
 
         item.setOnAction(() -> {
             setSelected(item);
-            System.out.println("You navigated to " + item.getTextLabel());
+            if (onNavigate != null) {
+                onNavigate.run();
+            } else {
+                System.out.println("You navigated to " + item.getTextLabel());
+            }
         });
+    }
 
+    /** Gắn lại hành động cho item đã thêm (dùng sau khi có MainLayout / navigator). */
+    public void bindItemAction(SidebarItem item, Runnable onNavigate) {
+        item.setOnAction(() -> {
+            setSelected(item);
+            if (onNavigate != null) {
+                onNavigate.run();
+            }
+        });
     }
 
     public void setActionLogoutButton(Runnable onAction) {
@@ -137,6 +150,10 @@ public class Sidebar extends VBox {
                 item.expand();
             }
         }
+    }
+
+    public void selectMenu(SidebarItem item) {
+        setSelected(item);
     }
 
     private void setSelected(SidebarItem item) {
