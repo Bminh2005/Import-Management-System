@@ -70,7 +70,7 @@ public class CreateImportRequestUI extends VBox {
     }
 
     public void setAddMerchandiseButtonAction(Runnable r){
-        addMerchandiseButton.setOnAction(e ->{
+        addMerchandiseButton.setOnAction(e->{
             r.run();
         });
     }
