@@ -1,12 +1,8 @@
 package com.app.common.ui.components;
 
-import com.app.auth.login.ui.LoginUI;
-import com.app.auth.security.CurrentUserSession;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.stage.Stage;
 
 public class UserMenu extends ContextMenu {
 
@@ -26,13 +22,7 @@ public class UserMenu extends ContextMenu {
         // Gán sự kiện (Bạn có thể truyền Lambda hoặc Interface vào constructor để xử lý logic)
         profileItem.setOnAction(e -> System.out.println("Mở Hồ sơ..."));
         settingsItem.setOnAction(e -> System.out.println("Mở Cài đặt..."));
-        logoutItem.setOnAction(e -> {
-            System.out.println("Đang đăng xuất...");
-            CurrentUserSession.logout();
-            Stage stage = (Stage) this.getOwnerWindow();
-            stage.setScene(new Scene(new LoginUI()));
-            stage.centerOnScreen();
-        });
+        logoutItem.setOnAction(e -> System.out.println("Đang đăng xuất..."));
 
         // Thêm vào ContextMenu
         this.getItems().addAll(profileItem, settingsItem, separator, logoutItem);

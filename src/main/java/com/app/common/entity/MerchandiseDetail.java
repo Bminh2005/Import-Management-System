@@ -18,6 +18,4 @@ public class MerchandiseDetail {
         this.unit = unit;
         this.reference_price = reference_price;
     }
-
-
 }

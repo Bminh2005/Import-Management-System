@@ -6,6 +6,11 @@ import com.app.common.ui.components.PageHeaderUI;
 import com.app.common.ui.components.SearchBarUI;
 import com.app.common.util.FxmlUiHelper;
 import com.app.modules.site.catalog.ui.components.SiteCardUI;
+import com.app.database.manager.DatabaseManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,7 +21,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-/** UI màn Danh sách Site (dữ liệu mẫu — chưa có Service). */
+/** UI màn Danh sách Site. */
 public class SitesListUI extends ScrollPane {
 
   private record SiteCardData(
@@ -41,7 +46,7 @@ public class SitesListUI extends ScrollPane {
   private SearchBarUI searchBar;
   private FilterChipsUI filterChips;
 
-  private final List<SiteCardData> allSites = createMockSites();
+  private final List<SiteCardData> allSites = loadSitesFromDb();
   private String searchQuery = "";
   private String selectedStatus = "all";
   private Consumer<String> onViewDetail;
@@ -59,18 +64,44 @@ public class SitesListUI extends ScrollPane {
     this.onViewDetail = onViewDetail;
   }
 
-  private static List<SiteCardData> createMockSites() {
-    return List.of(
-        new SiteCardData("1", "SITE01", "Kho Hong Kong", "Hong Kong Central Warehouse", "Hong Kong",
-            "15,000 mặt hàng", true, "Hoạt động", "active"),
-        new SiteCardData("2", "SITE02", "Kho Singapore", "Singapore Distribution Center", "Singapore",
-            "12,000 mặt hàng", true, "Hoạt động", "active"),
-        new SiteCardData("3", "SITE03", "Kho Bangkok", "Bangkok Logistics Hub", "Bangkok, Thailand",
-            "8,500 mặt hàng", true, "Hoạt động", "active"),
-        new SiteCardData("4", "SITE04", "Kho Shanghai", "Shanghai Regional Warehouse", "Shanghai, China",
-            "20,000 mặt hàng", true, "Hoạt động", "active"),
-        new SiteCardData("5", "SITE05", "Kho Kuala Lumpur", "KL Storage Facility", "Kuala Lumpur, Malaysia",
-            "3,000 mặt hàng", false, "Không hoạt động", "inactive"));
+  private List<SiteCardData> loadSitesFromDb() {
+    List<SiteCardData> list = new ArrayList<>();
+    String sql = "SELECT s.id, s.site_name, s.site_address, s.site_url, s.more_info, "
+        + "  (SELECT COALESCE(SUM(si.quantity), 0) FROM \"SiteInventory\" si WHERE si.site_id = s.id) as total_qty "
+        + "FROM \"Site\" s "
+        + "ORDER BY s.id ASC";
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+      while (rs.next()) {
+        long id = rs.getLong("id");
+        String name = rs.getString("site_name");
+        String address = rs.getString("site_address");
+        String url = rs.getString("site_url");
+        String moreInfo = rs.getString("more_info");
+        int totalQty = rs.getInt("total_qty");
+
+        String code = "SITE" + String.format("%02d", id);
+        String warehouseName = name + " Warehouse";
+        String location = address != null ? address : "Chưa xác định";
+        String inventoryText = String.format("%,d mặt hàng", totalQty);
+
+        list.add(new SiteCardData(
+            String.valueOf(id),
+            code,
+            name,
+            warehouseName,
+            location,
+            inventoryText,
+            true, // active
+            "Hoạt động", // statusText
+            "active" // statusKey
+        ));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return list;
   }
 
   private void loadComponents() {
@@ -96,11 +127,15 @@ public class SitesListUI extends ScrollPane {
   }
 
   private void setupStatusFilters() {
+    long allCount = allSites.size();
+    long activeCount = allSites.stream().filter(SiteCardData::active).count();
+    long inactiveCount = allCount - activeCount;
+
     filterChips.bindChips(
         List.of(
-            new ChipOption("all", "Tất cả", "5", true),
-            new ChipOption("active", "Hoạt động", "4", false),
-            new ChipOption("inactive", "Không hoạt động", "1", false)));
+            new ChipOption("all", "Tất cả", String.valueOf(allCount), true),
+            new ChipOption("active", "Hoạt động", String.valueOf(activeCount), false),
+            new ChipOption("inactive", "Không hoạt động", String.valueOf(inactiveCount), false)));
     filterChips.setOnFilterSelected(
         value -> {
           selectedStatus = value;

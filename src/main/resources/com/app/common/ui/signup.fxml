@@ -14,7 +14,6 @@
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<?import com.app.auth.login.ui.RoleItem?>
 <fx:root type="StackPane" prefHeight="560.0" prefWidth="820.0" styleClass="root-container" stylesheets="@loginStyle.css"
          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <!--         fx:controller="com.app.demo3.HelloController">-->
@@ -102,7 +101,7 @@
 
                             <children>
 
-                                <Label styleClass="field-label" text="Username"/>
+                                <Label styleClass="field-label" text="Email"/>
 
                                 <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="input-container">
 
@@ -116,7 +115,7 @@
                                                 content="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
                                                 fill="#64748b" scaleX="0.72" scaleY="0.72"/>
 
-                                        <TextField fx:id="username" promptText="admin001" HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="email" promptText="email@example.com" HBox.hgrow="ALWAYS"/>
 
                                     </children>
 
@@ -178,11 +177,10 @@
                                                   promptText="Chọn vai trò" HBox.hgrow="ALWAYS">
                                             <items>
                                                 <FXCollections fx:factory="observableArrayList">
-                                                    <RoleItem value="ADMIN" text="Quản trị viên (Admin)"/>
-                                                    <RoleItem value="WAREHOUSE" text="Bộ phận quản lý kho"/>
-                                                    <RoleItem value="SALES" text="Bộ phận bán hàng"/>
-                                                    <RoleItem value="PROCUREMENT" text="Bộ phận đặt hàng quốc tế"/>
-                                                    <RoleItem value="SITE" text="Tôi là Site hợp tác với hệ thống"/>
+                                                    <String fx:value="Quản trị viên (Admin)"/>
+                                                    <String fx:value="Bộ phận quản lý kho"/>
+                                                    <String fx:value="Bộ phận bán hàng"/>
+                                                    <String fx:value="Bộ phận đặt hàng quốc tế"/>
                                                 </FXCollections>
                                             </items>
                                         </ComboBox>

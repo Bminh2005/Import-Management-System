@@ -1,7 +1,6 @@
 package com.app.database.manager;
 
 import com.app.database.connection.IDBProvider;
-import com.app.database.connection.MySQLProvider;
 import com.app.database.connection.PostgreSQLProvider;
 
 import java.sql.Connection;
@@ -19,11 +18,6 @@ public class DatabaseManager {
         return provider.getConnection();
     }
 
-    public static String getDatabaseName(){
-        if(provider instanceof PostgreSQLProvider){return "postgresql";}
-        else if(provider instanceof MySQLProvider){return "mysql";}
-        return null;
-    }
     // Có thể viết thêm hàm uỷ quyền để đóng kết nối
     public static void shutdown() {
         provider.shutdown();

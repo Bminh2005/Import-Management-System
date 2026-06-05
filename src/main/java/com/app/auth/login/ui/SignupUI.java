@@ -1,10 +1,7 @@
 package com.app.auth.login.ui;
 
-import com.app.common.ui.IScreen;
-import com.app.common.ui.components.ToastNotification;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
@@ -13,15 +10,15 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
-public class SignupUI extends StackPane implements IScreen {
+public class SignupUI extends StackPane {
     @FXML
     private TextField fullName;
     @FXML
-    private TextField username;
+    private TextField email;
     @FXML
     private TextField password;
     @FXML
-    private ComboBox<RoleItem> roleComboBox;
+    private ComboBox<String> roleComboBox;
     @FXML
     private Button signupButton;
     @FXML
@@ -29,7 +26,7 @@ public class SignupUI extends StackPane implements IScreen {
 
     public SignupUI() {
         FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/app/common/ui/signup.fxml"));
+                new FXMLLoader(getClass().getResource("com/app/common/ui/signup.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
@@ -39,7 +36,7 @@ public class SignupUI extends StackPane implements IScreen {
         }
         signupButton.setOnAction(e -> {
             System.out.println("FULLNAME:" + this.getFullName());
-            System.out.println("EMAIL:" + this.getUsername());
+            System.out.println("EMAIL:" + this.getEmail());
             System.out.println("PASSWORD:" + this.getPassword());
             System.out.println("ROLE:" + this.getRole());
         });
@@ -52,8 +49,8 @@ public class SignupUI extends StackPane implements IScreen {
         return fullName.getText();
     }
 
-    public String getUsername() {
-        return username.getText();
+    public String getEmail() {
+        return email.getText();
     }
 
     public String getPassword() {
@@ -61,30 +58,8 @@ public class SignupUI extends StackPane implements IScreen {
     }
 
     public String getRole() {
-        RoleItem item = roleComboBox.getValue();
-
-        if(item == null){
-            return null;
-        }
-
-        return item.getValue();
+        return roleComboBox.getValue();
     }
 
-    public void setSignupButtonAction(Runnable r){
-        signupButton.setOnAction(e -> {
-            r.run();
-        });
-    }
-    public void setOnActionForLoginLink(Runnable r){
-        loginLink.setOnAction(e -> {
-            r.run();
-        });
-    }
-    public void showToastNotification(String message, boolean isSuccess) {
-        ToastNotification.show(this.getScene().getWindow(), message, isSuccess);
-    }
-    @Override
-    public Parent getRoot() {
-        return this;
-    }
+
 }
