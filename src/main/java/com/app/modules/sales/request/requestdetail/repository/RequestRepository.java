@@ -1,7 +1,6 @@
 package com.app.modules.sales.request.requestdetail.repository;
 
 import com.app.database.manager.DatabaseManager;
-import com.app.modules.sales.request.requestdetail.dto.RequestListRow;
 import com.app.modules.sales.request.entity.OrderItem;
 import com.app.modules.sales.request.entity.RejectedItem;
 import com.app.modules.sales.request.entity.RelatedOrder;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository CRUD cho Request — đọc/ghi trực tiếp các bảng thật trên
+ * Repository đọc dữ liệu chi tiết yêu cầu — truy vấn trực tiếp các bảng thật trên
  * Supabase (Postgres) qua {@link DatabaseManager}. Theo quy ước README:
  * CHỈ làm CRUD, không có business logic.
  *
@@ -33,28 +32,6 @@ import java.util.Optional;
 public class RequestRepository {
 
     // ----- READ -----
-
-    /** Danh sách tóm tắt yêu cầu (màn danh sách). */
-    public List<RequestListRow> findAllSummaries() {
-        List<RequestListRow> result = new ArrayList<>();
-        String sql = "SELECT r.id, r.created_at::date AS created_date, r.status, "
-                + "(SELECT COUNT(*)::int FROM \"RequestDetail\" d WHERE d.request_id = r.id) AS item_count "
-                + "FROM \"ImportRequest\" r ORDER BY r.created_at DESC, r.id DESC";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                result.add(new RequestListRow(
-                        String.valueOf(rs.getLong("id")),
-                        rs.getString("created_date"),
-                        rs.getInt("item_count"),
-                        fromRequestEnum(rs.getString("status"))));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi đọc danh sách yêu cầu", e);
-        }
-        return result;
-    }
 
     /** Lấy toàn bộ yêu cầu (info + items + rejected + orders). */
     public Optional<Request> findById(String code) {
@@ -191,153 +168,6 @@ public class RequestRepository {
                 rs.getLong("total_value"));
     }
 
-    // ----- WRITE -----
-
-    /**
-     * Cập nhật phần thông tin chung của 1 yêu cầu (không đụng items).
-     * Trên bảng thật chỉ có status là đổi được (created_at/user là FK/auto),
-     * và chỉ đổi nếu token map được sang enum request_status.
-     */
-    public void updateRequestInfo(Request request) {
-        updateStatus(request.getCode(), request.getStatus());
-    }
-
-    /**
-     * Chỉ cập nhật trạng thái yêu cầu. Token "cancelled"/"draft" KHÔNG có
-     * trong enum request_status (PENDING/PROCESSING/PROCESSED) nên sẽ no-op
-     * (không được phép sửa schema để thêm enum).
-     */
-    public void updateStatus(String code, String status) {
-        Long id = tryParseId(code);
-        String dbStatus = toRequestEnum(status);
-        if (id == null || dbStatus == null) return;
-        String sql = "UPDATE \"ImportRequest\" SET status = ?::request_status WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, dbStatus);
-            ps.setLong(2, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi cập nhật trạng thái " + code, e);
-        }
-    }
-
-    public void updateItemQuantity(String requestCode, String itemCode, int quantity) {
-        Long reqId = tryParseId(requestCode);
-        Long mdId = tryParseId(itemCode);
-        if (reqId == null || mdId == null) return;
-        String sql = "UPDATE \"RequestDetail\" SET quantity = ? "
-                + "WHERE request_id = ? AND merchandise_detail_id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, quantity);
-            ps.setLong(2, reqId);
-            ps.setLong(3, mdId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi cập nhật số lượng " + itemCode, e);
-        }
-    }
-
-    /**
-     * Ngày nhận hàng dùng chung cho cả yêu cầu (cột desired_date trên
-     * "ImportRequest"), nên cập nhật theo yêu cầu — itemCode không dùng.
-     */
-    public void updateItemDeliveryDate(String requestCode, String itemCode, String date) {
-        Long reqId = tryParseId(requestCode);
-        if (reqId == null) return;
-        String sql = "UPDATE \"ImportRequest\" SET desired_date = ?::date WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            if (date == null || date.isBlank()) ps.setNull(1, java.sql.Types.VARCHAR);
-            else ps.setString(1, date.trim());
-            ps.setLong(2, reqId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi cập nhật ngày nhận " + itemCode, e);
-        }
-    }
-
-    /**
-     * Thêm/cập nhật 1 mặt hàng của yêu cầu (upsert theo
-     * request_id + merchandise_detail_id). Không có unique constraint nên
-     * thử UPDATE trước, nếu chưa có dòng nào thì INSERT. Cột id là IDENTITY
-     * nên bỏ qua khi insert; bảng không có cột position.
-     */
-    public void insertItem(String requestCode, RequestItem item, int position) {
-        Long reqId = tryParseId(requestCode);
-        Long mdId = tryParseId(item.getCode());
-        if (reqId == null || mdId == null) return;
-        try (Connection conn = DatabaseManager.getConnection()) {
-            String update = "UPDATE \"RequestDetail\" SET quantity = ? "
-                    + "WHERE request_id = ? AND merchandise_detail_id = ?";
-            int affected;
-            try (PreparedStatement ps = conn.prepareStatement(update)) {
-                ps.setInt(1, item.getQuantity());
-                ps.setLong(2, reqId);
-                ps.setLong(3, mdId);
-                affected = ps.executeUpdate();
-            }
-            if (affected == 0) {
-                String insert = "INSERT INTO \"RequestDetail\" "
-                        + "(quantity, request_id, merchandise_detail_id) VALUES (?, ?, ?)";
-                try (PreparedStatement ps = conn.prepareStatement(insert)) {
-                    ps.setInt(1, item.getQuantity());
-                    ps.setLong(2, reqId);
-                    ps.setLong(3, mdId);
-                    ps.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi thêm mặt hàng " + item.getCode(), e);
-        }
-    }
-
-    /** Xóa 1 mặt hàng khỏi yêu cầu. */
-    public void deleteItem(String requestCode, String itemCode) {
-        Long reqId = tryParseId(requestCode);
-        Long mdId = tryParseId(itemCode);
-        if (reqId == null || mdId == null) return;
-        String sql = "DELETE FROM \"RequestDetail\" "
-                + "WHERE request_id = ? AND merchandise_detail_id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, reqId);
-            ps.setLong(2, mdId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi xóa mặt hàng " + itemCode, e);
-        }
-    }
-
-    /**
-     * Danh sách sản phẩm khả dụng (master list) = toàn bộ "MerchandiseDetail"
-     * kèm tên hàng. code = merchandise_detail_id.
-     */
-    public List<RequestItem> findAllProducts() {
-        List<RequestItem> result = new ArrayList<>();
-        String sql = "SELECT md.id AS item_code, m.merchandise_name AS name, md.unit AS unit "
-                + "FROM \"MerchandiseDetail\" md "
-                + "JOIN \"Merchandise\" m ON m.id = md.merchandise_id "
-                + "ORDER BY md.id";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                result.add(new RequestItem(
-                        String.valueOf(rs.getLong("item_code")),
-                        rs.getString("name"),
-                        0,
-                        rs.getString("unit"),
-                        "",
-                        "pending"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi đọc danh sách sản phẩm", e);
-        }
-        return result;
-    }
-
     /** Tìm 1 đơn hàng liên quan theo mã đơn (kèm mã yêu cầu gốc). */
     public Optional<RelatedOrderWithRequest> findRelatedOrder(String orderCode) {
         Long orderId = tryParseId(orderCode);
@@ -430,26 +260,6 @@ public class RequestRepository {
         public RelatedOrder getOrder() { return order; }
     }
 
-    /** Xóa 1 yêu cầu (xóa chi tiết trước để tránh vi phạm khóa ngoại). */
-    public void deleteById(String code) {
-        Long id = tryParseId(code);
-        if (id == null) return;
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM \"RequestDetail\" WHERE request_id = ?")) {
-                ps.setLong(1, id);
-                ps.executeUpdate();
-            }
-            try (PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM \"ImportRequest\" WHERE id = ?")) {
-                ps.setLong(1, id);
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi xóa yêu cầu " + code, e);
-        }
-    }
-
     // ----- Helpers: parse id + map enum trạng thái -----
 
     private static Long tryParseId(String code) {
@@ -469,17 +279,6 @@ public class RequestRepository {
             case "PROCESSING": return "processing";
             case "PROCESSED": return "completed";
             default: return dbStatus.toLowerCase();
-        }
-    }
-
-    /** token UI → request_status (DB); null nếu không có enum tương ứng. */
-    private static String toRequestEnum(String token) {
-        if (token == null) return null;
-        switch (token.toLowerCase()) {
-            case "pending": return "PENDING";
-            case "processing": return "PROCESSING";
-            case "completed": return "PROCESSED";
-            default: return null;
         }
     }
 

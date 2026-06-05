@@ -1,4 +1,4 @@
-package com.app.modules.sales.request.requestdetail.dto;
+package com.app.modules.sales.request.requestlist.dto;
 
 /**
  * Một dòng trên màn danh sách yêu cầu nhập hàng.

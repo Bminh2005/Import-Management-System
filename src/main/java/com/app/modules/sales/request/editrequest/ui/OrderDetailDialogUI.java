@@ -2,9 +2,9 @@ package com.app.modules.sales.request.editrequest.ui;
 
 import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
-import com.app.modules.sales.request.editrequest.dto.OrderDetailResponse;
 import com.app.modules.sales.request.entity.OrderItem;
-import com.app.modules.sales.request.editrequest.service.RequestService;
+import com.app.modules.sales.request.requestdetail.dto.OrderDetailResponse;
+import com.app.modules.sales.request.requestdetail.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
