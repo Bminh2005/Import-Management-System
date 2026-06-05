@@ -62,25 +62,25 @@ public class CreateRequestServiceTest {
     }
 
     @Test
-    @DisplayName("TC_WB_03: ExpectedDate là null (Nhánh 5 True)")
+    @DisplayName("TC_WB_03: ExpectedDate là null (Nhánh 4 True)")
     public void testValidate_DateIsNull_ThrowsException() {
         validItem.setExpectedDate(null); // Bỏ trống ngày
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
             service.validateImportItem(validItem);
         });
-        assertEquals("Ngày dự kiến nhận hàng không được để trống.", exception.getMessage());
+        assertEquals("Ngày mong muốn nhận hàng không được để trống.", exception.getMessage());
     }
 
     @Test
-    @DisplayName("TC_WB_04: ExpectedDate là ngày hôm nay (Nhánh 6 True)")
+    @DisplayName("TC_WB_04: ExpectedDate là ngày hôm nay (Nhánh 5 True)")
     public void testValidate_DateIsToday_ThrowsException() {
         validItem.setExpectedDate(LocalDate.now()); // Set ngày hôm nay
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
             service.validateImportItem(validItem);
         });
-        assertEquals("Ngày dự kiến nhận hàng phải từ ngày mai trở đi.", exception.getMessage());
+        assertEquals("Ngày mong muốn nhận hàng phải từ ngày mai trở đi.", exception.getMessage());
     }
 
     // ==============================================================
@@ -100,7 +100,7 @@ public class CreateRequestServiceTest {
     }
 
     @Test
-    @DisplayName("TC_BB_03: Quantity = 1 - Biên dưới hợp lệ (All False)")
+    @DisplayName("TC_BB_02: Quantity = 1 - Biên dưới hợp lệ (All False)")
     public void testValidate_QuantityIsOne_Success() {
         validItem.setQuantity(1);
 
@@ -111,9 +111,20 @@ public class CreateRequestServiceTest {
     }
 
     @Test
-    @DisplayName("TC_BB_04: Quantity = 10000 - Biên trên hợp lệ (All False)")
-    public void testValidate_QuantityIsTenThousand_Success() {
-        validItem.setQuantity(10000);
+    @DisplayName("TC_BB_03: Quantity = -10 - Không hợp lệ (All False)")
+    public void testValidate_QuantityIsMinusTen_Success() {
+        validItem.setQuantity(-10);
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            service.validateImportItem(validItem);
+        });
+        assertEquals("Số lượng nhập phải lớn hơn 0.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC_BB_04: Quantity = 100 - Hợp lệ (All False)")
+    public void testValidate_QuantityIsHundred_Success() {
+        validItem.setQuantity(100);
 
         // Không ném ra ngoại lệ nào là Pass
         assertDoesNotThrow(() -> {

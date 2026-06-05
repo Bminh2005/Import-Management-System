@@ -22,9 +22,9 @@ public class salesApp extends Application {
         MainLayoutUI root = new MainLayoutUI();
         SalesShell shell = new SalesShell(root);
         shell.showDashboard();
-        root.setLeft(new SalesSidebar());
-        CreateRequestController controller = new CreateRequestController();
-        root.setPage(controller.getView());
+//        root.setLeft(new SalesSidebar());
+//        CreateRequestController controller = new CreateRequestController();
+//        root.setPage(controller.getView());
         Scene scene = new Scene(root, 1280, 720);
 
 //        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());

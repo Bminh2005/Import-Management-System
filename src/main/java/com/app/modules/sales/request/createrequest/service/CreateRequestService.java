@@ -81,7 +81,7 @@ public class CreateRequestService {
         }
         catch (DatabaseOperationException e){
             if(e.getMessage().equals("Failed connection with database")){
-//                    System.out.println("Failed connection with database");
+                    System.out.println("Failed connection with database");
                 throw new BusinessException("Chưa thể kết nối với hệ thống. Kiểm tra kết nối rồi thử lại");
             }
             else{

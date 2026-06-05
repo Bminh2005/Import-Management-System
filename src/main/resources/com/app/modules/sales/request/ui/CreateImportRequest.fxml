@@ -43,13 +43,13 @@
         <StackPane VBox.vgrow="ALWAYS">
             <TableView fx:id="tableItems" styleClass="custom-table">
                 <columns>
-                    <TableColumn fx:id="colMaHang" text="MÃ HÀNG" prefWidth="120"/>
-                    <TableColumn fx:id="colTenHang" text="TÊN MẶT HÀNG" prefWidth="220"/>
-                    <TableColumn fx:id="colSoLuong" text="SỐ LƯỢNG" prefWidth="100"/>
-                    <TableColumn fx:id="colDonVi" text="ĐƠN VỊ" prefWidth="80"/>
-                    <TableColumn fx:id="colNgayNhan" text="NGÀY NHẬN (MONG MUỐN)" prefWidth="180"/>
-                    <TableColumn fx:id="colGiaThamKhao" text="GIÁ THAM KHẢO" prefWidth="120"/>
-                    <TableColumn fx:id="colThaoTac" text="THAO TÁC" prefWidth="80"/>
+                    <TableColumn fx:id="colMaHang" text="MÃ HÀNG" minWidth="70" prefWidth="70" maxWidth="70"/>
+                    <TableColumn fx:id="colTenHang" text="TÊN MẶT HÀNG" prefWidth="250"/>
+                    <TableColumn fx:id="colSoLuong" text="SỐ LƯỢNG" minWidth="90" prefWidth="90" maxWidth="90"/>
+                    <TableColumn fx:id="colDonVi" text="ĐƠN VỊ" minWidth="110" prefWidth="110" maxWidth="110"/>
+                    <TableColumn fx:id="colGiaThamKhao"  text="GIÁ THAM KHẢO" minWidth="160" prefWidth="160" maxWidth="160"/>
+                    <TableColumn fx:id="colNgayNhan" text="NGÀY NHẬN (MONG MUỐN)" minWidth="200" prefWidth="200" maxWidth="200"/>
+                    <TableColumn fx:id="colThaoTac" text="" minWidth="40" prefWidth="40" maxWidth="40"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
