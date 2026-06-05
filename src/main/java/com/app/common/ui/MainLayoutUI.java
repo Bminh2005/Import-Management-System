@@ -1,5 +1,6 @@
 package com.app.common.ui;
 
+import com.app.common.ui.components.Sidebar;
 import com.app.modules.sales.dashboard.ui.SalesSidebar;
 import com.app.modules.sales.dashboard.ui.SalesDashboardUI;
 import javafx.fxml.FXML;
@@ -18,7 +19,7 @@ public class MainLayoutUI extends BorderPane {
     private HBox left;
 
     private Node page;
-    private final SalesSidebar salesSidebar;
+    private final Sidebar salesSidebar;
 
     public MainLayoutUI() {
         FXMLLoader loader =
@@ -35,7 +36,7 @@ public class MainLayoutUI extends BorderPane {
         setPage(new SalesDashboardUI());
     }
 
-    public SalesSidebar getSalesSidebar() {
+    public Sidebar getSalesSidebar() {
         return salesSidebar;
     }
 

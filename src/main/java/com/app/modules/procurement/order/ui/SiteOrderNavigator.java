@@ -35,7 +35,14 @@ public final class SiteOrderNavigator {
             throw new RuntimeException("Không mở được danh sách đơn", e);
         }
     }
-
+    public static Parent getListView() {
+        try {
+            ensureListLoaded();
+            return listRoot;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static void showDetail(Scene scene, long orderId) {
         try {
             FXMLLoader loader = new FXMLLoader(

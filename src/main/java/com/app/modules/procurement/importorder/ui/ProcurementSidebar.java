@@ -4,6 +4,9 @@ import com.app.common.ui.MainLayoutUI;
 import com.app.common.ui.components.Sidebar;
 import com.app.common.ui.components.SidebarItem;
 import com.app.modules.procurement.inventory.ui.InventoryListUI;
+import com.app.modules.procurement.order.model.SiteOrder;
+import com.app.modules.procurement.order.ui.SiteOrderListController;
+import com.app.modules.procurement.order.ui.SiteOrderNavigator;
 import com.app.modules.procurement.product.ui.MerchandiseListUI;
 import com.app.modules.site.catalog.ui.SiteDetailUI;
 import com.app.modules.site.catalog.ui.SitesListUI;
@@ -39,14 +42,20 @@ public class ProcurementSidebar extends Sidebar {
         setupActions();
     }
 
+
     private void setupActions() {
         dashboard.setOnAction(() -> navigateTo(new ProcurementDashboardUI(), "Hệ thống Quản lý Nhập khẩu - Đặt hàng Quốc tế"));
         importRequest.setOnAction(() -> navigateTo(new ProcessImportRequestsUI(), "Hệ thống Quản lý Nhập khẩu - Xử lý Yêu cầu nhập hàng"));
-        
         orderManager.setOnAction(() -> {
-            // Placeholder: chuyển đến quản lý mặt hàng (MerchandiseListUI) làm mẫu
-            navigateTo(new MerchandiseListUI(), "Hệ thống Quản lý Nhập khẩu - Quản lý Mặt hàng");
+            navigateTo(
+                    SiteOrderNavigator.getListView(),
+                    "Hệ thống Quản lý Nhập khẩu - Đơn đặt hàng"
+            );
         });
+//        orderManager.setOnAction(() -> {
+//            // Placeholder: chuyển đến quản lý mặt hàng (MerchandiseListUI) làm mẫu
+//            navigateTo(new MerchandiseListUI(), "Hệ thống Quản lý Nhập khẩu - Quản lý Mặt hàng");
+//        });
 
         siteList.setOnAction(() -> {
             SitesListUI sitesList = new SitesListUI();

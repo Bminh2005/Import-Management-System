@@ -21,7 +21,7 @@ public class SalesShell {
 
     public SalesShell(MainLayoutUI layout) {
         this.layout = layout;
-        this.sidebar = layout.getSalesSidebar();
+        this.sidebar = (SalesSidebar) layout.getSalesSidebar();
         sidebar.bindNavigation(
                 this::showDashboard,
                 this::showProductList,
