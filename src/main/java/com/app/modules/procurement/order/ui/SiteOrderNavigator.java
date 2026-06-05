@@ -1,5 +1,6 @@
 package com.app.modules.procurement.order.ui;
 
+import com.app.common.ui.MainLayoutUI;
 import com.app.modules.procurement.order.model.ReallocationResult;
 import com.app.modules.procurement.order.service.SiteOrderService;
 
@@ -29,7 +30,7 @@ public final class SiteOrderNavigator {
         try {
             ensureListLoaded();
             listController.refresh();
-            scene.setRoot(listRoot);
+            showPage(scene, listRoot);
             stageTitle(scene, "Đơn đặt hàng");
         } catch (Exception e) {
             throw new RuntimeException("Không mở được danh sách đơn", e);
@@ -38,6 +39,7 @@ public final class SiteOrderNavigator {
     public static Parent getListView() {
         try {
             ensureListLoaded();
+            listController.refresh();
             return listRoot;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -49,7 +51,7 @@ public final class SiteOrderNavigator {
                     SiteOrderNavigator.class.getResource("SiteOrderDetailView.fxml"));
             Parent root = loader.load();
             ((SiteOrderDetailController) loader.getController()).loadOrder(orderId);
-            scene.setRoot(root);
+            showPage(scene, root);
             stageTitle(scene, "Chi tiết đơn #" + orderId);
         } catch (Exception e) {
             throw new RuntimeException("Không mở được chi tiết đơn", e);
@@ -62,7 +64,7 @@ public final class SiteOrderNavigator {
                     SiteOrderNavigator.class.getResource("SiteOrderReallocationView.fxml"));
             Parent root = loader.load();
             ((SiteOrderReallocationController) loader.getController()).loadOrder(orderId);
-            scene.setRoot(root);
+            showPage(scene, root);
             stageTitle(scene, "Phân bổ lại đơn #" + orderId);
         } catch (Exception e) {
             throw new RuntimeException("Không mở được màn phân bổ lại", e);
@@ -77,7 +79,7 @@ public final class SiteOrderNavigator {
             ((SiteOrderSuccessController) loader.getController()).setResult(result, removedOrderId);
             ensureListLoaded();
             listController.refresh();
-            scene.setRoot(root);
+            showPage(scene, root);
             stageTitle(scene, "Gửi đơn thành công");
         } catch (Exception e) {
             throw new RuntimeException("Không mở được màn thành công", e);
@@ -93,7 +95,22 @@ public final class SiteOrderNavigator {
         }
     }
 
+    private static void showPage(Scene scene, Parent page) {
+        if (scene == null) {
+            return;
+        }
+        Parent root = scene.getRoot();
+        if (root instanceof MainLayoutUI mainLayout) {
+            mainLayout.setPage(page);
+        } else {
+            scene.setRoot(page);
+        }
+    }
+
     private static void stageTitle(Scene scene, String title) {
+        if (scene == null) {
+            return;
+        }
         Stage stage = (Stage) scene.getWindow();
         if (stage == null) {
             return;
