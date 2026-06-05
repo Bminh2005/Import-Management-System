@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-
-      stylesheets="@requestListStyle.css" styleClass="main-content" spacing="20">
+<fx:root type="javafx.scene.layout.VBox"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+         stylesheets="@requestListStyle.css" styleClass="main-content" spacing="20">
 
     <padding>
         <Insets top="24" right="32" bottom="24" left="32"/>
@@ -27,17 +27,7 @@
 
         <TextField fx:id="txtSearch" promptText="Tìm kiếm theo mã yêu cầu..." styleClass="search-field"/>
 
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <fx:define>
-                <ToggleGroup fx:id="filterGroup"/>
-            </fx:define>
-            <ToggleButton text="Tất cả (24)" styleClass="filter-pill" selected="true" toggleGroup="$filterGroup"/>
-            <ToggleButton text="Bản nháp (5)" styleClass="filter-pill" toggleGroup="$filterGroup"/>
-            <ToggleButton text="Chờ xử lý (8)" styleClass="filter-pill" toggleGroup="$filterGroup"/>
-            <ToggleButton text="Đang xử lý (6)" styleClass="filter-pill" toggleGroup="$filterGroup"/>
-            <ToggleButton text="Hoàn thành (4)" styleClass="filter-pill" toggleGroup="$filterGroup"/>
-            <ToggleButton text="Đã hủy (1)" styleClass="filter-pill" toggleGroup="$filterGroup"/>
-        </HBox>
+        <HBox fx:id="filterBar" spacing="10" alignment="CENTER_LEFT"/>
     </VBox>
 
     <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="16">
@@ -63,16 +53,15 @@
                 <Insets left="16" right="16"/>
             </padding>
 
-            <Label text="Hiển thị 1-4 trong 24 yêu cầu" styleClass="pagination-info"/>
+            <Label fx:id="paginationInfoLabel" text="Hiển thị 0 yêu cầu" styleClass="pagination-info"/>
 
             <Region HBox.hgrow="ALWAYS"/>
 
             <HBox spacing="5" alignment="CENTER_RIGHT">
-                <Button text="Trước" styleClass="btn-page"/>
-                <Button text="1" styleClass="btn-page, page-active"/>
-                <Button text="2" styleClass="btn-page"/>
-                <Button text="Sau" styleClass="btn-page"/>
+                <Button fx:id="btnPrev" text="Trước" styleClass="btn-page" onAction="#onPrevPage"/>
+                <HBox fx:id="pageButtonsBox" spacing="5" alignment="CENTER_RIGHT"/>
+                <Button fx:id="btnNext" text="Sau" styleClass="btn-page" onAction="#onNextPage"/>
             </HBox>
         </HBox>
     </VBox>
-</VBox>
+</fx:root>

@@ -14,6 +14,7 @@ public class SignupService {
           User newUser =  signupRepository.save(userInfo);
           return newUser;
         } catch (DatabaseOperationException e){
+            e.printStackTrace();
             throw new BusinessException("Xảy ra lỗi khi đăng ký. Vui lòng thử lại!");
         }
     }

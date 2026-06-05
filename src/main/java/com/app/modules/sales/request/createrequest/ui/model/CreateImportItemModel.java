@@ -6,7 +6,7 @@ import javafx.beans.value.ObservableValue;
 import java.time.LocalDate;
 
 public class CreateImportItemModel {
-    private final long merchandiseDetailId;
+    private long merchandiseDetailId;
     private final StringProperty itemCode;     // mã hàng
     private final StringProperty itemName;     // tên hàng
     private final IntegerProperty quantity;    // số lượng
@@ -59,4 +59,7 @@ public class CreateImportItemModel {
     public BooleanProperty selectedProperty() { return selected; }
 
     public long getMerchandiseDetailId() { return merchandiseDetailId; }
+    public void setMerchandiseDetailId(long id){
+        this.merchandiseDetailId = id;
+    }
 }

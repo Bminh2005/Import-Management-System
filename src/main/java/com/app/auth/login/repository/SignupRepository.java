@@ -10,12 +10,12 @@ public class SignupRepository {
 
     public User save(User newUser){
         String sql = """
-                INSERT INTO users (username, password, role, full_name) VALUES (?, ?, ?, ?)
+                INSERT INTO "Users" (username, password, role, full_name) VALUES (?, ?, ?::user_role, ?)
                 """;
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
         // Hàm isValid(timeout_in_seconds) để check kết nối có đang sống không
-            if (conn == null || !conn.isValid(5)) {
+            if (conn == null || !conn.isValid(1000)) {
                 throw new RuntimeException("Kết nối database không hợp lệ");
             }
 

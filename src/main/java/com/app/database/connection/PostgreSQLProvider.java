@@ -15,7 +15,7 @@ public class PostgreSQLProvider implements IDBProvider {
         config.setUsername("postgres.lsrmwnisivtnpeqmpxcu");
         config.setPassword("binhminh3000");
         config.setDriverClassName("org.postgresql.Driver"); // Driver PostgreSQL
-
+        config.setConnectionTimeout(10000);
         this.dataSource = new HikariDataSource(config);
     }
 

@@ -10,15 +10,11 @@ import javafx.scene.Parent;
 public class SignupController {
     private SignupUI view;
     private SignupService service;
-    private LoginController loginController;
-    public SignupController(LoginController loginController) {
-        service = new SignupService();
+
+    public SignupController() {
         view = new SignupUI();
-        this.loginController = loginController;
-        view.setSignupButtonAction(()->{
-            signupHandle();
-            Navigator.getInstance().goBack();
-        });
+        service = new SignupService();
+        view.setSignupButtonAction(this::signupHandle);
         view.setOnActionForLoginLink(()->{
             Navigator.getInstance().goBack();
         });
@@ -31,6 +27,7 @@ public class SignupController {
         try{
             service.signup(info);
             view.showToastNotification("Đã đăng ký thành công", true);
+            Navigator.getInstance().goBack();
         } catch (BusinessException e){
             view.showToastNotification(e.getMessage(), false);
         }

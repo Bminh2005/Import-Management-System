@@ -6,14 +6,14 @@
 <?import javafx.scene.shape.SVGPath?>
 
 <fx:root type="VBox" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      stylesheets="@CreateRequestStyle.css" styleClass="main-content" spacing="20">
+         stylesheets="@CreateRequestStyle.css" styleClass="main-content" spacing="20">
 
     <padding>
         <Insets top="24" right="32" bottom="24" left="32"/>
     </padding>
 
     <HBox spacing="15" alignment="CENTER_LEFT">
-        <Button styleClass="btn-back">
+        <Button fx:id="backButton" styleClass="btn-back">
             <graphic>
                 <SVGPath content="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#475569"/>
             </graphic>
@@ -36,9 +36,7 @@
 
         <HBox alignment="CENTER_LEFT">
             <Label text="Danh sách mặt hàng" styleClass="section-title"/>
-
             <Region HBox.hgrow="ALWAYS"/>
-
             <Button fx:id="addMerchandiseButton" text="+ Thêm mặt hàng" styleClass="btn-secondary"/>
         </HBox>
 
@@ -47,14 +45,10 @@
                 <columns>
                     <TableColumn fx:id="colMaHang" text="MÃ HÀNG" minWidth="70" prefWidth="70" maxWidth="70"/>
                     <TableColumn fx:id="colTenHang" text="TÊN MẶT HÀNG" prefWidth="250"/>
-
                     <TableColumn fx:id="colSoLuong" text="SỐ LƯỢNG" minWidth="90" prefWidth="90" maxWidth="90"/>
-
                     <TableColumn fx:id="colDonVi" text="ĐƠN VỊ" minWidth="110" prefWidth="110" maxWidth="110"/>
                     <TableColumn fx:id="colGiaThamKhao"  text="GIÁ THAM KHẢO" minWidth="160" prefWidth="160" maxWidth="160"/>
-
                     <TableColumn fx:id="colNgayNhan" text="NGÀY NHẬN (MONG MUỐN)" minWidth="200" prefWidth="200" maxWidth="200"/>
-
                     <TableColumn fx:id="colThaoTac" text="" minWidth="40" prefWidth="40" maxWidth="40"/>
                 </columns>
                 <columnResizePolicy>
@@ -72,7 +66,6 @@
 
     <HBox alignment="CENTER_LEFT">
         <Region HBox.hgrow="ALWAYS"/>
-
         <HBox spacing="12">
             <Button fx:id="cancelButton" text="Hủy bỏ" styleClass="btn-outline"/>
             <Button fx:id="createButton" text="Tạo Yêu cầu" styleClass="btn-primary">
