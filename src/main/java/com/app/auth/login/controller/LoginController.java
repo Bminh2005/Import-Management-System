@@ -7,6 +7,8 @@ import com.app.auth.security.CurrentUserSession;
 import com.app.common.entity.User;
 import com.app.common.exception.BusinessException;
 import com.app.common.navigator.Navigator;
+import com.app.modules.procurement.dashboard.ui.ProcurementMainUI;
+import com.app.modules.procurement.importorder.ui.ProcurementDashboardUI;
 import com.app.modules.sales.dashboard.ui.SalesMainUI;
 import com.app.modules.warehouse.dashboard.ui.WarehouseHomeUI;
 import javafx.scene.Parent;
@@ -56,6 +58,9 @@ public class LoginController {
                 }
                 else if("WAREHOUSE".equalsIgnoreCase(loginInfo.getRole())) {
                     Navigator.getInstance().navigateTo(new WarehouseHomeUI());
+                }
+                else if("PROCUREMENT".equalsIgnoreCase(loginInfo.getRole())) {
+                    Navigator.getInstance().navigateTo(new ProcurementMainUI());
                 }
             }
         } catch (BusinessException e) {

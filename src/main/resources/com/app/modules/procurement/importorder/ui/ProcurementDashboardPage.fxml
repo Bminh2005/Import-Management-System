@@ -121,45 +121,6 @@
             </GridPane>
         </VBox>
 
-        <!-- Recent Orders -->
-        <VBox styleClass="card recent-card" spacing="0">
-            <VBox spacing="16">
-                <padding>
-                    <Insets top="20" right="20" bottom="0" left="20"/>
-                </padding>
 
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Yêu cầu Gần đây" styleClass="section-title"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button text="Xem tất cả →"
-                            styleClass="text-link-button"
-                            onAction="#onViewAllRequests"/>
-                </HBox>
-            </VBox>
-
-            <GridPane styleClass="table-header">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="22"/>
-                    <ColumnConstraints percentWidth="18"/>
-                    <ColumnConstraints percentWidth="25"/>
-                    <ColumnConstraints percentWidth="20"/>
-                    <ColumnConstraints percentWidth="15"/>
-                </columnConstraints>
-
-                <Label text="MÃ YÊU CẦU" styleClass="table-header-label"
-                       GridPane.columnIndex="0"/>
-                <Label text="NGÀY NHẬN" styleClass="table-header-label"
-                       GridPane.columnIndex="1"/>
-                <Label text="SITE PHÂN BỔ" styleClass="table-header-label"
-                       GridPane.columnIndex="2"/>
-                <Label text="TRẠNG THÁI" styleClass="table-header-label"
-                       GridPane.columnIndex="3"/>
-                <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="4">
-                    <Label text="THAO TÁC" styleClass="table-header-label"/>
-                </HBox>
-            </GridPane>
-
-            <VBox fx:id="recentRequestsList"/>
-        </VBox>
     </VBox>
 </fx:root>

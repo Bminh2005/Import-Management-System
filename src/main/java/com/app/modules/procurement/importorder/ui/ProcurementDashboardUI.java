@@ -1,8 +1,10 @@
 package com.app.modules.procurement.importorder.ui;
 
+import com.app.common.ui.IScreen;
 import com.app.database.manager.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -19,7 +21,7 @@ import java.sql.SQLException;
  * UI Class cho màn "Trang Chủ - Bộ phận Đặt hàng Quốc tế".
  * Kế thừa ScrollPane và nạp FXML thông qua fx:root.
  */
-public class ProcurementDashboardUI extends ScrollPane {
+public class ProcurementDashboardUI extends ScrollPane implements IScreen {
 
     @FXML private Label totalRequestsLabel;
     @FXML private Label pendingAllocationLabel;
@@ -151,5 +153,10 @@ public class ProcurementDashboardUI extends ScrollPane {
             ((Stage) scene.getWindow()).setTitle(
                     "Hệ thống Quản lý Nhập khẩu - Danh sách Site");
         }
+    }
+
+    @Override
+    public Parent getRoot() {
+        return this;
     }
 }
