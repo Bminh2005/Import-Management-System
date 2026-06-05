@@ -1,0 +1,110 @@
+/* ============================================================
+   SelectProductDialogPage.css — popup "Chọn mặt hàng"
+   ============================================================ */
+
+.select-dialog {
+    -primary-color: #2563EB;
+    -border-color: #E5E7EB;
+    -text-primary: #111827;
+    -text-secondary: #6B7280;
+
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 18, 0, 0, 4);
+}
+
+.dialog-header {
+    -fx-background-color: white;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.dialog-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.dialog-close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-padding: 4 10;
+    -fx-background-radius: 8px;
+}
+
+.dialog-close-btn:hover {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #111827;
+}
+
+.dialog-divider {
+    -fx-pref-height: 1px;
+    -fx-min-height: 1px;
+    -fx-background-color: -border-color;
+}
+
+.select-scroll {
+    -fx-background-color: white;
+    -fx-background: white;
+    -fx-border-width: 0;
+}
+
+.select-scroll > .viewport {
+    -fx-background-color: white;
+}
+
+.select-body {
+    -fx-background-color: white;
+}
+
+/* ---------- Card sản phẩm ---------- */
+.product-card {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.product-card:hover {
+    -fx-border-color: #93C5FD;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.10), 6, 0, 0, 2);
+}
+
+.product-name {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.product-meta {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+/* ---------- Nút Chọn (xanh nhạt) ---------- */
+.pick-button {
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1E40AF;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 22;
+    -fx-background-radius: 8px;
+}
+
+.pick-button:hover {
+    -fx-background-color: #BFDBFE;
+}
+
+.dialog-footer {
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 12 12;
+}
+
+.empty-state {
+    -fx-text-fill: -text-secondary;
+    -fx-font-style: italic;
+    -fx-padding: 24 0 24 0;
+    -fx-alignment: center;
+}

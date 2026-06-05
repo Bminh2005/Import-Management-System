@@ -14,6 +14,7 @@ import java.util.List;
 public class CreateRequestController {
     private CreateImportRequestUI view;
     private CreateRequestService service;
+    private Runnable onCreated;
     public CreateRequestController() {
         this.view = new CreateImportRequestUI();
         this.service = new CreateRequestService();
@@ -40,11 +41,18 @@ public class CreateRequestController {
         return view;
     }
 
+    public void setOnCreated(Runnable callback) {
+        this.onCreated = callback;
+    }
+
     private void SubmitCreateRequest(){
         try{
             ObservableList<CreateImportItemModel> list = view.getItems();
             long id = service.saveNewRequest(list);
             view.showToastNotification(String.format("%s%d","Đã tạo yêu cầu thành công! ID: ",id), true);
+            if (onCreated != null) {
+                onCreated.run();
+            }
         }catch (BusinessException e){
             view.showToastNotification(e.getMessage(),false);
         }

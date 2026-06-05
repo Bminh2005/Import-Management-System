@@ -18,6 +18,7 @@ public class MainLayoutUI extends BorderPane {
     private HBox left;
 
     private Node page;
+    private final SalesSidebar salesSidebar;
 
     public MainLayoutUI() {
         FXMLLoader loader =
@@ -29,8 +30,13 @@ public class MainLayoutUI extends BorderPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        setLeft(new SalesSidebar());
+        salesSidebar = new SalesSidebar();
+        setLeft(salesSidebar);
         setPage(new SalesDashboardUI());
+    }
+
+    public SalesSidebar getSalesSidebar() {
+        return salesSidebar;
     }
 
     public void setPage(Node page) {

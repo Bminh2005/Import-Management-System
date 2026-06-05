@@ -1,5 +1,6 @@
 package com.app.modules.sales.request.ui;
 
+import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
 import com.app.modules.sales.request.dto.RequestResponse;
 import com.app.modules.sales.request.entity.RejectedItem;
@@ -9,8 +10,8 @@ import com.app.modules.sales.request.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -21,19 +22,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.shape.SVGPath;
 
 /**
- * UI Class cho màn hình "Xem chi tiết Yêu cầu Nhập hàng".
- * Màn này độc lập — thao tác vào đến từ danh sách yêu cầu,
- * thoát ra bằng nút "Đóng".
+ * UI Class cho màn "Xem chi tiết Yêu cầu Nhập hàng".
+ * Là 1 component nhúng vào trong MainLayoutUI (đã có sidebar + header).
  *
- * Theo quy ước README: chỉ gọi service, không truy cập trực tiếp repository
- * và không chứa business logic.
+ * Caller có thể đăng ký {@link #setOnBack(Runnable)} cho nút ← trên header.
+ *
+ * Theo quy ước README: UI chỉ gọi service, không truy cập repository.
  */
 public class RequestDetailUI extends ScrollPane {
+
+    // --- Header ---
+    @FXML private Button backButton;
+    @FXML private Label titleLabel;
 
     // --- Info card ---
     @FXML private Label codeLabel;
@@ -68,21 +71,32 @@ public class RequestDetailUI extends ScrollPane {
     @FXML private Label orderCountLabel;
     @FXML private Label orderEmptyLabel;
 
-    private final RequestService service = new RequestService();
+    private final RequestService service;
     private RequestResponse current;
 
+    private Runnable backAction;
+
     public RequestDetailUI() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "RequestDetailPage.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this(new RequestService());
+    }
+
+    public RequestDetailUI(RequestService service) {
+        this.service = service;
+        FxmlUiHelper.loadSelf(this, "RequestDetailPage.fxml");
         setupItemsTable();
         setupOrdersTable();
+        wireBackButtons();
+    }
+
+    public void setOnBack(Runnable callback) {
+        this.backAction = callback;
+        wireBackButtons();
+    }
+
+    private void wireBackButtons() {
+        if (backButton != null) {
+            backButton.setOnAction(e -> handleBackClick());
+        }
     }
 
     private void setupItemsTable() {
@@ -110,22 +124,19 @@ public class RequestDetailUI extends ScrollPane {
                 StatusStyle.badgeCellFactory(StatusStyle::requestStatusLabel));
 
         orderActionsColumn.setCellFactory(col -> new TableCell<RelatedOrder, Void>() {
-            private final Button viewBtn = new Button("Xem");
-            private final Button cancelBtn = new Button("Hủy");
-            private final HBox box = new HBox(8, viewBtn, cancelBtn);
+            private final Button viewBtn = iconButton(eyePath(), "#475569");
+            private final HBox box = new HBox(viewBtn);
 
             {
-                viewBtn.getStyleClass().add("link-button");
-                cancelBtn.getStyleClass().add("link-button-danger");
+                viewBtn.getStyleClass().add("icon-btn");
+                box.setAlignment(javafx.geometry.Pos.CENTER);
                 viewBtn.setOnAction(e -> {
                     RelatedOrder order = getTableView().getItems().get(getIndex());
                     System.out.println("Nội dung chức năng: Xem chi tiết đơn hàng "
                             + order.getCode());
-                });
-                cancelBtn.setOnAction(e -> {
-                    RelatedOrder order = getTableView().getItems().get(getIndex());
-                    System.out.println("Nội dung chức năng: Hủy đơn hàng "
-                            + order.getCode());
+                    OrderDetailDialogUI.show(
+                            getScene() != null ? getScene().getWindow() : null,
+                            order.getCode());
                 });
             }
 
@@ -137,7 +148,23 @@ public class RequestDetailUI extends ScrollPane {
         });
     }
 
-    /** Nạp dữ liệu yêu cầu theo mã (gọi service). */
+    private static Button iconButton(String svg, String fill) {
+        SVGPath icon = new SVGPath();
+        icon.setContent(svg);
+        icon.setStyle("-fx-fill: " + fill + ";");
+        icon.setScaleX(0.85);
+        icon.setScaleY(0.85);
+        Button btn = new Button();
+        btn.setGraphic(icon);
+        return btn;
+    }
+
+    private static String eyePath() {
+        return "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5"
+                + "C21.27 7.61 17 4.5 12 4.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z";
+    }
+
+    /** Nạp dữ liệu yêu cầu theo mã. */
     public void loadRequest(String code) {
         this.current = service.getRequestDetail(code);
         render();
@@ -146,6 +173,7 @@ public class RequestDetailUI extends ScrollPane {
     private void render() {
         if (current == null) return;
 
+        titleLabel.setText("Chi tiết Yêu cầu: " + current.getCode());
         codeLabel.setText(current.getCode());
         createdDateLabel.setText(current.getCreatedDate());
         itemCountLabel.setText(String.valueOf(current.getItemCount()));
@@ -186,17 +214,16 @@ public class RequestDetailUI extends ScrollPane {
         name.getStyleClass().add("rejected-name");
 
         HBox header = new HBox(10, name, codeChip);
+        header.setAlignment(Pos.CENTER_LEFT);
 
         Label qty = new Label("Số lượng: " + item.getQuantity() + " " + item.getUnit());
         qty.getStyleClass().add("rejected-sub");
 
+        boolean isOverseas = "overseas".equals(item.getRejectedBy());
         Label rejectedByBadge = new Label(
-                "overseas".equals(item.getRejectedBy())
-                        ? "Từ chối bởi Đặt hàng Quốc tế"
-                        : "Hủy bởi người dùng");
-        rejectedByBadge.setStyle("-fx-padding: 3 10; -fx-background-radius: 10; "
-                + "-fx-font-size: 11px; -fx-font-weight: bold; "
-                + "-fx-background-color: #FEF3C7; -fx-text-fill: #92400E;");
+                isOverseas ? "Từ chối bởi Đặt hàng Quốc tế" : "Hủy bởi người dùng");
+        rejectedByBadge.getStyleClass().add(
+                isOverseas ? "rejected-badge-overseas" : "rejected-badge-user");
 
         Label dateLabel = new Label(item.getRejectedDate());
         dateLabel.getStyleClass().add("rejected-sub");
@@ -204,7 +231,11 @@ public class RequestDetailUI extends ScrollPane {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox topRow = new HBox(12, header, spacer, rejectedByBadge);
+        VBox rightBox = new VBox(4, rejectedByBadge, dateLabel);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+
+        HBox topRow = new HBox(12, header, spacer, rightBox);
+        topRow.setAlignment(Pos.CENTER_LEFT);
 
         Label reasonTitle = new Label("Lý do:");
         reasonTitle.getStyleClass().add("rejected-reason-title");
@@ -212,11 +243,7 @@ public class RequestDetailUI extends ScrollPane {
         reason.getStyleClass().add("rejected-sub");
         reason.setWrapText(true);
 
-        Region spacer2 = new Region();
-        HBox.setHgrow(spacer2, Priority.ALWAYS);
-        HBox subRow = new HBox(12, qty, spacer2, dateLabel);
-
-        VBox row = new VBox(8, topRow, subRow, reasonTitle, reason);
+        VBox row = new VBox(8, topRow, qty, reasonTitle, reason);
         row.getStyleClass().add("rejected-row");
         row.setPadding(new Insets(14, 16, 14, 16));
         return row;
@@ -235,10 +262,13 @@ public class RequestDetailUI extends ScrollPane {
     }
 
     @FXML
-    private void onClose() {
-        System.out.println("Nội dung chức năng: Đóng màn hình chi tiết yêu cầu "
+    private void handleBackClick() {
+        if (backAction != null) {
+            backAction.run();
+            return;
+        }
+        System.out.println("Nội dung chức năng: Quay lại danh sách yêu cầu "
                 + (current != null ? current.getCode() : ""));
-        Stage stage = (Stage) itemsTable.getScene().getWindow();
-        stage.close();
     }
+
 }

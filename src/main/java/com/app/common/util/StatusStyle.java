@@ -1,5 +1,6 @@
 package com.app.common.util;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -81,6 +82,10 @@ public final class StatusStyle {
             badgeCellFactory(Function<String, String> labeler) {
         return column -> new TableCell<S, String>() {
             private final Label badge = new Label();
+
+            {
+                setAlignment(Pos.CENTER);
+            }
 
             @Override
             protected void updateItem(String status, boolean empty) {

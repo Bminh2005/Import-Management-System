@@ -19,7 +19,7 @@ public class HeaderUIController {
     private UserMenu userMenu;
 
     public void initialize() {
-        if(CurrentUserSession.getFullname() != null) {
+        if (CurrentUserSession.getFullname() != null) {
             fullnameLabel.setText(CurrentUserSession.getFullname());
             roleLabel.setText(CurrentUserSession.getRole());
         }
@@ -34,11 +34,11 @@ public class HeaderUIController {
 
     }
 
-//    private MenuItem createLogoutMenuItem() {
-//        MenuItem logoutItem = new MenuItem("Đăng xuất");
-//        logoutItem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;"); // Chữ đỏ
-//        logoutItem.setOnAction(e -> System.out.println("Đang đăng xuất..."));
-//        return logoutItem;
-//    }
+    private MenuItem createLogoutMenuItem() {
+        MenuItem logoutItem = new MenuItem("Đăng xuất");
+        logoutItem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;"); // Chữ đỏ
+        logoutItem.setOnAction(e -> System.out.println("Đang đăng xuất..."));
+        return logoutItem;
+    }
 
 }
