@@ -27,8 +27,8 @@ public class salesApp extends Application {
 //        root.setPage(controller.getView());
         Scene scene = new Scene(root, 1280, 720);
 
-//        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());
-//        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/components/common.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/components/common.css").toExternalForm());
         stage.setTitle("Hệ thống Quản lý Nhập khẩu - Sales");
         stage.setMinWidth(1100);
         stage.setMinHeight(720);

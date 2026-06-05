@@ -5,6 +5,7 @@ import com.app.modules.sales.request.dto.RequestResponse;
 import com.app.modules.sales.request.dto.UpdateRequestDTO;
 import com.app.modules.sales.request.entity.RejectedItem;
 import com.app.modules.sales.request.entity.RequestItem;
+import com.app.modules.sales.request.requestdetail.controller.RequestDetailController;
 import com.app.modules.sales.request.service.RequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
