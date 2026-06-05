@@ -2,7 +2,7 @@ package com.app.modules.sales.request.editrequest.ui;
 
 import com.app.common.util.FxmlUiHelper;
 import com.app.modules.sales.request.entity.RequestItem;
-import com.app.modules.sales.request.editrequest.service.RequestService;
+import com.app.modules.sales.request.editrequest.ui.common.ProductCardUI;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,23 +31,29 @@ public class SelectProductDialogUI extends VBox {
 
     @FXML private VBox productList;
 
-    private final RequestService service;
+    private final EditRequestController controller;
     private Stage stage;
     private Consumer<RequestItem> onPicked;
 
     public SelectProductDialogUI() {
-        this(new RequestService());
+        this(new EditRequestController());
     }
 
-    public SelectProductDialogUI(RequestService service) {
-        this.service = service;
+    public SelectProductDialogUI(EditRequestController controller) {
+        this.controller = controller;
         FxmlUiHelper.loadSelf(this, "SelectProductDialogPage.fxml");
     }
 
     /** Tiện ích: mở popup, callback nhận RequestItem đã chọn (chưa có SL/ngày). */
     public static void show(Window owner, String currentRequestCode,
                             Consumer<RequestItem> onPicked) {
-        SelectProductDialogUI dialog = new SelectProductDialogUI();
+        show(owner, currentRequestCode, new EditRequestController(), onPicked);
+    }
+
+    /** Tiện ích với Provider: mở popup, callback nhận RequestItem đã chọn. */
+    public static void show(Window owner, String currentRequestCode, EditRequestController controller,
+                            Consumer<RequestItem> onPicked) {
+        SelectProductDialogUI dialog = new SelectProductDialogUI(controller);
         dialog.onPicked = onPicked;
         dialog.loadProducts(currentRequestCode);
 
@@ -64,7 +70,7 @@ public class SelectProductDialogUI extends VBox {
 
     private void loadProducts(String requestCode) {
         productList.getChildren().clear();
-        List<RequestItem> products = service.listAvailableProducts(requestCode);
+        List<RequestItem> products = controller.getAvailableProducts(requestCode);
         if (products.isEmpty()) {
             Label empty = new Label("Tất cả sản phẩm đã có trong yêu cầu.");
             empty.getStyleClass().add("empty-state");
@@ -74,35 +80,11 @@ public class SelectProductDialogUI extends VBox {
             return;
         }
         for (RequestItem p : products) {
-            productList.getChildren().add(buildCard(p));
+            productList.getChildren().add(new ProductCardUI(p, () -> {
+                if (onPicked != null) onPicked.accept(p);
+                if (stage != null) stage.close();
+            }));
         }
-    }
-
-    private HBox buildCard(RequestItem product) {
-        Label name = new Label(product.getName());
-        name.getStyleClass().add("product-name");
-
-        Label meta = new Label("Mã: " + product.getCode() + "  -  ĐVT: " + product.getUnit());
-        meta.getStyleClass().add("product-meta");
-
-        VBox info = new VBox(4, name, meta);
-        VBox.setVgrow(info, Priority.ALWAYS);
-
-        Button pick = new Button("Chọn");
-        pick.getStyleClass().add("pick-button");
-        pick.setOnAction(e -> {
-            if (onPicked != null) onPicked.accept(product);
-            if (stage != null) stage.close();
-        });
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        HBox card = new HBox(12, info, spacer, pick);
-        card.setAlignment(Pos.CENTER_LEFT);
-        card.setPadding(new Insets(14, 18, 14, 18));
-        card.getStyleClass().add("product-card");
-        return card;
     }
 
     @FXML

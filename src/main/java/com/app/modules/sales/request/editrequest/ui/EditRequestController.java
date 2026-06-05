@@ -98,7 +98,7 @@ public class EditRequestController {
     private void handleAddItem() {
         if (!view.hasCurrentRequest() || !view.isEditable()) return;
         javafx.stage.Window owner = view.getSceneWindow();
-        SelectProductDialogUI.show(owner, view.getRequestCode(), product ->
+        SelectProductDialogUI.show(owner, view.getRequestCode(), this, product ->
                 EnterItemInfoDialogUI.show(owner, product, newItem -> {
                     view.addRequestItem(newItem);
                     System.out.println("Nội dung chức năng: Đã thêm mặt hàng " + newItem.getCode());

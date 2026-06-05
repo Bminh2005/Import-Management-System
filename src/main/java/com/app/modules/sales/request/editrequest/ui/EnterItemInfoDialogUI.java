@@ -95,15 +95,15 @@ public class EnterItemInfoDialogUI extends VBox {
     }
 
     private Integer readQuantity() {
-        Integer value = quantitySpinner.getValue();
-        if (value != null) return value;
         String text = quantitySpinner.getEditor().getText();
-        if (text == null || text.isBlank()) return null;
-        try {
-            return Integer.parseInt(text.trim());
-        } catch (NumberFormatException e) {
-            return null;
+        if (text != null && !text.isBlank()) {
+            try {
+                return Integer.parseInt(text.trim());
+            } catch (NumberFormatException e) {
+                // parse fails, fallback to value
+            }
         }
+        return quantitySpinner.getValue();
     }
 
     private void showError(String msg) {

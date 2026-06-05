@@ -6,8 +6,8 @@ import com.app.modules.sales.request.createrequest.controller.CreateRequestContr
 import com.app.modules.sales.request.createrequest.ui.CreateImportRequestUI;
 import com.app.modules.sales.request.editrequest.ui.EditRequestController;
 import com.app.modules.sales.request.editrequest.ui.EditRequestUI;
-import com.app.modules.sales.request.requestdetail.ui.RequestDetailUI;
-import com.app.modules.sales.request.requestlist.ui.RequestListUI;
+import com.app.modules.sales.request.requestdetail.controller.RequestDetailController;
+import com.app.modules.sales.request.requestlist.controller.RequestListController;
 import javafx.scene.control.Alert;
 
 /**
@@ -17,6 +17,7 @@ public class SalesShell {
 
     private final MainLayoutUI layout;
     private final SalesSidebar sidebar;
+    private RequestListController requestListController;
 
     public SalesShell(MainLayoutUI layout) {
         this.layout = layout;
@@ -43,11 +44,11 @@ public class SalesShell {
 
     public void showRequestList() {
         sidebar.selectMenu(sidebar.getImportRequestItem());
-        RequestListUI list = new RequestListUI();
-        list.setOnViewDetail(this::showRequestDetail);
-        list.setOnEditRequest(this::showRequestEdit);
-        list.setOnCreateRequest(this::showCreateRequest);
-        layout.setPage(list);
+        requestListController = new RequestListController();
+        requestListController.setOnViewDetail(this::showRequestDetail);
+        requestListController.setOnEditRequest(this::showRequestEdit);
+        requestListController.setOnCreateRequest(this::showCreateRequest);
+        layout.setPage(requestListController.getView());
     }
 
     /** Màn tạo yêu cầu nhập hàng mới (createrequest). */
@@ -63,14 +64,23 @@ public class SalesShell {
     /** @return false nếu không tải được yêu cầu từ DB */
     public boolean showRequestDetail(String code) {
         sidebar.selectMenu(sidebar.getImportRequestItem());
-        RequestDetailUI detail = new RequestDetailUI();
-        detail.setOnBack(this::showRequestList);
-        layout.setPage(detail);
-        if (!detail.loadRequest(code)) {
-            showRequestList();
+        try {
+            RequestDetailController controller = new RequestDetailController();
+            controller.setOnBack(this::showRequestList);
+            controller.setOnEdit(this::showRequestEdit);
+            if (!controller.loadRequest(code)) {
+                return false;
+            }
+            layout.setPage(controller.getView());
+            return true;
+        } catch (RuntimeException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Xem chi tiết yêu cầu");
+            alert.setHeaderText("Không mở được màn chi tiết: " + code);
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
             return false;
         }
-        return true;
     }
 
     /** Màn chỉnh sửa yêu cầu — mở từ icon chỉnh sửa trên danh sách. */
