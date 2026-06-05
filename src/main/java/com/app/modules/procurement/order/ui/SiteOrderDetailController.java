@@ -37,6 +37,7 @@ public class SiteOrderDetailController implements Initializable {
     @FXML private Label lblSite;
     @FXML private Label lblOrderCreated;
     @FXML private Label lblTotalValue;
+    @FXML private Label lblTableTotal;
 
     @FXML private HBox alertRefused;
     @FXML private Label lblRefusedReason;
@@ -77,6 +78,7 @@ public class SiteOrderDetailController implements Initializable {
         Objects.requireNonNull(lblSite);
         Objects.requireNonNull(lblOrderCreated);
         Objects.requireNonNull(lblTotalValue);
+        Objects.requireNonNull(lblTableTotal);
         Objects.requireNonNull(alertRefused);
         Objects.requireNonNull(lblRefusedReason);
         Objects.requireNonNull(lblItemCount);
@@ -108,6 +110,24 @@ public class SiteOrderDetailController implements Initializable {
                 new ReadOnlyStringWrapper(formatMoney(cell.getValue().getPrice())));
         colSubtotal.setCellValueFactory(cell ->
                 new ReadOnlyStringWrapper(formatMoney(cell.getValue().getPrice() * cell.getValue().getQuantity())));
+        colSubtotal.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    getStyleClass().remove("money-cell");
+                } else {
+                    setText(item);
+                    if (!getStyleClass().contains("money-cell")) {
+                        getStyleClass().add("money-cell");
+                    }
+                }
+            }
+        });
+        colUnitPrice.setStyle("-fx-alignment: CENTER-RIGHT;");
+        colQty.setStyle("-fx-alignment: CENTER-RIGHT;");
+        colSubtotal.setStyle("-fx-alignment: CENTER-RIGHT;");
     }
 
     public void loadOrder(long orderId) {
@@ -130,6 +150,7 @@ public class SiteOrderDetailController implements Initializable {
                 .mapToDouble(item -> item.getQuantity() * item.getPrice())
                 .sum();
         lblTotalValue.setText(formatMoney(totalValue));
+        lblTableTotal.setText(formatMoney(totalValue));
 
         setStatusDisplay(currentOrder.getStatus());
         boolean canReallocate = currentOrder.getStatus() == OrderStatus.REFUSED

@@ -88,8 +88,17 @@ public final class SiteOrderNavigator {
 
     private static void stageTitle(Scene scene, String title) {
         Stage stage = (Stage) scene.getWindow();
-        if (stage != null) {
-            stage.setTitle(title);
+        if (stage == null) {
+            return;
         }
+        stage.setTitle(title);
+        if (stage.getWidth() < 1024) {
+            stage.setWidth(1280);
+        }
+        if (stage.getHeight() < 700) {
+            stage.setHeight(800);
+        }
+        stage.setMinWidth(1024);
+        stage.setMinHeight(640);
     }
 }

@@ -12,6 +12,11 @@
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="page-scroll">
         <VBox styleClass="page-body" spacing="18">
 
+            <VBox spacing="4">
+                <Label text="Danh sách Đơn Đặt Hàng" styleClass="page-title"/>
+                <Label text="Quản lý và theo dõi các đơn đặt hàng từ Site" styleClass="page-subtitle"/>
+            </VBox>
+
             <HBox styleClass="stat-row" spacing="14">
                 <HBox styleClass="stat-card stat-card-total" alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
                     <VBox spacing="8" HBox.hgrow="ALWAYS">
@@ -86,7 +91,7 @@
                         <TableColumn fx:id="colOrderId" text="ID ĐƠN" prefWidth="90" minWidth="72"/>
                         <TableColumn fx:id="colOrderer" text="NGƯỜI ĐẶT" prefWidth="140" minWidth="110"/>
                         <TableColumn fx:id="colItemCount" text="SỐ MẶT HÀNG" prefWidth="100" minWidth="80"/>
-                        <TableColumn fx:id="colSiteName" text="SITE" prefWidth="160" minWidth="120"/>
+                        <TableColumn fx:id="colSiteName" text="MÃ SITE / TÊN SITE" prefWidth="180" minWidth="140"/>
                         <TableColumn fx:id="colCreatedAt" text="NGÀY TẠO" prefWidth="110" minWidth="90"/>
                         <TableColumn fx:id="colStatus" text="TRẠNG THÁI" prefWidth="120" minWidth="96"/>
                         <TableColumn fx:id="colAction" text="HÀNH ĐỘNG" prefWidth="180" minWidth="150"/>

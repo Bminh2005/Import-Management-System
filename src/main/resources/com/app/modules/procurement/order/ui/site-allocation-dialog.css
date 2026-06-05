@@ -1,138 +1,61 @@
 @import url("site-order-shared.css");
 
-.dialog-root {
-    -fx-background-color: -color-surface;
-    -fx-background-radius: 8;
-    -fx-border-color: -color-border;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.22), 28, 0, 0, 10);
-}
-
 .dialog-header {
     -fx-background-color: -color-primary;
-    -fx-padding: 20 22;
-}
-
-.dialog-header .dialog-title {
-    -fx-font-size: 19px;
-    -fx-font-weight: 800;
-    -fx-text-fill: white;
+    -fx-background-radius: 12 12 0 0;
 }
 
 .dialog-header .dialog-subtitle,
 .dialog-hint {
-    -fx-font-size: 12px;
-    -fx-text-fill: #dbe8ff;
+    -fx-text-fill: #DBEAFE;
 }
 
-.dialog-stat {
+.dialog-stat-neutral {
     -fx-background-color: rgba(255, 255, 255, 0.14);
-    -fx-background-radius: 8;
     -fx-border-color: rgba(255, 255, 255, 0.24);
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-padding: 10 12;
 }
 
-.dialog-stat-label {
-    -fx-font-size: 9px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #dbe8ff;
+.dialog-stat-warn {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-border-color: rgba(255, 255, 255, 0.3);
 }
 
-.dialog-stat-value {
-    -fx-font-size: 13px;
-    -fx-font-weight: 800;
+.dialog-stat-danger {
+    -fx-background-color: rgba(220, 38, 38, 0.25);
+    -fx-border-color: rgba(254, 202, 202, 0.5);
+}
+
+.dialog-header .dialog-stat-label {
+    -fx-text-fill: #DBEAFE;
+}
+
+.dialog-header .dialog-stat-value {
     -fx-text-fill: white;
 }
 
 .dialog-stat-danger .dialog-stat-value {
-    -fx-text-fill: #ffd2d2;
+    -fx-text-fill: #FEE2E2;
 }
 
-.alloc-progress > .track {
-    -fx-background-color: rgba(255, 255, 255, 0.22);
-    -fx-background-radius: 999;
-}
-
-.alloc-progress > .bar {
-    -fx-background-color: white;
-    -fx-background-radius: 999;
-}
-
-.dialog-scroll,
-.dialog-scroll > .viewport {
-    -fx-background-color: #f7f9fc;
-    -fx-background: #f7f9fc;
-    -fx-border-color: transparent;
-}
-
-.sites-container {
-    -fx-padding: 16 18;
-}
-
-.site-card {
-    -fx-background-color: white;
-    -fx-border-color: #b9d6ff;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 10, 0, 0, 3);
-}
-
-.site-name {
-    -fx-font-size: 15px;
-    -fx-font-weight: 800;
-    -fx-text-fill: -color-text;
+.site-card:hover {
+    -fx-border-color: -color-primary;
 }
 
 .score-badge {
     -fx-background-color: -color-warning-soft;
-    -fx-text-fill: #8a5a12;
-    -fx-border-color: #f0d38a;
-    -fx-border-width: 1;
+    -fx-text-fill: #92400E;
+    -fx-border-color: -color-warning-border;
 }
 
 .info-label-highlight {
-    -fx-font-size: 12px;
-    -fx-font-weight: 700;
+    -fx-font-weight: bold;
     -fx-text-fill: -color-primary;
 }
 
-.qty-label,
-.qty-max {
-    -fx-font-size: 12px;
-    -fx-text-fill: -color-text-secondary;
-}
-
-.qty-input {
-    -fx-background-color: -color-surface-muted;
-    -fx-border-color: -color-border-strong;
-    -fx-border-width: 1;
-    -fx-border-radius: 7;
-    -fx-background-radius: 7;
-    -fx-padding: 8 10;
-    -fx-pref-width: 90;
-    -fx-font-size: 14px;
-    -fx-font-weight: 800;
-    -fx-alignment: CENTER_RIGHT;
-}
-
 .qty-input:focused {
-    -fx-background-color: white;
     -fx-border-color: -color-primary;
 }
 
-.empty-site-msg {
-    -fx-font-size: 13px;
-    -fx-text-fill: -color-text-secondary;
-    -fx-padding: 16;
-}
-
 .dialog-footer {
-    -fx-background-color: -color-surface;
-    -fx-padding: 14 18;
-    -fx-border-color: -color-border transparent transparent transparent;
-    -fx-border-width: 1 0 0 0;
+    -fx-background-radius: 0 0 12 12;
 }

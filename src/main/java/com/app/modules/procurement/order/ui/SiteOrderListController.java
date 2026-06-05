@@ -27,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class SiteOrderListController implements Initializable {
 
@@ -97,6 +98,30 @@ public class SiteOrderListController implements Initializable {
                 new ReadOnlyStringWrapper(nullToDash(cell.getValue().getOrdererName())));
         colItemCount.setCellValueFactory(cell ->
                 new ReadOnlyStringWrapper(String.valueOf(cell.getValue().getItemCount())));
+        colSiteName.setCellFactory(col -> new TableCell<>() {
+            private final Label codeLabel = new Label();
+            private final Label nameLabel = new Label();
+            private final VBox box = new VBox(2, codeLabel, nameLabel);
+
+            {
+                codeLabel.getStyleClass().add("text-site-code");
+                nameLabel.getStyleClass().add("text-site-name");
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                    return;
+                }
+                SiteOrder order = getTableRow().getItem();
+                codeLabel.setText(formatSiteCode(order.getSiteId()));
+                nameLabel.setText(nullToDash(order.getSiteName()));
+                setGraphic(box);
+                setText(null);
+            }
+        });
         colSiteName.setCellValueFactory(cell ->
                 new ReadOnlyStringWrapper(nullToDash(cell.getValue().getSiteName())));
         colCreatedAt.setCellValueFactory(cell -> new ReadOnlyStringWrapper(
@@ -122,13 +147,13 @@ public class SiteOrderListController implements Initializable {
         colStatus.setCellValueFactory(cell -> new ReadOnlyStringWrapper(formatStatus(cell.getValue().getStatus())));
 
         colAction.setCellFactory(column -> new TableCell<>() {
-            private final Button viewButton = new Button("Xem");
-            private final Button processButton = new Button("Xử lý");
+            private final Button viewButton = new Button("👁");
+            private final Button processButton = new Button("Phân bổ lại");
             private final HBox container = new HBox(8, viewButton, processButton);
 
             {
                 viewButton.getStyleClass().add("btn-view");
-                processButton.getStyleClass().add("btn-process");
+                processButton.getStyleClass().addAll("btn-action", "btn-process");
                 container.setAlignment(Pos.CENTER_LEFT);
                 viewButton.setOnAction(e -> {
                     SiteOrder order = getTableRow() != null ? getTableRow().getItem() : null;
@@ -253,6 +278,10 @@ public class SiteOrderListController implements Initializable {
         };
     }
 
+    private static String formatSiteCode(long siteId) {
+        return "SITE" + String.format("%02d", siteId);
+    }
+
     private static String nullToDash(String value) {
         return value == null || value.isBlank() ? "-" : value;
     }
@@ -266,4 +295,5 @@ public class SiteOrderListController implements Initializable {
             SiteOrderNavigator.showReallocation(orderTable.getScene(), order.getId());
         }
     }
+    
 }

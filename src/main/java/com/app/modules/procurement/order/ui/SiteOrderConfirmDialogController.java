@@ -20,6 +20,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -114,7 +116,7 @@ public class SiteOrderConfirmDialogController implements Initializable {
             Label row = new Label(entry.getMerchandiseName() + " - "
                     + entry.getQuantity() + " " + entry.getUnit()
                     + " x " + formatMoney(entry.getPrice()));
-            row.getStyleClass().add("info-label");
+            row.getStyleClass().add("preview-item-row");
             row.setWrapText(true);
             itemRows.getChildren().add(row);
         }
@@ -137,17 +139,33 @@ public class SiteOrderConfirmDialogController implements Initializable {
             ReallocationResult result = service.finalizeReallocation(
                     sourceOrder, requestInfo, allocationsBySite);
             closeWindow();
-            SiteOrderUiAlerts.info("Tạo đơn thành công",
-                    "Đã tạo " + result.getCount()
-                            + " đơn đặt hàng mới ở trạng thái Chưa xử lý và xóa đơn bị hủy "
-                            + SiteOrderService.formatOrderCode(sourceOrder.getId()) + ".");
+            
+            // Dùng Alert mặc định của JavaFX cho thông báo thành công
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Tạo đơn thành công");
+            alert.setHeaderText(null);
+            alert.setContentText("Đã tạo " + result.getCount() 
+                    + " đơn đặt hàng mới ở trạng thái Chưa xử lý và xóa đơn bị hủy "
+                    + SiteOrderService.formatOrderCode(sourceOrder.getId()) + ".");
+            alert.showAndWait();
+
             if (ownerScene != null) {
                 SiteOrderNavigator.showSuccess(ownerScene, result, sourceOrder.getId());
             }
-        } catch (RuntimeException exception) {
+        } catch (Exception exception) {
+            // IN LỖI RA TERMINAL ĐỂ DEBUG
+            exception.printStackTrace(); 
+            
             btnConfirm.setDisable(false);
-            SiteOrderUiAlerts.warn("Không thể tạo đơn",
-                    "Dữ liệu chưa được lưu. Vui lòng kiểm tra kết nối DB và thử lại.");
+            
+            // HIỂN THỊ LỖI THẬT LÊN MÀN HÌNH BẰNG JAVAFX ALERT
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Lỗi khi lưu vào Database");
+            alert.setHeaderText("Đã xảy ra lỗi hệ thống bên dưới:");
+            Throwable root = exception;
+while (root.getCause() != null) root = root.getCause();
+alert.setContentText(root.getClass().getSimpleName() + ": " + root.getMessage());
+            alert.showAndWait();
         }
     }
 

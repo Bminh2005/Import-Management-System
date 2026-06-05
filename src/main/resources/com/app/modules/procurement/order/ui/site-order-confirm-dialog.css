@@ -1,93 +1,46 @@
 @import url("site-order-shared.css");
 
-.dialog-root {
-    -fx-background-color: -color-surface;
-    -fx-background-radius: 8;
-    -fx-border-color: -color-border;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.22), 28, 0, 0, 10);
-}
-
 .dialog-header {
     -fx-background-color: -color-success;
-    -fx-padding: 20 22;
-}
-
-.dialog-header .dialog-title {
-    -fx-font-size: 19px;
-    -fx-font-weight: 800;
-    -fx-text-fill: white;
+    -fx-background-radius: 12 12 0 0;
 }
 
 .dialog-header .dialog-subtitle,
 .site-explain {
-    -fx-font-size: 12px;
-    -fx-text-fill: #dff7ec;
+    -fx-text-fill: #D1FAE5;
 }
 
 .summary-bar {
     -fx-background-color: rgba(255, 255, 255, 0.14);
-    -fx-background-radius: 8;
-    -fx-padding: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12;
 }
 
 .header-stat {
     -fx-background-color: rgba(255, 255, 255, 0.16);
-    -fx-background-radius: 8;
-    -fx-border-color: rgba(255, 255, 255, 0.24);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.26);
     -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-padding: 10 12;
+    -fx-border-radius: 10;
+    -fx-padding: 12 14;
 }
 
 .header-stat-label {
-    -fx-font-size: 9px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #dff7ec;
+    -fx-text-fill: #D1FAE5;
 }
 
 .header-stat-value {
-    -fx-font-size: 15px;
-    -fx-font-weight: 800;
     -fx-text-fill: white;
 }
 
-.header-stat-money {
-    -fx-font-size: 16px;
-}
-
-.dialog-scroll,
-.dialog-scroll > .viewport {
-    -fx-background-color: #f7faf9;
-    -fx-background: #f7faf9;
-    -fx-border-color: transparent;
-}
-
-.orders-container {
-    -fx-padding: 12 20 18 20;
-}
-
 .order-preview-card {
-    -fx-border-color: #9fdec8;
-    -fx-background-color: white;
+    -fx-border-color: -color-success-border;
 }
 
 .preview-order-title {
-    -fx-font-size: 15px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #075f48;
-}
-
-.preview-order-total {
-    -fx-font-size: 18px;
-    -fx-font-weight: 800;
-    -fx-text-fill: -color-success;
+    -fx-text-fill: #065F46;
 }
 
 .dialog-footer {
-    -fx-background-color: -color-surface;
-    -fx-padding: 14 18;
-    -fx-border-color: -color-border transparent transparent transparent;
-    -fx-border-width: 1 0 0 0;
+    -fx-background-radius: 0 0 12 12;
 }

@@ -43,15 +43,15 @@
                 </HBox>
 
                 <HBox spacing="12" fillHeight="true">
-                    <VBox styleClass="stat-mini" HBox.hgrow="ALWAYS">
+                    <VBox styleClass="stat-mini stat-mini-blue" HBox.hgrow="ALWAYS">
                         <Label text="📦 TỔNG MẶT HÀNG" styleClass="stat-mini-label"/>
                         <Label fx:id="lblTotalItems" text="0" styleClass="stat-mini-value"/>
                     </VBox>
-                    <VBox styleClass="stat-mini stat-mini-highlight" HBox.hgrow="ALWAYS">
+                    <VBox styleClass="stat-mini stat-mini-green stat-mini-highlight" HBox.hgrow="ALWAYS">
                         <Label text="✓ ĐÃ PHÂN BỔ" styleClass="stat-mini-label"/>
                         <Label fx:id="lblAllocated" text="0 / 0" styleClass="stat-mini-value"/>
                     </VBox>
-                    <VBox styleClass="stat-mini" HBox.hgrow="ALWAYS">
+                    <VBox styleClass="stat-mini stat-mini-purple" HBox.hgrow="ALWAYS">
                         <Label text="👤 NGƯỜI ĐẶT" styleClass="stat-mini-label"/>
                         <Label fx:id="lblOrderer" text="—" styleClass="stat-mini-value stat-mini-text"/>
                     </VBox>
@@ -60,7 +60,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="12">
                     <Label fx:id="lblProgress" text="Tiến độ 0%"
                            styleClass="progress-label"/>
-                    <ProgressBar fx:id="progressBar" progress="0"
+                    <ProgressBar fx:id="progressBar" progress="0.0"
                                  prefWidth="200" prefHeight="8"
                                  styleClass="main-progress" HBox.hgrow="ALWAYS"/>
                 </HBox>

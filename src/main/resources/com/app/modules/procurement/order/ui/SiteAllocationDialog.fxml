@@ -62,7 +62,6 @@
                 onAction="#handleClose"/>
         <Button fx:id="btnSave" text="Lưu phân bổ"
                 styleClass="btn-primary"
-                HBox.hgrow="ALWAYS" maxWidth="Infinity"
                 onAction="#handleSave"/>
     </HBox>
 </VBox>

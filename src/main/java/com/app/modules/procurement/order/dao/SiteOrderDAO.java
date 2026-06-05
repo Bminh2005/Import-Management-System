@@ -35,12 +35,14 @@ public class SiteOrderDAO {
     private static final String FIND_BY_STATUS_SQL = BASE_ORDER_SQL + "WHERE o.status = ? ORDER BY o.created_at DESC";
     private static final String FIND_BY_ID_SQL = BASE_ORDER_SQL + "WHERE o.id = ?";
     private static final String COUNT_BY_STATUS_SQL = "SELECT status, COUNT(*) AS total FROM \"Order\" GROUP BY status";
+
+    // FIX: Không INSERT id thủ công - để DB tự sinh sequence, dùng RETURNING id
     private static final String INSERT_ORDER_SQL = "INSERT INTO \"Order\" "
             + "(site_id, expected_delivery_date, user_id, request_id, status, delivery) "
-            + "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+            + "VALUES (?, ?, ?, ?, CAST(? AS order_status), CAST(? AS delivery_type)) RETURNING id";
     private static final String INSERT_ORDER_DETAIL_SQL = "INSERT INTO \"OrderDetail\" "
             + "(order_id, merchandise_detail_id, quantity, status, refused_reason) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, CAST(? AS order_status), ?)";
 
     public List<SiteOrder> getAll() {
         return queryOrders(FIND_ALL_SQL, null);
@@ -73,35 +75,10 @@ public class SiteOrderDAO {
     public long save(SiteOrder order, List<SiteOrderItem> items) {
         try (Connection conn = DatabaseManager.getConnection()) {
             conn.setAutoCommit(false);
-            try (PreparedStatement orderStmt = conn.prepareStatement(INSERT_ORDER_SQL)) {
-                orderStmt.setLong(1, order.getSiteId());
-                orderStmt.setDate(2, Date.valueOf(order.getExpectedDeliveryDate()));
-                orderStmt.setLong(3, order.getUserId());
-                if (order.getRequestId() > 0) {
-                    orderStmt.setLong(4, order.getRequestId());
-                } else {
-                    orderStmt.setNull(4, Types.BIGINT);
-                }
-                orderStmt.setString(5, order.getStatus().name());
-                orderStmt.setString(6, order.getDelivery().name());
-                try (ResultSet rs = orderStmt.executeQuery()) {
-                    if (rs.next()) {
-                        long orderId = rs.getLong("id");
-                        try (PreparedStatement itemStmt = conn.prepareStatement(INSERT_ORDER_DETAIL_SQL)) {
-                            for (SiteOrderItem item : items) {
-                                itemStmt.setLong(1, orderId);
-                                itemStmt.setLong(2, item.getMerchandiseDetailId());
-                                itemStmt.setLong(3, item.getQuantity());
-                                itemStmt.setString(4, item.getStatus() == null ? OrderStatus.PENDING.name() : item.getStatus().name());
-                                itemStmt.setString(5, item.getRefusedReason());
-                                itemStmt.addBatch();
-                            }
-                            itemStmt.executeBatch();
-                        }
-                        conn.commit();
-                        return orderId;
-                    }
-                }
+            try {
+                long orderId = insertOrder(conn, order, items);
+                conn.commit();
+                return orderId;
             } catch (SQLException e) {
                 conn.rollback();
                 throw e;
@@ -111,27 +88,33 @@ public class SiteOrderDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi lưu Order", e);
         }
-        return -1;
     }
 
     public List<Long> replaceRefusedOrder(long sourceOrderId, Map<SiteOrder, List<SiteOrderItem>> replacementOrders) {
         if (sourceOrderId <= 0 || replacementOrders == null || replacementOrders.isEmpty()) {
             return List.of();
         }
+
         List<Long> createdIds = new ArrayList<>();
+
         try (Connection conn = DatabaseManager.getConnection()) {
             conn.setAutoCommit(false);
             try {
+                // FIX: Xóa order cũ TRƯỚC khi insert order mới
+                // Tránh trường hợp sequence bị conflict hoặc FK ràng buộc
+                deleteOrder(conn, sourceOrderId);
+
                 for (Map.Entry<SiteOrder, List<SiteOrderItem>> entry : replacementOrders.entrySet()) {
                     List<SiteOrderItem> items = entry.getValue();
                     if (items == null || items.isEmpty()) {
                         continue;
                     }
-                    createdIds.add(insertOrder(conn, entry.getKey(), items));
+                    // FIX: Reset id về 0 để chắc chắn DB tự sinh id mới
+                    SiteOrder newOrder = entry.getKey();
+                    newOrder.setId(0);
+                    createdIds.add(insertOrder(conn, newOrder, items));
                 }
-                if (!createdIds.isEmpty()) {
-                    deleteOrder(conn, sourceOrderId);
-                }
+
                 conn.commit();
                 return createdIds;
             } catch (SQLException e) {
@@ -146,7 +129,7 @@ public class SiteOrderDAO {
     }
 
     private long insertOrder(Connection conn, SiteOrder order, List<SiteOrderItem> items) throws SQLException {
-        try (PreparedStatement orderStmt = conn.prepareStatement(INSERT_ORDER_SQL)) {
+        try (PreparedStatement orderStmt = conn.prepareStatement(INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS)) {
             orderStmt.setLong(1, order.getSiteId());
             orderStmt.setDate(2, Date.valueOf(order.getExpectedDeliveryDate()));
             orderStmt.setLong(3, order.getUserId());
@@ -157,9 +140,10 @@ public class SiteOrderDAO {
             }
             orderStmt.setString(5, order.getStatus().name());
             orderStmt.setString(6, order.getDelivery().name());
-            try (ResultSet rs = orderStmt.executeQuery()) {
+            orderStmt.executeUpdate();
+            try (ResultSet rs = orderStmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    long orderId = rs.getLong("id");
+                    long orderId = rs.getLong(1);
                     insertOrderItems(conn, orderId, items);
                     return orderId;
                 }
@@ -183,6 +167,7 @@ public class SiteOrderDAO {
     }
 
     private void deleteOrder(Connection conn, long orderId) throws SQLException {
+        // FIX: Xóa OrderDetail trước (FK child), sau đó mới xóa Order (FK parent)
         try (PreparedStatement detailStmt = conn.prepareStatement(
                 "DELETE FROM \"OrderDetail\" WHERE order_id = ?")) {
             detailStmt.setLong(1, orderId);
@@ -196,26 +181,25 @@ public class SiteOrderDAO {
     }
 
     public void deleteById(long orderId) {
+        // FIX: Thêm rollback() trong catch và đảm bảo autoCommit được reset
         try (Connection conn = DatabaseManager.getConnection()) {
             conn.setAutoCommit(false);
-            try (PreparedStatement detailStmt = conn.prepareStatement(
-                    "DELETE FROM \"OrderDetail\" WHERE order_id = ?")) {
-                detailStmt.setLong(1, orderId);
-                detailStmt.executeUpdate();
+            try {
+                deleteOrder(conn, orderId);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
             }
-            try (PreparedStatement orderStmt = conn.prepareStatement(
-                    "DELETE FROM \"Order\" WHERE id = ?")) {
-                orderStmt.setLong(1, orderId);
-                orderStmt.executeUpdate();
-            }
-            conn.commit();
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi xóa Order", e);
         }
     }
 
     public void updateStatus(long orderId, OrderStatus status) {
-        String sql = "UPDATE \"Order\" SET status = ? WHERE id = ?";
+        String sql = "UPDATE \"Order\" SET status = CAST(? AS order_status) WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status.name());

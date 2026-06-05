@@ -41,10 +41,6 @@ public class SiteOrderService {
         return orderDAO.getById(orderId);
     }
 
-    /**
-     * Site đủ điều kiện: tồn kho >= số lượng cần, giao tàu (hôm nay + ship days) trước ngày mong muốn.
-     * Sắp xếp: ship nhanh trước, tồn kho lớn trước.
-     */
     public List<SiteInventoryInfo> getEligibleSitesForReallocation(long merchandiseDetailId,
                                                                    long requiredQuantity,
                                                                    LocalDate desiredDate) {
@@ -138,12 +134,24 @@ public class SiteOrderService {
         Map<SiteOrder, List<SiteOrderItem>> replacementOrders = new LinkedHashMap<>();
 
         for (Map.Entry<Long, List<SiteAllocationEntry>> entry : allocationMap.entrySet()) {
+            long siteId = entry.getKey(); // FIX: đặt tên rõ ràng là siteId
             List<SiteAllocationEntry> allocations = entry.getValue();
             if (allocations == null || allocations.isEmpty()) {
                 continue;
             }
-            SiteOrder order = new SiteOrder(entry.getKey(), requestId, userId,
-                    expectedDate, OrderStatus.PENDING, DeliveryType.SHIP);
+
+            // FIX: Tạo SiteOrder mới với id = 0, chỉ set siteId
+            // Trước đây: new SiteOrder(entry.getKey(), ...) → truyền siteId vào vị trí id
+            // Gây ra conflict vì order mới mang id của site thay vì để DB tự sinh
+            SiteOrder order = new SiteOrder();
+            order.setId(0); // Đảm bảo DB tự sinh id mới qua sequence
+            order.setSiteId(siteId);
+            order.setRequestId(requestId);
+            order.setUserId(userId);
+            order.setExpectedDeliveryDate(expectedDate);
+            order.setStatus(OrderStatus.PENDING);
+            order.setDelivery(DeliveryType.SHIP);
+
             List<SiteOrderItem> items = new ArrayList<>();
             for (SiteAllocationEntry allocation : allocations) {
                 if (allocation.getQuantity() <= 0) {

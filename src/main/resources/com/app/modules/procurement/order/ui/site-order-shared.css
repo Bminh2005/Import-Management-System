@@ -1,71 +1,178 @@
-/* Shared order UI foundation */
+/* ============================================================
+   site-order-shared.css — Design system module Đơn Đặt Hàng
+   Đồng bộ với common.css (#2563EB, #F9FAFB)
+   ============================================================ */
+
 .root {
-    -fx-font-family: "Segoe UI", "Inter", "Arial", sans-serif;
-    -color-bg: #f5f7fb;
-    -color-surface: #ffffff;
-    -color-surface-muted: #f8fafc;
-    -color-border: #dbe3ee;
-    -color-border-strong: #b9c6d8;
-    -color-text: #132033;
-    -color-text-secondary: #536173;
-    -color-text-muted: #8290a3;
-    -color-primary: #2457c5;
-    -color-primary-hover: #1d469e;
-    -color-primary-soft: #e9f0ff;
-    -color-success: #087f5b;
-    -color-success-soft: #e7f8f1;
-    -color-warning: #b7791f;
-    -color-warning-soft: #fff6df;
-    -color-danger: #c53030;
-    -color-danger-soft: #fff0f0;
+    -fx-font-family: "Inter", "Segoe UI", "SF Pro Display", sans-serif;
+    -fx-font-size: 14px;
+
+    /* Thang chữ thống nhất */
+    -font-xs: 11px;
+    -font-sm: 12px;
+    -font-base: 14px;
+    -font-lg: 16px;
+    -font-xl: 22px;
+    -font-stat: 28px;
+
+    -color-bg: #F9FAFB;
+    -color-surface: #FFFFFF;
+    -color-surface-muted: #F3F4F6;
+    -color-border: #E5E7EB;
+    -color-border-strong: #D1D5DB;
+
+    -color-text: #111827;
+    -color-text-secondary: #6B7280;
+    -color-text-muted: #9CA3AF;
+
+    -color-primary: #2563EB;
+    -color-primary-hover: #1D4ED8;
+    -color-primary-soft: #EFF6FF;
+    -color-primary-border: #BFDBFE;
+
+    -color-success: #059669;
+    -color-success-soft: #ECFDF5;
+    -color-success-border: #A7F3D0;
+
+    -color-warning: #D97706;
+    -color-warning-soft: #FFFBEB;
+    -color-warning-border: #FDE68A;
+
+    -color-danger: #DC2626;
+    -color-danger-soft: #FEF2F2;
+    -color-danger-border: #FECACA;
+
+    -color-purple-soft: #F5F3FF;
+    -color-purple-text: #6D28D9;
+    -color-purple-border: #DDD6FE;
+
+    -color-orange-soft: #FFF7ED;
+    -color-orange-text: #C2410C;
+    -color-orange-border: #FED7AA;
 }
 
+/* ---------- Layout ---------- */
 .page-root {
     -fx-background-color: -color-bg;
 }
 
+.page-scroll,
+.page-scroll > .viewport,
+.content-scroll,
+.content-scroll > .viewport,
+.items-scroll,
+.items-scroll > .viewport,
+.dialog-scroll,
+.dialog-scroll > .viewport {
+    -fx-background-color: -color-bg;
+    -fx-background: -color-bg;
+    -fx-border-color: transparent;
+}
+
+.page-body,
+.content-area {
+    -fx-padding: 24 32 28 32;
+    -fx-spacing: 20;
+}
+
 .page-title {
-    -fx-font-size: 24px;
-    -fx-font-weight: 700;
+    -fx-font-size: -font-xl;
+    -fx-font-weight: bold;
     -fx-text-fill: -color-text;
 }
 
 .page-subtitle {
-    -fx-font-size: 13px;
+    -fx-font-size: -font-base;
     -fx-text-fill: -color-text-secondary;
 }
 
 .section-title {
-    -fx-font-size: 15px;
-    -fx-font-weight: 700;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.item-card-title {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
     -fx-text-fill: -color-text;
 }
 
 .info-label {
-    -fx-font-size: 12px;
+    -fx-font-size: -font-sm;
     -fx-text-fill: -color-text-secondary;
 }
 
 .info-value {
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #334155;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
 }
 
+.text-site-code {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-primary;
+}
+
+.text-site-name {
+    -fx-font-size: -font-base;
+    -fx-font-weight: normal;
+    -fx-text-fill: -color-text-secondary;
+}
+
+/* ---------- Thanh điều hướng / chân trang ---------- */
+.top-bar {
+    -fx-background-color: -color-surface;
+    -fx-padding: 0 32;
+    -fx-min-height: 56;
+    -fx-border-color: transparent transparent -color-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.page-header-row {
+    -fx-spacing: 16;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.page-footer {
+    -fx-background-color: -color-surface;
+    -fx-padding: 16 32;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-border-color: -color-border transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ---------- Thẻ ---------- */
 .card,
 .panel,
 .section-card,
 .meta-card,
 .stat-card,
-.stat-mini {
+.stat-mini,
+.site-card,
+.item-card,
+.order-preview-card,
+.summary-card {
     -fx-background-color: -color-surface;
-    -fx-background-radius: 8;
+    -fx-background-radius: 12;
     -fx-border-color: -color-border;
     -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.055), 14, 0, 0, 4);
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
 }
 
+.panel {
+    -fx-padding: 20 22;
+}
+
+.section-card {
+    -fx-padding: 20 22;
+    -fx-spacing: 14;
+}
+
+/* ---------- Badge ---------- */
 .badge,
 .status-pill,
 .code-badge,
@@ -74,8 +181,9 @@
     -fx-background-radius: 999;
     -fx-border-radius: 999;
     -fx-padding: 4 10;
-    -fx-font-size: 11px;
-    -fx-font-weight: 700;
+    -fx-font-size: -font-xs;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
 }
 
 .badge {
@@ -86,117 +194,567 @@
 .pill-yellow,
 .badge-pending {
     -fx-background-color: -color-warning-soft;
-    -fx-text-fill: #8a5a12;
-    -fx-border-color: #f0d38a;
+    -fx-text-fill: #92400E;
+    -fx-border-color: -color-warning-border;
 }
 
 .badge-blue,
 .pill-blue {
-    -fx-background-color: #e8f2ff;
-    -fx-text-fill: #1856a8;
-    -fx-border-color: #b9d6ff;
+    -fx-background-color: -color-primary-soft;
+    -fx-text-fill: #1E40AF;
+    -fx-border-color: -color-primary-border;
 }
 
 .badge-green,
 .pill-green,
 .badge-done {
     -fx-background-color: -color-success-soft;
-    -fx-text-fill: #056348;
-    -fx-border-color: #9fdec8;
+    -fx-text-fill: #065F46;
+    -fx-border-color: -color-success-border;
 }
 
 .badge-red,
 .pill-red {
     -fx-background-color: -color-danger-soft;
-    -fx-text-fill: #9b2424;
-    -fx-border-color: #efb4b4;
+    -fx-text-fill: #991B1B;
+    -fx-border-color: -color-danger-border;
 }
 
-.btn-primary,
-.btn-success,
-.btn-confirm,
-.btn-process,
-.btn-realloc {
+.count-badge {
+    -fx-background-color: -color-primary-soft;
+    -fx-text-fill: -color-primary;
+    -fx-border-color: -color-primary-border;
+    -fx-border-width: 1;
+}
+
+/* ---------- Nút xử lý (xanh, hover đậm) — ghi đè Modena ---------- */
+.button.btn-primary,
+.button.btn-process,
+.button.btn-realloc,
+.button.btn-reallocate,
+.button.btn-action {
     -fx-background-color: -color-primary;
     -fx-text-fill: white;
-    -fx-border-color: transparent;
-    -fx-background-radius: 7;
-    -fx-border-radius: 7;
-    -fx-padding: 9 16;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-cursor: hand;
-}
-
-.btn-primary:hover,
-.btn-process:hover,
-.btn-realloc:hover {
-    -fx-background-color: -color-primary-hover;
-}
-
-.btn-success,
-.btn-confirm {
-    -fx-background-color: -color-success;
-}
-
-.btn-success:hover,
-.btn-confirm:hover {
-    -fx-background-color: #066f4f;
-}
-
-.btn-ghost,
-.btn-view,
-.btn-link {
-    -fx-background-color: white;
-    -fx-text-fill: #334155;
-    -fx-border-color: -color-border-strong;
+    -fx-border-color: -color-primary;
     -fx-border-width: 1;
-    -fx-background-radius: 7;
-    -fx-border-radius: 7;
-    -fx-padding: 8 14;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: null;
+}
+
+.button.btn-primary:hover,
+.button.btn-process:hover,
+.button.btn-realloc:hover,
+.button.btn-reallocate:hover,
+.button.btn-action:hover {
+    -fx-background-color: -color-primary-hover;
+    -fx-border-color: -color-primary-hover;
+    -fx-text-fill: white;
+}
+
+.button.btn-primary:pressed,
+.button.btn-process:pressed,
+.button.btn-realloc:pressed,
+.button.btn-reallocate:pressed,
+.button.btn-action:pressed {
+    -fx-background-color: #1E40AF;
+    -fx-border-color: #1E40AF;
+}
+
+.button.btn-success,
+.button.btn-confirm {
+    -fx-background-color: -color-success;
+    -fx-border-color: -color-success;
+    -fx-text-fill: white;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
 }
 
-.btn-ghost:hover,
-.btn-view:hover,
-.btn-link:hover {
-    -fx-background-color: -color-surface-muted;
-    -fx-border-color: #94a3b8;
+.button.btn-success:hover,
+.button.btn-confirm:hover {
+    -fx-background-color: #047857;
+    -fx-border-color: #047857;
 }
 
-.btn-back-nav {
+.button.btn-ghost,
+.button.btn-secondary {
+    -fx-background-color: white;
+    -fx-text-fill: -color-text;
+    -fx-border-color: -color-border;
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.button.btn-ghost:hover,
+.button.btn-secondary:hover {
+    -fx-background-color: -color-surface-muted;
+    -fx-border-color: -color-border-strong;
+}
+
+.button.btn-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -color-text-secondary;
+    -fx-font-size: -font-lg;
+    -fx-padding: 6 8;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-background-insets: 0;
+}
+
+.button.btn-view:hover {
+    -fx-background-color: -color-primary-soft;
+    -fx-text-fill: -color-primary;
+}
+
+.button.btn-back-nav {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-text-fill: -color-primary;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-padding: 7 4;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-padding: 8 4;
     -fx-cursor: hand;
+    -fx-background-insets: 0;
 }
 
-.btn-back-nav:hover {
+.button.btn-back-nav:hover {
     -fx-text-fill: -color-primary-hover;
+    -fx-underline: true;
 }
 
-.btn-close {
-    -fx-background-color: rgba(255, 255, 255, 0.18);
+.button.btn-close {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-text-fill: white;
-    -fx-background-radius: 7;
-    -fx-border-color: rgba(255, 255, 255, 0.28);
-    -fx-border-radius: 7;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-radius: 8;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+}
+
+.button.btn-close:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Ô nhập ---------- */
+.search-input,
+.qty-input,
+.tab-btn {
+    -fx-font-size: -font-base;
+}
+
+.toggle-button.tab-btn {
+    -fx-font-size: -font-base;
+}
+
+.search-input:focused,
+.qty-input:focused {
+    -fx-background-insets: 0;
+}
+
+/* ---------- Bảng (danh sách) ---------- */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-table-cell-border-color: transparent;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: #F9FAFB;
+}
+
+.data-table .column-header {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: -color-border;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 14;
+}
+
+.data-table .column-header .label {
+    -fx-font-size: -font-xs;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent -color-border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 54;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: #EFF6FF;
+}
+
+.data-table .table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+}
+
+.data-table .table-cell {
+    -fx-padding: 12 14;
+    -fx-font-size: -font-base;
+    -fx-text-fill: -color-text;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.data-table .table-row-cell .table-cell:first-child {
+    -fx-font-weight: bold;
+}
+
+/* ---------- Bảng (chi tiết) ---------- */
+.detail-table {
+    -fx-background-color: transparent;
+    -fx-border-color: -color-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.detail-table .column-header-background {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.detail-table .column-header {
+    -fx-padding: 12 14;
+    -fx-border-color: transparent transparent -color-border transparent;
+}
+
+.detail-table .column-header .label {
+    -fx-font-size: -font-xs;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.detail-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent -color-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.detail-table .table-row-cell:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.detail-table .table-cell {
+    -fx-padding: 12 14;
+    -fx-font-size: -font-base;
+    -fx-border-color: transparent;
+}
+
+.money-cell {
+    -fx-text-fill: -color-success;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.table-summary-row {
+    -fx-padding: 14 4 4 4;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.table-summary-label {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.table-summary-value {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-success;
+}
+
+/* ---------- Cảnh báo ---------- */
+.alert-refused,
+.alert-cancelled {
+    -fx-background-color: -color-danger-soft;
+    -fx-border-color: -color-danger-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 16 18;
+}
+
+.alert-icon-badge {
+    -fx-background-color: -color-danger;
+    -fx-text-fill: white;
+    -fx-background-radius: 999;
     -fx-min-width: 32;
     -fx-min-height: 32;
-    -fx-font-weight: 700;
-    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: -font-base;
 }
 
-.btn-close:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.30);
+.alert-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #991B1B;
+    -fx-font-size: -font-base;
 }
 
-.table-empty {
-    -fx-font-size: 14px;
+.alert-body {
+    -fx-text-fill: #B91C1C;
+    -fx-font-size: -font-base;
+}
+
+/* ---------- Meta / stat mini (pastel) ---------- */
+.meta-card,
+.stat-mini {
+    -fx-padding: 16 18;
+    -fx-spacing: 8;
+    -fx-effect: null;
+}
+
+.meta-card-blue,
+.stat-mini-blue {
+    -fx-background-color: -color-primary-soft;
+    -fx-border-color: -color-primary-border;
+}
+
+.meta-card-purple,
+.stat-mini-purple {
+    -fx-background-color: -color-purple-soft;
+    -fx-border-color: -color-purple-border;
+}
+
+.meta-card-green,
+.stat-mini-green {
+    -fx-background-color: -color-success-soft;
+    -fx-border-color: -color-success-border;
+}
+
+.meta-card-orange,
+.stat-mini-orange {
+    -fx-background-color: -color-orange-soft;
+    -fx-border-color: -color-orange-border;
+}
+
+.meta-label,
+.stat-mini-label,
+.stat-label {
+    -fx-font-size: -font-xs;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.meta-card-blue .meta-label,
+.stat-mini-blue .stat-mini-label { -fx-text-fill: #1E40AF; }
+
+.meta-card-purple .meta-label,
+.stat-mini-purple .stat-mini-label { -fx-text-fill: -color-purple-text; }
+
+.meta-card-green .meta-label,
+.stat-mini-green .stat-mini-label { -fx-text-fill: #065F46; }
+
+.meta-card-orange .meta-label,
+.stat-mini-orange .stat-mini-label { -fx-text-fill: -color-orange-text; }
+
+.meta-value,
+.stat-mini-value {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.meta-value-money {
+    -fx-text-fill: -color-success;
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+}
+
+.stat-value {
+    -fx-font-size: -font-stat;
+    -fx-font-weight: bold;
+}
+
+.stat-mini-highlight {
+    -fx-background-color: -color-success-soft;
+    -fx-border-color: -color-success-border;
+}
+
+.stat-mini-highlight .stat-mini-value {
+    -fx-text-fill: -color-success;
+}
+
+.stat-mini-text {
+    -fx-font-size: -font-base;
+}
+
+/* ---------- Dialog ---------- */
+.dialog-root {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -color-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 28, 0, 0, 10);
+}
+
+.dialog-header {
+    -fx-padding: 22 24;
+}
+
+.dialog-header .dialog-title {
+    -fx-font-size: -font-lg;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.dialog-footer {
+    -fx-background-color: -color-surface;
+    -fx-padding: 16 22;
+    -fx-border-color: -color-border transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.dialog-stat {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 12 14;
+}
+
+.dialog-stat-label {
+    -fx-font-size: -font-xs;
+    -fx-font-weight: bold;
+}
+
+.dialog-stat-value {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Empty ---------- */
+.empty-state {
+    -fx-padding: 48 24;
+    -fx-alignment: center;
+}
+
+.empty-state .empty-title {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
     -fx-text-fill: -color-text-muted;
+}
+
+.empty-hint {
+    -fx-font-size: -font-base;
+    -fx-text-fill: #92400E;
+    -fx-background-color: -color-warning-soft;
+    -fx-background-radius: 10;
+    -fx-border-color: -color-warning-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-padding: 12 16;
+}
+
+/* ---------- Progress ---------- */
+.main-progress > .track,
+.item-progress > .track,
+.alloc-progress > .track {
+    -fx-background-color: #E5E7EB;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-pref-height: 8;
+}
+
+.main-progress > .bar,
+.item-progress > .bar {
+    -fx-background-color: -color-primary;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+}
+
+.alloc-progress > .bar {
+    -fx-background-color: white;
+    -fx-background-radius: 999;
+}
+
+/* ---------- Tab filter ---------- */
+.toggle-button.tab-btn {
+    -fx-background-color: -color-surface-muted;
+    -fx-text-fill: -color-text-secondary;
+    -fx-border-color: transparent;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 8 16;
+    -fx-font-weight: bold;
+    -fx-background-insets: 0;
+}
+
+.toggle-button.tab-btn:hover {
+    -fx-background-color: #E5E7EB;
+    -fx-text-fill: -color-text;
+}
+
+.toggle-button.tab-btn:selected {
+    -fx-background-color: -color-primary;
+    -fx-text-fill: white;
+}
+
+.toggle-button.tab-btn-danger:selected {
+    -fx-background-color: -color-danger;
+    -fx-text-fill: white;
+}
+
+.site-field-label {
+    -fx-font-size: -font-xs;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text-muted;
+}
+
+.site-field-value {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.desired-date-label,
+.progress-label,
+.pct-label {
+    -fx-font-size: -font-sm;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-primary;
+}
+
+.preview-order-title {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+}
+
+.preview-order-total {
+    -fx-font-size: -font-base;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-success;
+}
+
+.preview-item-row {
+    -fx-font-size: -font-base;
+    -fx-text-fill: -color-text-secondary;
 }

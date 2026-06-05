@@ -9,26 +9,19 @@
       styleClass="page-root"
       spacing="0">
 
-    <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
-        <Button fx:id="btnBack" text="← Quay lại danh sách"
-                styleClass="btn-back-nav"
-                onAction="#handleBack"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="lblStatusBadge" text="" styleClass="badge badge-yellow"/>
-        <Button fx:id="btnReallocate"
-                text="↻ Phân bổ lại"
-                styleClass="btn-primary btn-reallocate"
-                visible="false" managed="false"
-                onAction="#handleReallocate"/>
-    </HBox>
-
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="content-scroll">
-        <VBox styleClass="content-area" spacing="16">
+        <VBox styleClass="content-area" spacing="18">
 
-            <VBox spacing="4">
-                <Label fx:id="lblTitle" text="Chi tiết Đơn Đặt Hàng" styleClass="page-title"/>
-                <Label text="Thông tin chi tiết đơn hàng" styleClass="page-subtitle"/>
-            </VBox>
+            <HBox styleClass="page-header-row" alignment="CENTER_LEFT">
+                <Button fx:id="btnBack" text="←"
+                        styleClass="btn-back-nav"
+                        onAction="#handleBack"/>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblTitle" text="Chi tiết Đơn Đặt Hàng" styleClass="page-title"/>
+                    <Label text="Thông tin chi tiết đơn hàng" styleClass="page-subtitle"/>
+                </VBox>
+                <Label fx:id="lblStatusBadge" text="" styleClass="badge badge-yellow"/>
+            </HBox>
 
             <HBox fx:id="alertRefused" styleClass="alert-refused"
                   spacing="12" alignment="CENTER_LEFT"
@@ -47,19 +40,19 @@
                     <ColumnConstraints percentWidth="25"/>
                     <ColumnConstraints percentWidth="25"/>
                 </columnConstraints>
-                <VBox styleClass="meta-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <VBox styleClass="meta-card meta-card-blue" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <Label text="👤 NGƯỜI ĐẶT" styleClass="meta-label"/>
                     <Label fx:id="lblOrderer" text="—" styleClass="meta-value"/>
                 </VBox>
-                <VBox styleClass="meta-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <VBox styleClass="meta-card meta-card-purple" GridPane.columnIndex="1" GridPane.rowIndex="0">
                     <Label text="📍 SITE" styleClass="meta-label"/>
                     <Label fx:id="lblSite" text="—" styleClass="meta-value"/>
                 </VBox>
-                <VBox styleClass="meta-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <VBox styleClass="meta-card meta-card-green" GridPane.columnIndex="2" GridPane.rowIndex="0">
                     <Label text="📅 NGÀY TẠO" styleClass="meta-label"/>
                     <Label fx:id="lblOrderCreated" text="—" styleClass="meta-value"/>
                 </VBox>
-                <VBox styleClass="meta-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                <VBox styleClass="meta-card meta-card-orange" GridPane.columnIndex="3" GridPane.rowIndex="0">
                     <Label text="💰 TỔNG GIÁ TRỊ" styleClass="meta-label"/>
                     <Label fx:id="lblTotalValue" text="—" styleClass="meta-value meta-value-money"/>
                 </VBox>
@@ -70,7 +63,7 @@
                     <Label text="Danh sách Mặt hàng" styleClass="section-title" HBox.hgrow="ALWAYS"/>
                     <Label fx:id="lblItemCount" text="0 mặt hàng" styleClass="count-badge"/>
                 </HBox>
-                <TableView fx:id="itemTable" styleClass="detail-table" prefHeight="220">
+                <TableView fx:id="itemTable" styleClass="detail-table" prefHeight="240">
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
@@ -83,33 +76,37 @@
                         <TableColumn fx:id="colSubtotal" text="THÀNH TIỀN" prefWidth="120"/>
                     </columns>
                 </TableView>
+                <HBox styleClass="table-summary-row" alignment="CENTER_RIGHT">
+                    <Label text="Tổng cộng:" styleClass="table-summary-label"/>
+                    <Label fx:id="lblTableTotal" text="0 đ" styleClass="table-summary-value"/>
+                </HBox>
             </VBox>
 
-            <VBox styleClass="section-card" spacing="12">
+            <VBox styleClass="section-card" spacing="14">
                 <Label text="📍 Thông tin Site cung cấp" styleClass="section-title"/>
-                <GridPane hgap="16" vgap="10">
+                <GridPane hgap="20" vgap="12">
                     <columnConstraints>
-                        <ColumnConstraints percentWidth="20"/>
-                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="18"/>
+                        <ColumnConstraints percentWidth="32"/>
                         <ColumnConstraints percentWidth="50"/>
                     </columnConstraints>
-                    <VBox spacing="3" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <Label text="MÃ SITE" styleClass="site-field-label"/>
-                        <Label fx:id="lblSiteCode" text="—" styleClass="site-field-value"/>
+                        <Label fx:id="lblSiteCode" text="—" styleClass="site-field-value text-site-code"/>
                     </VBox>
-                    <VBox spacing="3" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <Label text="TÊN SITE" styleClass="site-field-label"/>
                         <Label fx:id="lblSiteName" text="—" styleClass="site-field-value"/>
                     </VBox>
-                    <VBox spacing="3" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
                         <Label text="VỊ TRÍ" styleClass="site-field-label"/>
                         <Label fx:id="lblSiteAddress" text="—" styleClass="site-field-value" wrapText="true"/>
                     </VBox>
-                    <VBox spacing="3" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
                         <Label text="VẬN CHUYỂN TÀU" styleClass="site-field-label"/>
                         <Label fx:id="lblShipDays" text="—" styleClass="site-field-value"/>
                     </VBox>
-                    <VBox spacing="3" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="1">
                         <Label text="VẬN CHUYỂN MÁY BAY" styleClass="site-field-label"/>
                         <Label fx:id="lblAirDays" text="—" styleClass="site-field-value"/>
                     </VBox>
@@ -118,4 +115,15 @@
 
         </VBox>
     </ScrollPane>
+
+    <HBox styleClass="page-footer" alignment="CENTER_RIGHT" spacing="12">
+        <Button fx:id="btnFooterBack" text="Quay lại danh sách"
+                styleClass="btn-ghost"
+                onAction="#handleBack"/>
+        <Button fx:id="btnReallocate"
+                text="↻ Phân bổ lại"
+                styleClass="btn-action btn-primary btn-reallocate"
+                visible="false" managed="false"
+                onAction="#handleReallocate"/>
+    </HBox>
 </VBox>

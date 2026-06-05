@@ -12,7 +12,7 @@
 
     <VBox styleClass="success-container" alignment="CENTER" spacing="24" VBox.vgrow="ALWAYS">
         <VBox alignment="CENTER" spacing="12" styleClass="success-header">
-            <Label text="OK" styleClass="success-icon"/>
+            <Label text="✓" styleClass="success-icon"/>
             <Label fx:id="lblHeadline" text="Đã tạo đơn hàng thay thế thành công"
                    styleClass="success-title"/>
             <Label fx:id="lblSubtext"
