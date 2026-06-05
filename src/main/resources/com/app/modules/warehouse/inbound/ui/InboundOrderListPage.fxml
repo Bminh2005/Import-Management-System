@@ -5,69 +5,72 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import com.app.common.ui.components.WarehouseSidebarUI?>
-<?import com.app.common.ui.components.WarehouseTopBarUI?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import com.app.common.ui.components.WarehouseTopBarUI?>
+<?import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar?>
 
-<fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17"
+         xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../../../../common/ui/theme.css"/>
+        <URL value="@../../../../common/ui/components/common.css"/>
         <URL value="@InboundOrderListPage.css"/>
-        <URL value="/com/app/common/ui/components/WarehouseComponents.css"/>
     </stylesheets>
     <left>
-        <WarehouseSidebarUI fx:id="sidebar"/>
+        <WarehouseSidebar fx:id="sidebar"/>
     </left>
     <top>
         <WarehouseTopBarUI/>
     </top>
     <center>
-        <VBox spacing="22.0" styleClass="page-content">
-            <padding>
-                <Insets bottom="28.0" left="34.0" right="34.0" top="26.0"/>
-            </padding>
-            <HBox alignment="CENTER_LEFT">
-                <VBox spacing="4.0">
+        <ScrollPane fitToWidth="true" styleClass="screen-scroll">
+            <VBox spacing="18.0" styleClass="main-content">
+                <padding>
+                    <Insets bottom="32.0" left="24.0" right="24.0" top="24.0"/>
+                </padding>
+
+                <VBox spacing="5.0">
                     <Label styleClass="page-title" text="Danh sách Đơn Nhập Kho"/>
-                    <Label styleClass="page-subtitle" text="Theo dõi, lọc và chọn đơn cần xử lý nhập kho"/>
+                    <Label styleClass="page-subtitle" text="Quản lý và xử lý các đơn hàng nhập kho từ nhà cung cấp"/>
                 </VBox>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button mnemonicParsing="false" onAction="#onCreateInboundClick" styleClass="primary-button"
-                        text="+ Tạo đơn nhập"/>
-            </HBox>
 
-            <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="filter-panel">
-                <TextField fx:id="keywordField" prefWidth="320.0" promptText="Mã đơn, nhà cung cấp..."
-                           styleClass="filter-input"/>
-                <ComboBox fx:id="statusFilter" prefWidth="190.0" styleClass="filter-input"/>
-                <Button mnemonicParsing="false" onAction="#onSearchClick" styleClass="primary-button" text="Tìm kiếm"/>
-                <Button mnemonicParsing="false" onAction="#onResetFilterClick" styleClass="secondary-button" text="Đặt lại"/>
-            </HBox>
-
-            <VBox spacing="14.0" styleClass="panel">
-                <HBox alignment="CENTER_LEFT">
-                    <Label styleClass="section-title" text="Đơn chờ nhập kho"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button mnemonicParsing="false" onAction="#onProcessSelectedClick" styleClass="link-button"
-                            text="Xử lý đơn →"/>
+                <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="card filter-panel">
+                    <TextField fx:id="keywordField" onAction="#onSearchClick"
+                               promptText="Tìm theo mã đơn hàng, mã yêu cầu, hoặc nhà cung cấp..."
+                               styleClass="search-input" HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="statusFilter" onAction="#onSearchClick" prefWidth="245.0"
+                              styleClass="status-filter"/>
                 </HBox>
-                <TableView fx:id="inboundOrderTable" prefHeight="500.0" styleClass="warehouse-table">
-                    <columns>
-                        <TableColumn fx:id="orderCodeColumn" prefWidth="150.0" text="MÃ ĐƠN"/>
-                        <TableColumn fx:id="receivedDateColumn" prefWidth="130.0" text="NGÀY NHẬN"/>
-                        <TableColumn fx:id="supplierColumn" prefWidth="190.0" text="NHÀ CUNG CẤP"/>
-                        <TableColumn fx:id="statusColumn" prefWidth="170.0" text="TRẠNG THÁI"/>
-                        <TableColumn fx:id="expectedQuantityColumn" prefWidth="130.0" text="SL DỰ KIẾN"/>
-                        <TableColumn fx:id="actualQuantityColumn" prefWidth="130.0" text="SL THỰC NHẬN"/>
-                        <TableColumn fx:id="actionColumn" prefWidth="110.0" text="THAO TÁC"/>
-                    </columns>
-                </TableView>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label fx:id="resultCountLabel" styleClass="result-count" text="Hiển thị 0 đơn hàng"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button mnemonicParsing="false" onAction="#onSortClick" styleClass="sort-button" text="⇅  Sắp xếp"/>
+                </HBox>
+
+                <VBox styleClass="card table-panel">
+                    <TableView fx:id="inboundOrderTable" prefHeight="430.0" styleClass="data-table warehouse-table">
+                        <columns>
+                            <TableColumn fx:id="orderCodeColumn" prefWidth="150.0" text="MÃ ĐƠN HÀNG"/>
+                            <TableColumn fx:id="requestCodeColumn" prefWidth="140.0" text="MÃ YÊU CẦU"/>
+                            <TableColumn fx:id="supplierColumn" prefWidth="190.0" text="NHÀ CUNG CẤP"/>
+                            <TableColumn fx:id="receivedDateColumn" prefWidth="140.0" text="NGÀY NHẬN"/>
+                            <TableColumn fx:id="expectedDateColumn" prefWidth="140.0" text="NGÀY DỰ KIẾN"/>
+                            <TableColumn fx:id="itemCountColumn" prefWidth="115.0" text="SỐ MẶT HÀNG"/>
+                            <TableColumn fx:id="totalQuantityColumn" prefWidth="105.0" text="TỔNG SL"/>
+                            <TableColumn fx:id="statusColumn" prefWidth="155.0" text="TRẠNG THÁI"/>
+                            <TableColumn fx:id="actionColumn" prefWidth="120.0" text="THAO TÁC"/>
+                        </columns>
+                    </TableView>
+                </VBox>
             </VBox>
-        </VBox>
+        </ScrollPane>
     </center>
 </fx:root>

@@ -2,6 +2,7 @@ package com.app.modules.sales.request.createrequest.ui;
 
 import com.app.common.ui.components.ToastNotification;
 import com.app.common.util.FormatUtil;
+import com.app.common.util.FxmlUiHelper;
 import com.app.modules.sales.request.createrequest.ui.components.ActionTableCell;
 import com.app.modules.sales.request.createrequest.ui.components.CreateQuantityTableCell;
 import com.app.modules.sales.request.createrequest.ui.components.DesiredDateTableCell;
@@ -18,16 +19,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 public class CreateImportRequestUI extends VBox {
-    @FXML
-    private Button addMerchandiseButton;
-    @FXML
-    private Button createButton;
-    @FXML
-    private Button cancelButton;
+    @FXML private Button backButton;
+    @FXML private Button addMerchandiseButton;
+    @FXML private Button createButton;
+    @FXML private Button cancelButton;
     @FXML private TableView<CreateImportItemModel> tableItems;
     @FXML private TableColumn<CreateImportItemModel, String> colMaHang;
     @FXML private TableColumn<CreateImportItemModel, String> colTenHang;
@@ -38,15 +36,7 @@ public class CreateImportRequestUI extends VBox {
     @FXML private TableColumn<CreateImportItemModel, Double> colGiaThamKhao;
     ObservableList<CreateImportItemModel> availableProducts;
     public CreateImportRequestUI() {
-        FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/app/modules/sales/request/ui/CreateImportRequest.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FxmlUiHelper.loadSelf(this, "/com/app/modules/sales/request/ui/CreateImportRequest.fxml");
         colMaHang.setCellValueFactory(cellData -> cellData.getValue().itemCodeProperty());
         colTenHang.setCellValueFactory(cellData -> cellData.getValue().itemNameProperty());
         colDonVi.setCellValueFactory(cellData -> cellData.getValue().unitProperty());
@@ -76,23 +66,11 @@ public class CreateImportRequestUI extends VBox {
 //
 //        // Đổ danh sách dữ liệu mẫu này lên TableView
 //        tableItems.setItems(testData);
-        setAddMerchandiseButtonAction(new Runnable() {
-            @Override
-            public void run() {
-                showSelectMerchandisePopup();
-            }
-        });
-        setCreateButtonAction(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Create button clicked");
-            }
-        });
-
+        setAddMerchandiseButtonAction(this::showSelectMerchandisePopup);
     }
 
     public void setAddMerchandiseButtonAction(Runnable r){
-        addMerchandiseButton.setOnAction(e ->{
+        addMerchandiseButton.setOnAction(e->{
             r.run();
         });
     }
@@ -105,10 +83,11 @@ public class CreateImportRequestUI extends VBox {
             }
         });
     }
-    public void setCancelButtonAction(Runnable r){
-        cancelButton.setOnAction(e ->{
-            r.run();
-        });
+    public void setCancelButtonAction(Runnable r) {
+        cancelButton.setOnAction(e -> r.run());
+        if (backButton != null) {
+            backButton.setOnAction(e -> r.run());
+        }
     }
     private void showSelectMerchandisePopup() {
         try {

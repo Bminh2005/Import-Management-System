@@ -62,8 +62,7 @@ public class SalesDashboardUI extends ScrollPane {
     }
 
     public void setActionOnViewAllRequests(Runnable r) {
-        viewAllRequests.setOnMouseClicked(e -> {
-            r.run();
-        });
+        viewAllRequests.setOnMouseClicked(e -> r.run());
+        viewAllLabel.setOnMouseClicked(e -> r.run());
     }
 }

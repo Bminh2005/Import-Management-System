@@ -52,51 +52,55 @@ public class PostgreSQLCreateRequestRepository implements ICreateRequestReposito
         VALUES (?, ?, ?, ?)
         """;
         try (Connection conn = DatabaseManager.getConnection()) {
+            if (conn != null && conn.isValid(5)) {
+                conn.setAutoCommit(false);
 
-            conn.setAutoCommit(false);
+                try {
 
-            try {
+                    long requestId;
 
-                long requestId;
+                    // Tạo Request
+                    try (PreparedStatement ps =
+                                 conn.prepareStatement(createRequestSql)) {
 
-                // Tạo Request
-                try (PreparedStatement ps =
-                             conn.prepareStatement(createRequestSql)) {
+                        ResultSet rs = ps.executeQuery();
 
-                    ResultSet rs = ps.executeQuery();
+                        if (!rs.next()) {
+                            throw new DatabaseOperationException(
+                                    "Cannot create request"
+                            );
+                        }
 
-                    if (!rs.next()) {
-                        throw new DatabaseOperationException(
-                                "Cannot create request"
-                        );
+                        requestId = rs.getLong("id");
                     }
 
-                    requestId = rs.getLong("id");
-                }
+                    // Tạo các RequestDetail
+                    try (PreparedStatement ps =
+                                 conn.prepareStatement(createDetailSql)) {
 
-                // Tạo các RequestDetail
-                try (PreparedStatement ps =
-                             conn.prepareStatement(createDetailSql)) {
+                        for (RequestDetail detail : merchandiseList) {
 
-                    for (RequestDetail detail : merchandiseList) {
-
-                        ps.setLong(1, requestId);
-                        ps.setLong(2, detail.getMerchandise_detail_id());
-                        ps.setInt(3, detail.getQuantity());
-                        ps.setDate(4, java.sql.Date.valueOf(detail.getDesired_date())
-                        );
-                        ps.addBatch();
+                            ps.setLong(1, requestId);
+                            ps.setLong(2, detail.getMerchandise_detail_id());
+                            ps.setInt(3, detail.getQuantity());
+                            ps.setDate(4, java.sql.Date.valueOf(detail.getDesired_date())
+                            );
+                            ps.addBatch();
+                        }
+                        ps.executeBatch();
                     }
-                    ps.executeBatch();
+                    conn.commit();
+                    return requestId;
+                } catch (Exception e) {
+                    conn.rollback();
+                    throw e;
                 }
-                conn.commit();
-                return requestId;
-            } catch (Exception e) {
-                conn.rollback();
-                throw e;
+            }
+            else{
+                throw new DatabaseOperationException("Failed connection with database");
             }
         } catch (Exception e) {
-            throw new DatabaseOperationException("Cannot create request", e);
+            throw new DatabaseOperationException("Failed connection with database", e);
         }
     }
 }

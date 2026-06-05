@@ -102,3 +102,15 @@ ALTER TABLE "ImportRequest" ADD CONSTRAINT importrequest_user_id_fkey FOREIGN KE
 ALTER TABLE "Order" ADD CONSTRAINT order_site_id_fkey FOREIGN KEY (site_id) REFERENCES "Site"(id);
 ALTER TABLE "Order" ADD CONSTRAINT order_user_id_fkey FOREIGN KEY (user_id) REFERENCES "Users"(id);
 ALTER TABLE "SiteInventory" ADD CONSTRAINT siteinventory_site_id_fkey FOREIGN KEY (site_id) REFERENCES "Site"(id);
+
+-- Warehouse inbound processing support.
+ALTER TYPE order_status ADD VALUE IF NOT EXISTS 'IMPORTED';
+ALTER TYPE order_status ADD VALUE IF NOT EXISTS 'MISMATCH';
+
+ALTER TABLE "Order"
+    ADD COLUMN IF NOT EXISTS actual_delivery_date timestamp with time zone,
+    ADD COLUMN IF NOT EXISTS inspected_by bigint REFERENCES "Users"(id),
+    ADD COLUMN IF NOT EXISTS mismatch_reason text;
+
+ALTER TABLE "OrderDetail"
+    ADD COLUMN IF NOT EXISTS actual_quantity bigint;

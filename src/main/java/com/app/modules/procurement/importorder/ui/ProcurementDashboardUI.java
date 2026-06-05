@@ -1,38 +1,32 @@
 package com.app.modules.procurement.importorder.ui;
 
+import com.app.common.ui.IScreen;
+import com.app.database.manager.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * UI Class cho màn "Trang Chủ - Bộ phận Đặt hàng Quốc tế".
  * Kế thừa ScrollPane và nạp FXML thông qua fx:root.
  */
-public class ProcurementDashboardUI extends ScrollPane {
+public class ProcurementDashboardUI extends ScrollPane implements IScreen {
 
     @FXML private Label totalRequestsLabel;
     @FXML private Label pendingAllocationLabel;
     @FXML private Label allocatedThisMonthLabel;
     @FXML private Label activeSitesLabel;
-
-    @FXML private VBox recentRequestsList;
-
-    private final List<RecentRequestRow> recentRequests = new ArrayList<>();
 
     public ProcurementDashboardUI() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ProcurementDashboardPage.fxml"));
@@ -44,116 +38,70 @@ public class ProcurementDashboardUI extends ScrollPane {
             e.printStackTrace();
         }
 
-        loadDashboardData();
         renderMetrics();
-        renderRecentRequests();
-    }
-
-    private void loadDashboardData() {
-        recentRequests.clear();
-
-        recentRequests.add(new RecentRequestRow(
-                "REQ-2024-004",
-                "2024-05-10",
-                "Chưa phân bổ",
-                "pending"
-        ));
-
-        recentRequests.add(new RecentRequestRow(
-                "REQ-2024-002",
-                "2024-05-09",
-                "Amazon US",
-                "allocated"
-        ));
-
-        recentRequests.add(new RecentRequestRow(
-                "REQ-2024-001",
-                "2024-05-08",
-                "Alibaba CN",
-                "allocated"
-        ));
     }
 
     private void renderMetrics() {
-        totalRequestsLabel.setText("156");
-        pendingAllocationLabel.setText("24");
-        allocatedThisMonthLabel.setText("132");
-        activeSitesLabel.setText("18");
+        totalRequestsLabel.setText(String.valueOf(getTotalRequestsCount()));
+        pendingAllocationLabel.setText(String.valueOf(getPendingRequestsCount()));
+        allocatedThisMonthLabel.setText(String.valueOf(getAllocatedRequestsCount()));
+        activeSitesLabel.setText(String.valueOf(getSitesCount()));
     }
 
-    private void renderRecentRequests() {
-        recentRequestsList.getChildren().clear();
-
-        for (RecentRequestRow request : recentRequests) {
-            recentRequestsList.getChildren().add(buildRecentRequestRow(request));
+    private int getPendingRequestsCount() {
+        String sql = "SELECT COUNT(*) FROM \"ImportRequest\" WHERE status = 'PENDING'::request_status";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return 0;
     }
 
-    private GridPane buildRecentRequestRow(RecentRequestRow request) {
-        GridPane row = new GridPane();
-        row.getStyleClass().add("table-row");
-        row.setHgap(12);
-        applyRecentTableColumns(row);
-
-        Label codeLabel = new Label(request.code());
-        codeLabel.getStyleClass().add("request-code");
-        row.add(codeLabel, 0, 0);
-
-        Label dateLabel = new Label(request.receivedDate());
-        dateLabel.getStyleClass().add("table-cell-muted");
-        row.add(dateLabel, 1, 0);
-
-        Label siteLabel = new Label(request.allocatedSite());
-        siteLabel.getStyleClass().add("table-cell-text");
-        row.add(siteLabel, 2, 0);
-
-        Label statusLabel = new Label(getStatusLabel(request.status()));
-        statusLabel.getStyleClass().addAll("status-badge", getStatusStyleClass(request.status()));
-
-        HBox statusBox = new HBox(statusLabel);
-        statusBox.setAlignment(Pos.CENTER_LEFT);
-        row.add(statusBox, 3, 0);
-
-        Button detailButton = new Button("Xem chi tiết");
-        detailButton.getStyleClass().add("row-action-button");
-        detailButton.setOnAction(event -> onViewRequestDetail(request.code()));
-
-        HBox actionBox = new HBox(detailButton);
-        actionBox.setAlignment(Pos.CENTER_RIGHT);
-        row.add(actionBox, 4, 0);
-        GridPane.setHalignment(actionBox, HPos.RIGHT);
-
-        return row;
+    private int getSitesCount() {
+        String sql = "SELECT COUNT(*) FROM \"Site\"";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
-    private void applyRecentTableColumns(GridPane grid) {
-        addColumn(grid, 22);
-        addColumn(grid, 18);
-        addColumn(grid, 25);
-        addColumn(grid, 20);
-        addColumn(grid, 15);
+    private int getTotalRequestsCount() {
+        String sql = "SELECT COUNT(*) FROM \"ImportRequest\"";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
-    private void addColumn(GridPane grid, double percent) {
-        ColumnConstraints column = new ColumnConstraints();
-        column.setPercentWidth(percent);
-        grid.getColumnConstraints().add(column);
-    }
-
-    private String getStatusLabel(String status) {
-        return switch (status) {
-            case "pending" -> "Chờ phân bổ";
-            case "allocated" -> "Đã phân bổ";
-            default -> "Không xác định";
-        };
-    }
-
-    private String getStatusStyleClass(String status) {
-        return switch (status) {
-            case "pending" -> "status-pending";
-            case "allocated" -> "status-allocated";
-            default -> "status-unknown";
-        };
+    private int getAllocatedRequestsCount() {
+        String sql = "SELECT COUNT(*) FROM \"ImportRequest\" WHERE status = 'PROCESSED'::request_status";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @FXML
@@ -162,9 +110,14 @@ public class ProcurementDashboardUI extends ScrollPane {
 
         ProcessImportRequestsUI root = new ProcessImportRequestsUI();
 
-        Scene scene = recentRequestsList.getScene();
+        Scene scene = totalRequestsLabel.getScene();
         if (scene != null) {
-            scene.setRoot(root);
+            javafx.scene.Parent parentRoot = scene.getRoot();
+            if (parentRoot instanceof com.app.common.ui.MainLayoutUI) {
+                ((com.app.common.ui.MainLayoutUI) parentRoot).setPage(root);
+            } else {
+                scene.setRoot(root);
+            }
             ((Stage) scene.getWindow()).setTitle(
                     "Hệ thống Quản lý Nhập khẩu - Xử lý Yêu cầu nhập hàng");
         }
@@ -173,22 +126,37 @@ public class ProcurementDashboardUI extends ScrollPane {
     @FXML
     private void onViewSites(MouseEvent event) {
         System.out.println("Nội dung chức năng: Mở danh sách site / nhà cung cấp");
+        com.app.modules.site.catalog.ui.SitesListUI sitesList = new com.app.modules.site.catalog.ui.SitesListUI();
+        sitesList.setOnViewDetail(siteId -> {
+            com.app.modules.site.catalog.ui.SiteDetailUI siteDetail = new com.app.modules.site.catalog.ui.SiteDetailUI();
+            siteDetail.loadSite(siteId);
+            siteDetail.setOnBack(() -> {
+                Scene scene = activeSitesLabel.getScene();
+                if (scene != null && scene.getRoot() instanceof com.app.common.ui.MainLayoutUI) {
+                    ((com.app.common.ui.MainLayoutUI) scene.getRoot()).setPage(sitesList);
+                }
+            });
+            Scene scene = activeSitesLabel.getScene();
+            if (scene != null && scene.getRoot() instanceof com.app.common.ui.MainLayoutUI) {
+                ((com.app.common.ui.MainLayoutUI) scene.getRoot()).setPage(siteDetail);
+            }
+        });
+
+        Scene scene = activeSitesLabel.getScene();
+        if (scene != null) {
+            javafx.scene.Parent parentRoot = scene.getRoot();
+            if (parentRoot instanceof com.app.common.ui.MainLayoutUI) {
+                ((com.app.common.ui.MainLayoutUI) parentRoot).setPage(sitesList);
+            } else {
+                scene.setRoot(sitesList);
+            }
+            ((Stage) scene.getWindow()).setTitle(
+                    "Hệ thống Quản lý Nhập khẩu - Danh sách Site");
+        }
     }
 
-    @FXML
-    private void onViewAllRequests() {
-        System.out.println("Nội dung chức năng: Xem tất cả yêu cầu cần xử lý");
-    }
-
-    private void onViewRequestDetail(String requestCode) {
-        System.out.println("Nội dung chức năng: Xem chi tiết yêu cầu " + requestCode);
-    }
-
-    private record RecentRequestRow(
-            String code,
-            String receivedDate,
-            String allocatedSite,
-            String status
-    ) {
+    @Override
+    public Parent getRoot() {
+        return this;
     }
 }

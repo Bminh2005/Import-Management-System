@@ -37,8 +37,7 @@ public class Sidebar extends VBox {
     private boolean collapsed = false;
 
     public Sidebar() {
-        FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/app/common/ui/components/Sidebar.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/app/common/ui/components/Sidebar.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
@@ -50,23 +49,38 @@ public class Sidebar extends VBox {
     }
 
     public void addMenuItem(SidebarItem item) {
-        // Lưu item
-        items.add(item);
+        addMenuItem(item, null);
+    }
 
-        // Add vào giao diện
+    /** Thêm menu; {@code onNavigate} chạy sau khi đổi trạng thái selected. */
+    public void addMenuItem(SidebarItem item, Runnable onNavigate) {
+        items.add(item);
         menuItems.getChildren().add(item);
 
-        // Nếu chưa có item nào được chọn
-        // thì chọn item đầu tiên
         if (selected == null) {
-            setSelected(item);
+            setSelectedItem(item);
         }
 
         item.setOnAction(() -> {
             setSelected(item);
-            System.out.println("You navigated to " + item.getTextLabel());
+            if (onNavigate != null) {
+                onNavigate.run();
+            } else {
+                System.out.println("You navigated to " + item.getTextLabel());
+            }
         });
+    }
 
+    /**
+     * Gắn lại hành động cho item đã thêm (dùng sau khi có MainLayout / navigator).
+     */
+    public void bindItemAction(SidebarItem item, Runnable onNavigate) {
+        item.setOnAction(() -> {
+            setSelected(item);
+            if (onNavigate != null) {
+                onNavigate.run();
+            }
+        });
     }
 
     public void setActionLogoutButton(Runnable onAction) {
@@ -76,25 +90,21 @@ public class Sidebar extends VBox {
         });
     }
 
-
     public void handleToggleButton() {
 
         collapsed = !collapsed;
 
-        double targetWidth =
-                collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
+        double targetWidth = collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
 
         Timeline timeline = new Timeline();
 
         KeyValue kv = new KeyValue(
                 prefWidthProperty(),
-                targetWidth
-        );
+                targetWidth);
 
         KeyFrame kf = new KeyFrame(
                 Duration.millis(150),
-                kv
-        );
+                kv);
 
         timeline.getKeyFrames().add(kf);
 
@@ -139,7 +149,21 @@ public class Sidebar extends VBox {
         }
     }
 
+    public void selectMenu(SidebarItem item) {
+        setSelected(item);
+    }
     private void setSelected(SidebarItem item) {
+
+        // Bỏ chọn item cũ
+        if (selected != null) {
+            selected.unactiveItem();
+        }
+
+        // Chọn item mới
+        selected = item;
+        selected.activeItem();
+    }
+    protected void setSelectedItem(SidebarItem item) {
 
         // Bỏ chọn item cũ
         if (selected != null) {

@@ -1,0 +1,206 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\title{\textbf{Bài tập 7: Lập trình và kiểm thử}\\
+Use case: Xử lý đơn nhập kho}
+\author{Họ tên: \textit{Điền tên của bạn}\\
+Nhóm: \textit{Điền nhóm}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Use case phụ trách}
+
+Use case được kiểm thử là \textbf{Xử lý đơn nhập kho} thuộc Bộ phận Quản lý Kho.
+Chức năng chính của use case là cho phép nhân viên kho kiểm đếm hàng thực nhận, nhập số lượng thực tế, xử lý sai lệch, cập nhật trạng thái đơn nhập kho và đồng bộ kết quả sang hệ thống quản lý kho riêng.
+
+Module được chọn để kiểm thử đơn vị là:
+
+\begin{center}
+\texttt{com.app.modules.warehouse.inbound.service.InboundOrderRules}
+\end{center}
+
+Module này được tách ra từ logic nghiệp vụ xác nhận nhập kho để có thể kiểm thử tự động mà không phụ thuộc vào JavaFX UI, database hoặc API ngoài.
+
+\section{Mô tả module kiểm thử}
+
+Class \texttt{InboundOrderRules} chịu trách nhiệm xử lý các quy tắc nghiệp vụ cốt lõi trước khi xác nhận nhập kho:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item Kiểm tra danh sách mặt hàng không được rỗng.
+    \item Kiểm tra số lượng thực nhận không được âm.
+    \item Nếu xác nhận nhập kho và có sai lệch thì bắt buộc phải nhập lý do sai lệch.
+    \item Xác định trạng thái đơn sau khi đối chiếu: \texttt{IMPORTED} hoặc \texttt{MISMATCH}.
+    \item Tổng hợp lý do sai lệch để lưu vào đơn nhập kho.
+\end{itemize}
+
+\begin{longtable}{|p{6cm}|p{8cm}|}
+\hline
+\textbf{Phương thức} & \textbf{Ý nghĩa} \\
+\hline
+\texttt{validateItems(items, requireMismatchReason)} & Kiểm tra tính hợp lệ của danh sách mặt hàng. \\
+\hline
+\texttt{resolveStatus(items)} & Xác định trạng thái đơn nhập kho sau khi đối chiếu. \\
+\hline
+\texttt{resolveMismatchReason(items, mismatchReason)} & Xác định nội dung lý do sai lệch cần lưu. \\
+\hline
+\end{longtable}
+
+\section{Thiết kế test case bằng kỹ thuật hộp đen}
+
+Kỹ thuật hộp đen được áp dụng dựa trên đặc tả đầu vào và đầu ra của module, không xét cấu trúc code bên trong.
+
+\begin{longtable}{|p{1.4cm}|p{3.4cm}|p{5.2cm}|p{4.2cm}|}
+\hline
+\textbf{Mã TC} & \textbf{Mục tiêu} & \textbf{Dữ liệu vào} & \textbf{Kết quả mong đợi} \\
+\hline
+BB-01 & Tất cả số lượng khớp & SP001: ordered=100, actual=100; SP002: ordered=50, actual=50 & Hợp lệ, trạng thái \texttt{IMPORTED}, lý do sai lệch rỗng. \\
+\hline
+BB-02 & Có sai lệch và có lý do & SP001: ordered=100, actual=95, reason=Thiếu 5 sản phẩm & Hợp lệ, trạng thái \texttt{MISMATCH}, lưu lý do sai lệch. \\
+\hline
+BB-03 & Lý do chung ưu tiên hơn lý do từng item & Có item sai lệch, mismatchReason=Hàng bị rách thùng & Lưu lý do chung. \\
+\hline
+BB-04 & Sai lệch nhưng không nhập lý do & SP001: ordered=100, actual=95, reason rỗng & Ném \texttt{IllegalArgumentException}. \\
+\hline
+BB-05 & Số lượng thực nhận âm & SP001: ordered=100, actual=-1 & Ném \texttt{IllegalArgumentException}. \\
+\hline
+BB-06 & Danh sách mặt hàng rỗng & items rỗng & Ném \texttt{IllegalArgumentException}. \\
+\hline
+\end{longtable}
+
+JUnit test class cho kiểm thử hộp đen:
+
+\begin{center}
+\texttt{com.app.modules.warehouse.inbound.service.InboundOrderRulesBlackBoxTest}
+\end{center}
+
+Các test method:
+\begin{itemize}[leftmargin=1.2cm]
+    \item \texttt{matchingQuantitiesAreImported}
+    \item \texttt{mismatchWithItemReasonIsAcceptedAndMarkedMismatch}
+    \item \texttt{globalMismatchReasonOverridesItemReasons}
+    \item \texttt{mismatchWithoutReasonIsRejectedWhenConfirming}
+    \item \texttt{negativeActualQuantityIsRejected}
+    \item \texttt{emptyItemListIsRejected}
+\end{itemize}
+
+\section{Thiết kế test case bằng kỹ thuật hộp trắng C1}
+
+Kỹ thuật hộp trắng C1 được áp dụng để phủ các nhánh điều kiện trong module \texttt{InboundOrderRules}.
+
+\subsection{Phân tích nhánh}
+
+Trong \texttt{validateItems} có các nhánh chính:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \texttt{items == null || items.isEmpty()}: nhánh lỗi khi danh sách null hoặc rỗng, nhánh hợp lệ khi có item.
+    \item \texttt{actualQuantity < 0}: nhánh lỗi khi có số lượng âm, nhánh hợp lệ khi tất cả số lượng không âm.
+    \item \texttt{requireMismatchReason \&\& item.hasMismatch() \&\& reason blank}: nhánh lỗi khi xác nhận đơn có sai lệch nhưng thiếu lý do, nhánh hợp lệ khi lưu tạm hoặc đã có lý do.
+\end{itemize}
+
+Trong \texttt{resolveStatus} có hai nhánh:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item Có sai lệch: trả về \texttt{MISMATCH}.
+    \item Không sai lệch: trả về \texttt{IMPORTED}.
+\end{itemize}
+
+Trong \texttt{resolveMismatchReason} có ba nhánh:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item Không có sai lệch: trả về chuỗi rỗng.
+    \item Có sai lệch và có lý do chung: trả về lý do chung.
+    \item Có sai lệch và không có lý do chung: tổng hợp lý do từng mặt hàng.
+\end{itemize}
+
+\subsection{Bảng test case hộp trắng C1}
+
+\begin{longtable}{|p{1.4cm}|p{4.2cm}|p{4.6cm}|p{4cm}|}
+\hline
+\textbf{Mã TC} & \textbf{Nhánh được phủ} & \textbf{Dữ liệu vào} & \textbf{Kết quả mong đợi} \\
+\hline
+WB-01 & \texttt{items == null} & items=null & Ném \texttt{IllegalArgumentException}. \\
+\hline
+WB-02 & \texttt{actualQuantity < 0} & SP001: ordered=10, actual=-1 & Ném \texttt{IllegalArgumentException}. \\
+\hline
+WB-03 & \texttt{requireMismatchReason=false} & SP001: ordered=10, actual=8, reason rỗng & Không ném lỗi khi lưu tạm. \\
+\hline
+WB-04 & \texttt{requireMismatchReason=true} và reason rỗng & SP001: ordered=10, actual=8, reason rỗng & Ném \texttt{IllegalArgumentException}. \\
+\hline
+WB-05 & Hai nhánh status & Một item khớp, một item lệch & Trả về \texttt{IMPORTED} và \texttt{MISMATCH}. \\
+\hline
+WB-06 & Không có mismatch khi resolve reason & SP001: ordered=10, actual=10 & Trả về chuỗi rỗng. \\
+\hline
+WB-07 & Tổng hợp lý do từng item & SP001 thiếu 2, SP002 thừa 1 & Trả về chuỗi tổng hợp lý do. \\
+\hline
+\end{longtable}
+
+JUnit test class cho kiểm thử hộp trắng C1:
+
+\begin{center}
+\texttt{com.app.modules.warehouse.inbound.service.InboundOrderRulesWhiteBoxC1Test}
+\end{center}
+
+\section{Kiểm thử use case}
+
+Bên cạnh kiểm thử đơn vị, use case \textbf{Xử lý đơn nhập kho} được kiểm thử theo các scenario sau:
+
+\begin{longtable}{|p{1.4cm}|p{3.3cm}|p{5.1cm}|p{4.4cm}|}
+\hline
+\textbf{Mã TC} & \textbf{Scenario} & \textbf{Các bước test} & \textbf{Kết quả mong đợi} \\
+\hline
+UC-01 & Nhập kho không sai lệch & Nhập số lượng thực nhận bằng số lượng đặt, bấm xác nhận. & Đơn cập nhật \texttt{IMPORTED}, tồn kho tăng, hiển thị popup thành công. \\
+\hline
+UC-02 & Nhập kho có sai lệch & Nhập số lượng thực nhận khác số lượng đặt, nhập lý do, bấm xác nhận. & Đơn cập nhật \texttt{MISMATCH}, tồn kho tăng theo số thực nhận, lưu lý do. \\
+\hline
+UC-03 & Sai lệch nhưng thiếu lý do & Nhập số lượng lệch nhưng bỏ trống lý do, bấm xác nhận. & Hệ thống chặn và yêu cầu nhập lý do. \\
+\hline
+UC-04 & Lưu tạm kết quả kiểm đếm & Nhập số lượng thực nhận, bấm lưu tạm. & Đơn cập nhật \texttt{PROCESSING}, chưa cộng tồn kho. \\
+\hline
+UC-05 & Không xác nhận lại đơn đã xử lý & Mở đơn đã \texttt{IMPORTED} hoặc \texttt{MISMATCH}, bấm xác nhận. & Hệ thống chặn để tránh cộng kho hai lần. \\
+\hline
+UC-06 & Đồng bộ API ngoài thành công & Xác nhận đơn hợp lệ khi API \texttt{/api/orders} hoạt động. & Hiển thị xác nhận thành công và đồng bộ thành công. \\
+\hline
+UC-07 & Đồng bộ API ngoài thất bại & Xác nhận đơn hợp lệ khi API ngoài lỗi hoặc timeout. & Nhập kho vẫn thành công, hiển thị cảnh báo đồng bộ thất bại. \\
+\hline
+\end{longtable}
+
+\section{Kết quả chạy kiểm thử tự động}
+
+Lệnh chạy test:
+
+\begin{verbatim}
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+.\mvnw.cmd test
+\end{verbatim}
+
+Kết quả:
+
+\begin{verbatim}
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+\end{verbatim}
+
+\section{Kết luận}
+
+Module \texttt{InboundOrderRules} đã được kiểm thử bằng cả hai kỹ thuật hộp đen và hộp trắng C1. Các test case bao phủ các luồng nghiệp vụ quan trọng của use case xử lý đơn nhập kho: nhập đúng số lượng, sai lệch có lý do, sai lệch thiếu lý do, số lượng âm, danh sách rỗng, xác định trạng thái và tổng hợp lý do sai lệch.
+
+Việc tách module nghiệp vụ thuần giúp kiểm thử tự động bằng JUnit dễ hơn, đồng thời làm cho thiết kế phù hợp hơn với các nguyên lý đã áp dụng trong Bài tập 6.
+
+\end{document}

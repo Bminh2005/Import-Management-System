@@ -2,97 +2,97 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import com.app.common.ui.components.WarehouseSidebarUI?>
-<?import com.app.common.ui.components.WarehouseTopBarUI?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import com.app.common.ui.components.WarehouseTopBarUI?>
+<?import com.app.modules.warehouse.common.ui.WarehouseMetricCardUI?>
+<?import com.app.modules.warehouse.dashboard.ui.WarehouseSidebar?>
 
-<fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="BorderPane" styleClass="page-shell" xmlns="http://javafx.com/javafx/17"
+         xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
+        <URL value="@../../../../common/ui/theme.css"/>
+        <URL value="@../../../../common/ui/components/common.css"/>
         <URL value="@WarehouseHomePage.css"/>
-        <URL value="/com/app/common/ui/components/WarehouseComponents.css"/>
     </stylesheets>
     <left>
-        <WarehouseSidebarUI fx:id="sidebar"/>
+        <WarehouseSidebar fx:id="sidebar"/>
     </left>
     <top>
         <WarehouseTopBarUI/>
     </top>
     <center>
-        <VBox spacing="26.0" styleClass="page-content">
-            <padding>
-                <Insets bottom="28.0" left="34.0" right="34.0" top="10.0"/>
-            </padding>
-            <GridPane hgap="26.0" styleClass="summary-grid">
-                <VBox styleClass="summary-card" GridPane.columnIndex="0">
-                    <Label styleClass="summary-title" text="Đơn Chờ Nhập Kho"/>
-                    <HBox alignment="CENTER_LEFT">
-                        <Label fx:id="pendingInboundLabel" styleClass="summary-value" text="12"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label styleClass="summary-icon orange" text="◷"/>
-                    </HBox>
-                </VBox>
-                <VBox styleClass="summary-card" GridPane.columnIndex="1">
-                    <Label styleClass="summary-title" text="Đang Xử Lý"/>
-                    <HBox alignment="CENTER_LEFT">
-                        <Label fx:id="processingLabel" styleClass="summary-value" text="5"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label styleClass="summary-icon blue" text="▣"/>
-                    </HBox>
-                </VBox>
-                <VBox styleClass="summary-card" GridPane.columnIndex="2">
-                    <Label styleClass="summary-title" text="Đã Nhập Tháng này"/>
-                    <HBox alignment="CENTER_LEFT">
-                        <Label fx:id="importedThisMonthLabel" styleClass="summary-value" text="87"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label styleClass="summary-icon green" text="↗"/>
-                    </HBox>
-                </VBox>
-                <VBox styleClass="summary-card" GridPane.columnIndex="3">
-                    <Label styleClass="summary-title" text="Có Sai Lệch"/>
-                    <HBox alignment="CENTER_LEFT">
-                        <Label fx:id="mismatchLabel" styleClass="summary-value" text="3"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label styleClass="summary-icon red" text="⚠"/>
-                    </HBox>
-                </VBox>
-            </GridPane>
+        <ScrollPane fitToWidth="true" styleClass="screen-scroll">
+            <VBox spacing="26.0" styleClass="main-content">
+                <padding>
+                    <Insets bottom="32.0" left="34.0" right="34.0" top="34.0"/>
+                </padding>
 
-            <VBox spacing="22.0" styleClass="panel">
-                <Label styleClass="section-title" text="Thao tác Nhanh"/>
-                <HBox spacing="22.0">
-                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onProcessInboundClick"
-                            styleClass="quick-action" text="▣  Xử lý Đơn Nhập Kho&#10;Kiểm tra và nhập hàng vào kho"
-                            HBox.hgrow="ALWAYS"/>
-                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onMismatchClick"
-                            styleClass="quick-action danger" text="⚠  Xem Đơn Có Sai Lệch&#10;Xử lý các trường hợp thiếu/sai hàng"
-                            HBox.hgrow="ALWAYS"/>
-                </HBox>
-            </VBox>
+                <VBox spacing="6.0">
+                    <Label styleClass="page-title" text="Trang Chủ - Bộ phận Quản lý Kho"/>
+                    <Label styleClass="page-subtitle" text="Tổng quan về hoạt động nhập kho và xử lý hàng hóa"/>
+                </VBox>
 
-            <VBox spacing="18.0" styleClass="panel">
-                <HBox alignment="CENTER_LEFT">
-                    <Label styleClass="section-title" text="Đơn Nhập Kho Gần đây"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button mnemonicParsing="false" onAction="#onViewAllClick" styleClass="link-button" text="Xem tất cả →"/>
-                </HBox>
-                <TableView fx:id="recentOrderTable" prefHeight="300.0" styleClass="warehouse-table">
-                    <columns>
-                        <TableColumn fx:id="orderCodeColumn" prefWidth="210.0" text="MÃ ĐƠN HÀNG"/>
-                        <TableColumn fx:id="receivedDateColumn" prefWidth="170.0" text="NGÀY NHẬN"/>
-                        <TableColumn fx:id="supplierColumn" prefWidth="230.0" text="NHÀ CUNG CẤP"/>
-                        <TableColumn fx:id="statusColumn" prefWidth="230.0" text="TRẠNG THÁI"/>
-                        <TableColumn fx:id="actionColumn" prefWidth="130.0" text="THAO TÁC"/>
-                    </columns>
-                </TableView>
+                <GridPane hgap="24.0" styleClass="metrics-grid">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0"/>
+                    </columnConstraints>
+                    <WarehouseMetricCardUI fx:id="pendingMetricCard" GridPane.columnIndex="0"/>
+                    <WarehouseMetricCardUI fx:id="processingMetricCard" GridPane.columnIndex="1"/>
+                    <WarehouseMetricCardUI fx:id="importedMetricCard" GridPane.columnIndex="2"/>
+                    <WarehouseMetricCardUI fx:id="mismatchMetricCard" GridPane.columnIndex="3"/>
+                </GridPane>
+
+                <VBox spacing="18.0" styleClass="card panel">
+                    <Label styleClass="section-title" text="Thao tác Nhanh"/>
+                    <HBox spacing="18.0">
+                        <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onProcessInboundClick"
+                              styleClass="quick-action" HBox.hgrow="ALWAYS">
+                            <Label fx:id="quickProcessIcon" styleClass="quick-icon-success"/>
+                            <VBox spacing="3.0">
+                                <Label styleClass="quick-title" text="Xử lý Đơn Nhập Kho"/>
+                                <Label styleClass="quick-subtitle" text="Kiểm tra và nhập hàng vào kho"/>
+                            </VBox>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="14.0" onMouseClicked="#onMismatchClick"
+                              styleClass="quick-action-danger" HBox.hgrow="ALWAYS">
+                            <Label fx:id="quickMismatchIcon" styleClass="quick-icon-danger"/>
+                            <VBox spacing="3.0">
+                                <Label styleClass="quick-title" text="Xem Đơn Có Sai Lệch"/>
+                                <Label styleClass="quick-subtitle" text="Xử lý các trường hợp thiếu/sai hàng"/>
+                            </VBox>
+                        </HBox>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="18.0" styleClass="card panel">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label styleClass="section-title" text="Đơn Nhập Kho Gần đây"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label onMouseClicked="#onViewAllClick" styleClass="view-all-link" text="Xem tất cả →"/>
+                    </HBox>
+                    <TableView fx:id="recentOrderTable" prefHeight="285.0" styleClass="data-table warehouse-table">
+                        <columns>
+                            <TableColumn fx:id="orderCodeColumn" prefWidth="230.0" text="MÃ ĐƠN HÀNG"/>
+                            <TableColumn fx:id="receivedDateColumn" prefWidth="190.0" text="NGÀY NHẬN"/>
+                            <TableColumn fx:id="supplierColumn" prefWidth="250.0" text="NHÀ CUNG CẤP"/>
+                            <TableColumn fx:id="statusColumn" prefWidth="230.0" text="TRẠNG THÁI"/>
+                            <TableColumn fx:id="actionColumn" prefWidth="140.0" text="THAO TÁC"/>
+                        </columns>
+                    </TableView>
+                </VBox>
             </VBox>
-        </VBox>
+        </ScrollPane>
     </center>
 </fx:root>
