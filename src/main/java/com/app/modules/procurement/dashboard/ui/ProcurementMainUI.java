@@ -18,7 +18,17 @@ public class ProcurementMainUI extends MainLayoutUI implements IScreen {
                 getClass().getResource("/com/app/modules/procurement/order/ui/site-order-list.css").toExternalForm(),
                 getClass().getResource("/com/app/modules/procurement/order/ui/site-order-reallocation.css").toExternalForm(),
                 getClass().getResource("/com/app/modules/procurement/order/ui/site-order-shared.css").toExternalForm(),
-                getClass().getResource("/com/app/modules/procurement/order/ui/site-order-success.css").toExternalForm()
+                getClass().getResource("/com/app/modules/procurement/order/ui/site-order-success.css").toExternalForm(),
+
+                getClass().getResource("/com/app/modules/procurement/importorder/ui/process-import-request-detail.css").toExternalForm(),
+                getClass().getResource("/com/app/modules/procurement/importorder/ui/process-import-requests.css").toExternalForm(),
+                getClass().getResource("/com/app/modules/procurement/importorder/ui/procurement-dashboard.css").toExternalForm(),
+                getClass().getResource("/com/app/modules/procurement/inventory/ui/InventoryListPage.css").toExternalForm(),
+                getClass().getResource("/com/app/modules/procurement/product/ui/add-merchandise-dialog.css").toExternalForm(),
+                getClass().getResource("/com/app/modules/procurement/product/ui/merchandise-list.css").toExternalForm(),
+                getClass().getResource("/com/app/common/ui/components.css").toExternalForm(),
+                getClass().getResource("/com/app/common/ui/theme.css").toExternalForm()
+
         );
     }
     @Override
