@@ -24,18 +24,21 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 
+import java.util.function.Consumer;
+
 /**
  * UI Class cho màn "Xem chi tiết Yêu cầu Nhập hàng".
  * Là 1 component nhúng vào trong MainLayoutUI (đã có sidebar + header).
  *
- * Caller có thể đăng ký {@link #setOnBack(Runnable)} cho nút ← trên header.
+ * Caller có thể đăng ký:
+ * - {@link #setOnBack(Runnable)} để xử lý nút "Quay lại / Đóng"
+ * - {@link #setOnEdit(Consumer)} để chuyển sang màn "Chỉnh sửa"
  *
  * Theo quy ước README: UI chỉ gọi service, không truy cập repository.
  */
 public class RequestDetailUI extends ScrollPane {
 
     // --- Header ---
-    @FXML private Button backButton;
     @FXML private Label titleLabel;
 
     // --- Info card ---
@@ -74,7 +77,8 @@ public class RequestDetailUI extends ScrollPane {
     private final RequestService service;
     private RequestResponse current;
 
-    private Runnable backAction;
+    private Runnable onBack;
+    private Consumer<String> onEdit;
 
     public RequestDetailUI() {
         this(new RequestService());
@@ -98,6 +102,9 @@ public class RequestDetailUI extends ScrollPane {
             backButton.setOnAction(e -> handleBackClick());
         }
     }
+
+    public void setOnBack(Runnable callback) { this.onBack = callback; }
+    public void setOnEdit(Consumer<String> callback) { this.onEdit = callback; }
 
     private void setupItemsTable() {
         codeColumn.setCellValueFactory(c -> c.getValue().codeProperty());
@@ -262,13 +269,18 @@ public class RequestDetailUI extends ScrollPane {
     }
 
     @FXML
-    private void handleBackClick() {
-        if (backAction != null) {
-            backAction.run();
-            return;
-        }
+    private void onBack() {
         System.out.println("Nội dung chức năng: Quay lại danh sách yêu cầu "
                 + (current != null ? current.getCode() : ""));
+        if (onBack != null) onBack.run();
+    }
+
+    @FXML
+    private void onEdit() {
+        if (current == null) return;
+        System.out.println("Nội dung chức năng: Chuyển sang Chỉnh sửa yêu cầu "
+                + current.getCode());
+        if (onEdit != null) onEdit.accept(current.getCode());
     }
 
 }

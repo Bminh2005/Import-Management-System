@@ -2,8 +2,8 @@ package com.app.modules.sales.apptest;
 
 import com.app.common.ui.MainLayoutUI;
 import com.app.modules.sales.dashboard.ui.SalesSidebar;
-import com.app.modules.sales.request.editrequest.ui.EditRequestController;
 import com.app.modules.sales.request.editrequest.ui.EditRequestUI;
+import com.app.modules.sales.request.editrequest.ui.EditRequestController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -30,6 +30,8 @@ public class SalesEditRequestApp extends Application {
         root.setPage(ui);
 
         Scene scene = new Scene(root);
+        // Theme (biến màu -primary-color, -border-color...) định nghĩa trong common.css
+        // dưới selector .root -> phải gắn ở cấp Scene để page nhúng qua setPage kế thừa được.
         scene.getStylesheets().add(
                 getClass().getResource("/com/app/common/ui/components/common.css").toExternalForm());
         stage.setTitle("Hệ thống Quản lý Nhập khẩu - Chỉnh sửa Yêu cầu");

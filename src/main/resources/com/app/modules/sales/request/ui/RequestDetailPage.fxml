@@ -28,7 +28,7 @@
         <!-- Tiêu đề trang + nút Quay lại -->
         <HBox spacing="14" alignment="CENTER_LEFT">
             <Button fx:id="backButton" text="←" styleClass="back-button"
-                    onAction="#handleBackClick"/>
+                    onAction="#onBack"/>
             <VBox spacing="4">
                 <Label fx:id="titleLabel" text="Chi tiết Yêu cầu Nhập hàng"
                        styleClass="page-title"/>
@@ -160,5 +160,15 @@
                 </columnResizePolicy>
             </TableView>
         </VBox>
+
+        <!-- Nút thao tác cuối trang -->
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="8"/>
+            </padding>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Đóng" styleClass="btn-secondary" onAction="#onBack"/>
+            <Button text="Chỉnh sửa" styleClass="btn-primary" onAction="#onEdit"/>
+        </HBox>
     </VBox>
 </fx:root>
