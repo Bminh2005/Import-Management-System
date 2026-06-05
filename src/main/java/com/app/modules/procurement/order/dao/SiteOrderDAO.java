@@ -26,7 +26,10 @@ import com.app.modules.procurement.order.model.SiteOrderItem;
 public class SiteOrderDAO {
     private static final String BASE_ORDER_SQL = "SELECT o.id, o.created_at, o.site_id, s.site_name, "
             + "s.site_address, s.delivery_by_ship, s.delivery_by_air, "
-            + "o.expected_delivery_date, o.user_id, u.username, o.request_id, o.status, o.delivery "
+            + "o.expected_delivery_date, o.user_id, u.username, o.request_id, "
+            + "CASE WHEN EXISTS (SELECT 1 FROM \"OrderDetail\" od "
+            + "WHERE od.order_id = o.id AND od.status = 'REFUSED'::order_status) "
+            + "THEN 'REFUSED' ELSE o.status::text END AS status, o.delivery "
             + "FROM \"Order\" o "
             + "JOIN \"Site\" s ON o.site_id = s.id "
             + "JOIN \"Users\" u ON o.user_id = u.id ";
