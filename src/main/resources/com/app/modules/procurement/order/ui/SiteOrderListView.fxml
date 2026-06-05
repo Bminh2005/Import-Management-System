@@ -56,7 +56,7 @@
                     <Label text="🔎" styleClass="search-icon"/>
                     <TextField fx:id="searchField"
                                styleClass="search-input"
-                               promptText="Tìm id đơn, người đặt, site..."
+                               promptText="Tìm kiếm theo mã đơn, người đặt..."
                                HBox.hgrow="ALWAYS"/>
                 </HBox>
 
@@ -88,13 +88,13 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                     <columns>
-                        <TableColumn fx:id="colOrderId" text="ID ĐƠN" prefWidth="90" minWidth="72"/>
-                        <TableColumn fx:id="colOrderer" text="NGƯỜI ĐẶT" prefWidth="140" minWidth="110"/>
+                        <TableColumn fx:id="colOrderId" text="MÃ ĐƠN" prefWidth="90" minWidth="72"/>
+                        <TableColumn fx:id="colOrderer" text="NGƯỜI ĐẶT" prefWidth="130" minWidth="100"/>
                         <TableColumn fx:id="colItemCount" text="SỐ MẶT HÀNG" prefWidth="100" minWidth="80"/>
-                        <TableColumn fx:id="colSiteName" text="MÃ SITE / TÊN SITE" prefWidth="180" minWidth="140"/>
-                        <TableColumn fx:id="colCreatedAt" text="NGÀY TẠO" prefWidth="110" minWidth="90"/>
-                        <TableColumn fx:id="colStatus" text="TRẠNG THÁI" prefWidth="120" minWidth="96"/>
-                        <TableColumn fx:id="colAction" text="HÀNH ĐỘNG" prefWidth="180" minWidth="150"/>
+                        <TableColumn fx:id="colSiteName" text="MÃ SITE / TÊN SITE" prefWidth="200" minWidth="150"/>
+                        <TableColumn fx:id="colCreatedAt" text="NGÀY TẠO" prefWidth="100" minWidth="80"/>
+                        <TableColumn fx:id="colStatus" text="TRẠNG THÁI" prefWidth="110" minWidth="90"/>
+                        <TableColumn fx:id="colAction" text="HÀNH ĐỘNG" prefWidth="190" minWidth="160"/>
                     </columns>
                     <placeholder>
                         <VBox alignment="CENTER" spacing="8" styleClass="empty-state">

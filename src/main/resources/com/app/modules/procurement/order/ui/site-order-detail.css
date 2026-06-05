@@ -1,3 +1,13 @@
 @import url("site-order-shared.css");
 
-/* Chi tiết — dùng thang chữ shared, không override cỡ chữ */
+.content-area {
+    -fx-padding: 32 40 28 40;
+}
+
+.meta-card {
+    -fx-background-color: #F8FBFF;
+}
+
+.meta-card:hover {
+    -fx-border-color: #60A5FA;
+}

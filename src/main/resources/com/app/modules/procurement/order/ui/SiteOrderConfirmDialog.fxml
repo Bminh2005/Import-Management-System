@@ -55,7 +55,7 @@
                 onAction="#handleBack"/>
         <Button fx:id="btnConfirm"
                 text="Xác nhận và tạo đơn mới"
-                styleClass="btn-confirm"
+                styleClass="btn-action btn-primary btn-confirm"
                 onAction="#handleConfirm"/>
     </HBox>
 </VBox>

@@ -47,10 +47,10 @@
 
         <HBox spacing="12" alignment="CENTER" styleClass="success-actions">
             <Button fx:id="btnHome" text="Quay về danh sách"
-                    styleClass="btn-ghost"
+                    styleClass="btn-action btn-primary"
                     onAction="#handleHome"/>
             <Button fx:id="btnList" text="Xem danh sách đơn hàng"
-                    styleClass="btn-primary"
+                    styleClass="btn-action btn-primary"
                     onAction="#handleList"/>
         </HBox>
     </VBox>

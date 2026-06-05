@@ -61,7 +61,7 @@
                 styleClass="btn-ghost"
                 onAction="#handleClose"/>
         <Button fx:id="btnSave" text="Lưu phân bổ"
-                styleClass="btn-primary"
+                styleClass="btn-action btn-primary"
                 onAction="#handleSave"/>
     </HBox>
 </VBox>

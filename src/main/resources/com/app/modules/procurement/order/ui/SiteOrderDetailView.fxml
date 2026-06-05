@@ -13,7 +13,7 @@
         <VBox styleClass="content-area" spacing="18">
 
             <HBox styleClass="page-header-row" alignment="CENTER_LEFT">
-                <Button fx:id="btnBack" text="←"
+                <Button fx:id="btnBack" text="← Quay lại"
                         styleClass="btn-back-nav"
                         onAction="#handleBack"/>
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
@@ -117,7 +117,7 @@
     </ScrollPane>
 
     <HBox styleClass="page-footer" alignment="CENTER_RIGHT" spacing="12">
-        <Button fx:id="btnFooterBack" text="Quay lại danh sách"
+        <Button fx:id="btnFooterBack" text="Quay lại"
                 styleClass="btn-ghost"
                 onAction="#handleBack"/>
         <Button fx:id="btnReallocate"

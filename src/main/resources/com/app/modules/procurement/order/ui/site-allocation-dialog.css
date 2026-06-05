@@ -1,61 +1,86 @@
 @import url("site-order-shared.css");
 
-.dialog-header {
-    -fx-background-color: -color-primary;
-    -fx-background-radius: 12 12 0 0;
-}
-
-.dialog-header .dialog-subtitle,
-.dialog-hint {
-    -fx-text-fill: #DBEAFE;
-}
-
 .dialog-stat-neutral {
     -fx-background-color: rgba(255, 255, 255, 0.14);
-    -fx-border-color: rgba(255, 255, 255, 0.24);
+    -fx-border-color: rgba(255, 255, 255, 0.25);
 }
 
 .dialog-stat-warn {
     -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-color: rgba(255, 255, 255, 0.32);
 }
 
 .dialog-stat-danger {
-    -fx-background-color: rgba(220, 38, 38, 0.25);
-    -fx-border-color: rgba(254, 202, 202, 0.5);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-border-color: rgba(255, 255, 255, 0.22);
 }
 
 .dialog-header .dialog-stat-label {
-    -fx-text-fill: #DBEAFE;
+    -fx-text-fill: #BFDBFE;
 }
 
 .dialog-header .dialog-stat-value {
     -fx-text-fill: white;
+    -fx-font-size: 17px;
 }
 
-.dialog-stat-danger .dialog-stat-value {
-    -fx-text-fill: #FEE2E2;
+.sites-container {
+    -fx-padding: 20 24;
+    -fx-spacing: 14;
+}
+
+.site-card {
+    -fx-border-color: #DBEAFE;
+    -fx-padding: 18 20;
+    -fx-background-color: #F8FBFF;
 }
 
 .site-card:hover {
-    -fx-border-color: -color-primary;
+    -fx-border-color: #3B82F6;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.12), 14, 0, 0, 4);
+}
+
+.site-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3A8A;
 }
 
 .score-badge {
-    -fx-background-color: -color-warning-soft;
-    -fx-text-fill: #92400E;
-    -fx-border-color: -color-warning-border;
+    -fx-background-color: #EFF6FF;
+    -fx-text-fill: #1E40AF;
+    -fx-border-color: #BFDBFE;
+    -fx-border-width: 1;
 }
 
 .info-label-highlight {
     -fx-font-weight: bold;
-    -fx-text-fill: -color-primary;
+    -fx-text-fill: #2563EB;
+}
+
+.qty-input {
+    -fx-background-color: white;
+    -fx-border-color: #BFDBFE;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 9 14;
+    -fx-pref-width: 100;
+    -fx-font-weight: bold;
 }
 
 .qty-input:focused {
-    -fx-border-color: -color-primary;
+    -fx-border-color: #3B82F6;
 }
 
-.dialog-footer {
-    -fx-background-radius: 0 0 12 12;
+.qty-label,
+.qty-max {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748B;
+}
+
+.empty-site-msg {
+    -fx-padding: 36;
+    -fx-alignment: center;
+    -fx-text-fill: #94A3B8;
 }

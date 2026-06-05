@@ -17,7 +17,7 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button fx:id="btnPreviewTop"
                         text="📋 Xem trước &amp; Xác nhận"
-                        styleClass="btn-success"
+                        styleClass="btn-action btn-primary"
                         visible="false" managed="false"
                         onAction="#handleOpenConfirmDialogTop"/>
             </HBox>
@@ -93,7 +93,7 @@
                     onAction="#handleCancel"/>
             <Button fx:id="btnPreview"
                     text="📋 Xem trước &amp; Xác nhận"
-                    styleClass="btn-success"
+                    styleClass="btn-action btn-primary"
                     onAction="#handleOpenConfirmDialog"/>
         </HBox>
     </bottom>
