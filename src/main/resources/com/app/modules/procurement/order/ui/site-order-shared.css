@@ -1,0 +1,793 @@
+/* ============================================================
+   site-order-shared.css — Premium Blue & White
+   ============================================================ */
+
+.root {
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 14px;
+
+    -color-bg: #EEF4FF;
+    -color-surface: #FFFFFF;
+    -color-surface-muted: #F5F9FF;
+    -color-border: #DBEAFE;
+    -color-border-strong: #93C5FD;
+
+    -color-text: #0F172A;
+    -color-text-secondary: #475569;
+    -color-text-muted: #94A3B8;
+
+    -color-blue-50:  #EFF6FF;
+    -color-blue-100: #DBEAFE;
+    -color-blue-200: #BFDBFE;
+    -color-blue-300: #93C5FD;
+    -color-blue-400: #60A5FA;
+    -color-blue-500: #3B82F6;
+    -color-blue-600: #2563EB;
+    -color-blue-700: #1D4ED8;
+    -color-blue-800: #1E40AF;
+    -color-blue-900: #1E3A8A;
+
+    -color-primary: #2563EB;
+    -color-primary-light: #3B82F6;
+    -color-primary-hover: #1D4ED8;
+    -color-primary-soft: #EFF6FF;
+    -color-primary-border: #BFDBFE;
+    -color-primary-dark: #1E40AF;
+
+    -color-success: #059669;
+    -color-success-soft: #ECFDF5;
+    -color-success-border: #A7F3D0;
+
+    -color-warning: #D97706;
+    -color-warning-soft: #FFFBEB;
+    -color-warning-border: #FDE68A;
+
+    -color-danger: #DC2626;
+    -color-danger-soft: #FEF2F2;
+    -color-danger-border: #FECACA;
+}
+
+/* ---------- Layout ---------- */
+.page-root {
+    -fx-background-color: -color-bg;
+}
+
+.page-scroll,
+.page-scroll > .viewport,
+.content-scroll,
+.content-scroll > .viewport,
+.items-scroll,
+.items-scroll > .viewport,
+.dialog-scroll,
+.dialog-scroll > .viewport {
+    -fx-background-color: -color-bg;
+    -fx-background: -color-bg;
+    -fx-border-color: transparent;
+}
+
+.page-body,
+.content-area {
+    -fx-padding: 32 40 36 40;
+    -fx-spacing: 24;
+}
+
+.page-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-900;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.section-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-900;
+}
+
+.item-card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.info-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.info-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.text-site-code {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-600;
+}
+
+.text-site-name {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-text-secondary;
+}
+
+/* ---------- Header / Footer ---------- */
+.top-bar {
+    -fx-background-color: -color-surface;
+    -fx-padding: 0 40;
+    -fx-min-height: 60;
+    -fx-border-color: transparent transparent -color-blue-100 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.page-header-row {
+    -fx-spacing: 16;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.page-footer,
+.footer-bar {
+    -fx-background-color: -color-surface;
+    -fx-padding: 18 40;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-border-color: -color-blue-100 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ---------- Cards ---------- */
+.card,
+.panel,
+.section-card,
+.meta-card,
+.stat-card,
+.stat-mini,
+.site-card,
+.item-card,
+.order-preview-card,
+.summary-card {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 14;
+    -fx-border-color: -color-blue-100;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.07), 16, 0, 0, 4);
+}
+
+.panel {
+    -fx-padding: 22 26;
+}
+
+.section-card {
+    -fx-padding: 24 26;
+    -fx-spacing: 16;
+}
+
+/* ---------- Badge ---------- */
+.badge,
+.status-pill,
+.code-badge,
+.count-badge,
+.score-badge {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 5 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.badge,
+.status-pill {
+    -fx-border-width: 1;
+}
+
+.badge-yellow,
+.pill-yellow,
+.badge-pending {
+    -fx-background-color: -color-warning-soft;
+    -fx-text-fill: #92400E;
+    -fx-border-color: -color-warning-border;
+}
+
+.badge-blue,
+.pill-blue {
+    -fx-background-color: -color-blue-50;
+    -fx-text-fill: -color-blue-800;
+    -fx-border-color: -color-blue-200;
+}
+
+.badge-green,
+.pill-green,
+.badge-done {
+    -fx-background-color: -color-success-soft;
+    -fx-text-fill: #065F46;
+    -fx-border-color: -color-success-border;
+}
+
+.badge-red,
+.pill-red {
+    -fx-background-color: -color-danger-soft;
+    -fx-text-fill: #991B1B;
+    -fx-border-color: -color-danger-border;
+}
+
+.count-badge {
+    -fx-background-color: -color-blue-50;
+    -fx-text-fill: -color-blue-700;
+    -fx-border-color: -color-blue-200;
+    -fx-border-width: 1;
+}
+
+.code-badge {
+    -fx-background-color: -color-blue-50;
+    -fx-text-fill: -color-blue-700;
+    -fx-border-color: -color-blue-200;
+    -fx-border-width: 1;
+}
+
+/* ============================================================
+   BUTTONS — Tất cả xanh dương
+   ============================================================ */
+
+/* Nút chính: xanh đặc + bóng nhẹ */
+.button.btn-primary,
+.button.btn-process,
+.button.btn-realloc,
+.button.btn-reallocate,
+.button.btn-action,
+.button.btn-confirm,
+.button.btn-success {
+    -fx-background-color: -color-blue-600;
+    -fx-text-fill: white;
+    -fx-border-color: -color-blue-600;
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 10 22;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.28), 10, 0, 0, 3);
+}
+
+.button.btn-primary:hover,
+.button.btn-process:hover,
+.button.btn-realloc:hover,
+.button.btn-reallocate:hover,
+.button.btn-action:hover,
+.button.btn-confirm:hover,
+.button.btn-success:hover {
+    -fx-background-color: -color-blue-700;
+    -fx-border-color: -color-blue-700;
+    -fx-effect: dropshadow(gaussian, rgba(29, 78, 216, 0.38), 12, 0, 0, 4);
+}
+
+.button.btn-primary:pressed,
+.button.btn-process:pressed,
+.button.btn-action:pressed,
+.button.btn-confirm:pressed {
+    -fx-background-color: -color-blue-800;
+    -fx-border-color: -color-blue-800;
+    -fx-effect: null;
+}
+
+/* Nút phụ: xanh đậm hơn một chút để phân cấp */
+.button.btn-ghost,
+.button.btn-secondary,
+.button.btn-outline {
+    -fx-background-color: -color-blue-500;
+    -fx-text-fill: white;
+    -fx-border-color: -color-blue-500;
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 10 22;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.22), 8, 0, 0, 2);
+}
+
+.button.btn-ghost:hover,
+.button.btn-secondary:hover,
+.button.btn-outline:hover {
+    -fx-background-color: -color-blue-600;
+    -fx-border-color: -color-blue-600;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.32), 10, 0, 0, 3);
+}
+
+.button.btn-ghost:pressed,
+.button.btn-secondary:pressed,
+.button.btn-outline:pressed {
+    -fx-background-color: -color-blue-700;
+    -fx-border-color: -color-blue-700;
+    -fx-effect: null;
+}
+
+/* Nút xem (icon): xanh solid nhỏ */
+.button.btn-view {
+    -fx-background-color: -color-blue-600;
+    -fx-border-color: -color-blue-600;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 6 10;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-insets: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.2), 6, 0, 0, 2);
+}
+
+.button.btn-view:hover {
+    -fx-background-color: -color-blue-700;
+    -fx-border-color: -color-blue-700;
+}
+
+/* Nút quay lại: xanh solid */
+.button.btn-back-nav {
+    -fx-background-color: -color-blue-600;
+    -fx-border-color: -color-blue-600;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.2), 6, 0, 0, 2);
+}
+
+.button.btn-back-nav:hover {
+    -fx-background-color: -color-blue-700;
+    -fx-border-color: -color-blue-700;
+}
+
+/* Nút đóng dialog */
+.button.btn-close {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.35);
+    -fx-border-radius: 10;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+}
+
+.button.btn-close:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.32);
+}
+
+/* ---------- Inputs ---------- */
+.search-input,
+.qty-input {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-text;
+    -fx-prompt-text-fill: -color-text-muted;
+}
+
+.search-input:focused,
+.qty-input:focused {
+    -fx-background-insets: 0;
+}
+
+/* ---------- Tables ---------- */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-table-cell-border-color: transparent;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: -color-blue-50;
+}
+
+.data-table .column-header {
+    -fx-background-color: -color-blue-50;
+    -fx-border-color: -color-blue-100;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 14 18;
+}
+
+.data-table .column-header .label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-800;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent -color-blue-50 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 54;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: -color-blue-50;
+}
+
+.data-table .table-row-cell:selected {
+    -fx-background-color: -color-blue-100;
+}
+
+.data-table .table-cell {
+    -fx-padding: 13 18;
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-text;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.data-table .table-row-cell .table-cell:first-child {
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-900;
+}
+
+.detail-table {
+    -fx-background-color: transparent;
+    -fx-border-color: -color-blue-100;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.detail-table .column-header-background {
+    -fx-background-color: -color-blue-50;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.detail-table .column-header {
+    -fx-padding: 13 18;
+    -fx-border-color: transparent transparent -color-blue-100 transparent;
+}
+
+.detail-table .column-header .label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-800;
+}
+
+.detail-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent -color-blue-50 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.detail-table .table-row-cell:hover {
+    -fx-background-color: -color-surface-muted;
+}
+
+.detail-table .table-cell {
+    -fx-padding: 13 18;
+    -fx-font-size: 14px;
+    -fx-border-color: transparent;
+}
+
+.money-cell {
+    -fx-text-fill: -color-blue-700;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.table-summary-row {
+    -fx-padding: 16 10 6 10;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-border-color: -color-blue-100 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.table-summary-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.table-summary-value {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-700;
+}
+
+/* ---------- Alerts ---------- */
+.alert-refused,
+.alert-cancelled {
+    -fx-background-color: -color-danger-soft;
+    -fx-border-color: -color-danger-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 18 22;
+}
+
+.alert-icon-badge {
+    -fx-background-color: -color-danger;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.alert-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #991B1B;
+    -fx-font-size: 14px;
+}
+
+.alert-body {
+    -fx-text-fill: #B91C1C;
+    -fx-font-size: 12px;
+}
+
+/* ---------- Meta / Stat ---------- */
+.meta-card,
+.stat-mini {
+    -fx-padding: 20 22;
+    -fx-spacing: 8;
+    -fx-background-color: linear-gradient(to bottom right, #FFFFFF, #F0F7FF);
+}
+
+.meta-label,
+.stat-mini-label,
+.stat-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-700;
+}
+
+.meta-value,
+.stat-mini-value {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-900;
+}
+
+.meta-value-money {
+    -fx-text-fill: -color-blue-600;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+.stat-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-900;
+}
+
+.stat-mini-highlight {
+    -fx-background-color: linear-gradient(to bottom right, #EFF6FF, #DBEAFE);
+    -fx-border-color: -color-blue-300;
+}
+
+.stat-mini-highlight .stat-mini-value {
+    -fx-text-fill: -color-blue-700;
+}
+
+.stat-mini-text {
+    -fx-font-size: 14px;
+}
+
+.meta-card-blue,
+.meta-card-purple,
+.meta-card-green,
+.meta-card-orange,
+.stat-mini-blue,
+.stat-mini-purple,
+.stat-mini-green {
+    -fx-border-color: -color-blue-200;
+}
+
+/* ---------- Dialogs ---------- */
+.dialog-root {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 16;
+    -fx-border-color: -color-blue-200;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.22), 40, 0, 0, 14);
+}
+
+.dialog-header {
+    -fx-background-color: linear-gradient(to right, #1E40AF, #3B82F6);
+    -fx-background-radius: 16 16 0 0;
+    -fx-padding: 24 28;
+}
+
+.dialog-header .dialog-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.dialog-header .dialog-subtitle,
+.dialog-hint,
+.site-explain {
+    -fx-font-size: 12px;
+    -fx-text-fill: #BFDBFE;
+}
+
+.dialog-footer {
+    -fx-background-color: -color-blue-50;
+    -fx-padding: 18 26;
+    -fx-border-color: -color-blue-100 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-background-radius: 0 0 16 16;
+}
+
+.dialog-stat {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 12 16;
+}
+
+.dialog-stat-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.dialog-stat-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Tabs ---------- */
+.toggle-button.tab-btn {
+    -fx-background-color: white;
+    -fx-text-fill: -color-text-secondary;
+    -fx-border-color: -color-blue-200;
+    -fx-border-width: 1;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 9 18;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-insets: 0;
+    -fx-cursor: hand;
+}
+
+.toggle-button.tab-btn:hover {
+    -fx-background-color: -color-blue-50;
+    -fx-text-fill: -color-blue-700;
+    -fx-border-color: -color-blue-400;
+}
+
+.toggle-button.tab-btn:selected {
+    -fx-background-color: -color-blue-600;
+    -fx-text-fill: white;
+    -fx-border-color: -color-blue-600;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.3), 8, 0, 0, 2);
+}
+
+.toggle-button.tab-btn-danger:selected {
+    -fx-background-color: -color-blue-600;
+    -fx-text-fill: white;
+    -fx-border-color: -color-blue-600;
+}
+
+/* ---------- Progress ---------- */
+.main-progress > .track,
+.item-progress > .track,
+.alloc-progress > .track,
+.item-progress-mini > .track {
+    -fx-background-color: -color-blue-100;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+}
+
+.main-progress > .bar,
+.item-progress > .bar,
+.item-progress-mini > .bar {
+    -fx-background-color: -color-blue-600;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+}
+
+.alloc-progress > .bar {
+    -fx-background-color: white;
+    -fx-background-radius: 999;
+}
+
+/* ---------- Misc ---------- */
+.empty-state {
+    -fx-padding: 60 24;
+    -fx-alignment: center;
+}
+
+.empty-state .empty-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-text-muted;
+}
+
+.empty-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-blue-800;
+    -fx-background-color: -color-blue-50;
+    -fx-background-radius: 10;
+    -fx-border-color: -color-blue-200;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-padding: 14 18;
+}
+
+.site-field-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-700;
+}
+
+.site-field-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.desired-date-label,
+.progress-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-600;
+}
+
+.item-pct-mini {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-600;
+    -fx-min-width: 32;
+}
+
+.allocation-lines {
+    -fx-padding: 10 0 0 28;
+    -fx-spacing: 6;
+    -fx-border-color: -color-blue-100 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.allocation-line {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-blue-800;
+}
+
+.preview-order-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-900;
+}
+
+.preview-order-total {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-blue-600;
+}
+
+.preview-item-row {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-text-secondary;
+}
+
+.item-index {
+    -fx-background-color: -color-blue-600;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10;
+    -fx-background-radius: 8;
+}

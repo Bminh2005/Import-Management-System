@@ -1,0 +1,45 @@
+@import url("site-order-shared.css");
+
+.summary-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.14);
+    -fx-background-radius: 12;
+    -fx-padding: 14;
+}
+
+.header-stat {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.28);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-padding: 14 16;
+}
+
+.header-stat-label {
+    -fx-text-fill: #BFDBFE;
+}
+
+.header-stat-value {
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+}
+
+.orders-container {
+    -fx-padding: 18 24 22 24;
+    -fx-spacing: 14;
+}
+
+.order-preview-card {
+    -fx-border-color: -color-blue-300;
+    -fx-border-width: 1 1 1 4;
+    -fx-padding: 18 20;
+    -fx-background-color: linear-gradient(to right, #F8FBFF, #FFFFFF);
+}
+
+.preview-order-title {
+    -fx-text-fill: -color-blue-900;
+}
+
+.preview-order-total {
+    -fx-text-fill: -color-blue-600;
+}

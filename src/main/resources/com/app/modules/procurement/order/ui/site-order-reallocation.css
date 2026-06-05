@@ -1,0 +1,61 @@
+@import url("site-order-shared.css");
+
+.top-stack {
+    -fx-background-color: white;
+}
+
+.header-panel {
+    -fx-padding: 24 40 26 40;
+    -fx-spacing: 20;
+    -fx-background-color: #F8FBFF;
+    -fx-border-color: transparent transparent #DBEAFE transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.center-wrap {
+    -fx-background-color: #EEF4FF;
+}
+
+.list-header {
+    -fx-padding: 20 40 12 40;
+}
+
+.items-container {
+    -fx-padding: 0 40 32 40;
+    -fx-spacing: 16;
+}
+
+.item-card {
+    -fx-border-color: #DBEAFE;
+    -fx-padding: 20 24;
+    -fx-background-color: #F8FBFF;
+}
+
+.item-card:hover {
+    -fx-border-color: #3B82F6;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.14), 16, 0, 0, 5);
+}
+
+.item-progress-mini {
+    -fx-pref-width: 72;
+    -fx-max-width: 72;
+    -fx-pref-height: 6;
+    -fx-max-height: 6;
+}
+
+.item-progress-mini > .track { -fx-pref-height: 6; }
+.item-progress-mini > .bar   { -fx-pref-height: 6; }
+
+.stat-mini {
+    -fx-background-color: #F8FBFF;
+}
+
+.stat-mini-highlight {
+    -fx-background-color: #DBEAFE;
+    -fx-border-color: #60A5FA;
+}
+
+.stat-mini-highlight .stat-mini-value,
+.stat-mini-highlight .stat-mini-label {
+    -fx-text-fill: #1E40AF;
+}

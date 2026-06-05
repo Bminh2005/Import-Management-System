@@ -1,0 +1,78 @@
+@import url("site-order-shared.css");
+
+.success-container {
+    -fx-padding: 64 48 52 48;
+    -fx-max-width: 760;
+}
+
+.success-icon {
+    -fx-font-size: 40px;
+    -fx-text-fill: white;
+    -fx-background-color: #2563EB;
+    -fx-background-radius: 999;
+    -fx-min-width: 96;
+    -fx-min-height: 96;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.4), 20, 0, 0, 6);
+}
+
+.success-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3A8A;
+}
+
+.success-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748B;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 540;
+}
+
+.summary-card {
+    -fx-padding: 32 36;
+    -fx-min-width: 560;
+    -fx-background-color: #F8FBFF;
+}
+
+.summary-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563EB;
+}
+
+.summary-value {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.summary-value-blue   { -fx-text-fill: #2563EB; }
+.summary-value-purple { -fx-text-fill: #1D4ED8; }
+.summary-value-green  { -fx-text-fill: #2563EB; -fx-font-size: 14px; }
+
+.summary-separator {
+    -fx-background-color: #DBEAFE;
+    -fx-pref-height: 1;
+}
+
+.order-ids-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3A8A;
+}
+
+.order-ids-list {
+    -fx-font-family: "Consolas", "Cascadia Mono", monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: #1E40AF;
+}
+
+.removed-order-note {
+    -fx-font-size: 12px;
+    -fx-text-fill: #94A3B8;
+}
+
+.success-actions {
+    -fx-spacing: 14;
+}

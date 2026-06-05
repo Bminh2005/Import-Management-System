@@ -1,0 +1,87 @@
+@import url("site-order-shared.css");
+
+.stat-row {
+    -fx-spacing: 18;
+}
+
+.stat-card {
+    -fx-min-height: 104;
+    -fx-padding: 20 24;
+    -fx-background-color: white;
+    -fx-border-width: 1 1 1 4;
+}
+
+.stat-card-total    { -fx-border-color: -color-blue-100 -color-blue-100 -color-blue-100 #3B82F6; }
+.stat-card-pending  { -fx-border-color: -color-blue-100 -color-blue-100 -color-blue-100 #60A5FA; }
+.stat-card-accepted { -fx-border-color: -color-blue-100 -color-blue-100 -color-blue-100 #2563EB; }
+.stat-card-refused  { -fx-border-color: -color-blue-100 -color-blue-100 -color-blue-100 #93C5FD; }
+
+.stat-card:hover {
+    -fx-border-color: -color-blue-300;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.12), 18, 0, 0, 5);
+}
+
+.stat-icon {
+    -fx-min-width: 52;
+    -fx-min-height: 52;
+    -fx-max-width: 52;
+    -fx-max-height: 52;
+    -fx-background-radius: 14;
+    -fx-font-size: 22px;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.35), 8, 0, 0, 3);
+}
+
+.stat-icon-total    { -fx-background-color: linear-gradient(to bottom, #3B82F6, #2563EB); }
+.stat-icon-pending  { -fx-background-color: linear-gradient(to bottom, #60A5FA, #3B82F6); }
+.stat-icon-accepted { -fx-background-color: linear-gradient(to bottom, #2563EB, #1D4ED8); }
+.stat-icon-refused  { -fx-background-color: linear-gradient(to bottom, #93C5FD, #60A5FA); }
+
+.stat-value-blue,
+.stat-value-amber,
+.stat-value-green,
+.stat-value-red {
+    -fx-text-fill: -color-blue-900;
+}
+
+.search-box {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: -color-blue-200;
+    -fx-border-width: 1;
+    -fx-padding: 0 16;
+    -fx-min-height: 46;
+}
+
+.search-box:focused-within {
+    -fx-border-color: -color-blue-500;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.15), 10, 0, 0, 0);
+}
+
+.search-input {
+    -fx-pref-height: 44;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.search-icon {
+    -fx-font-size: 17px;
+    -fx-text-fill: -color-blue-400;
+}
+
+.tab-bar {
+    -fx-spacing: 10;
+    -fx-padding: 4 0 0 0;
+}
+
+.panel-table {
+    -fx-padding: 8 8 12 8;
+}
+
+.data-table .button.btn-process {
+    -fx-min-height: 34;
+    -fx-padding: 7 16;
+    -fx-font-size: 12px;
+}

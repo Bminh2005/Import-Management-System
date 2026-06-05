@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.modules.procurement.order.ui.SiteOrderListController"
+      stylesheets="@site-order-list.css"
+      styleClass="page-root"
+      spacing="0">
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="page-scroll">
+        <VBox styleClass="page-body" spacing="18">
+
+            <VBox spacing="4">
+                <Label text="Danh sách Đơn Đặt Hàng" styleClass="page-title"/>
+                <Label text="Quản lý và theo dõi các đơn đặt hàng từ Site" styleClass="page-subtitle"/>
+            </VBox>
+
+            <HBox styleClass="stat-row" spacing="14">
+                <HBox styleClass="stat-card stat-card-total" alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Tổng Đơn Hàng" styleClass="stat-label"/>
+                        <Label fx:id="lblTotal" text="0" styleClass="stat-value stat-value-blue"/>
+                    </VBox>
+                    <Label text="🛒" styleClass="stat-icon stat-icon-total"/>
+                </HBox>
+
+                <HBox styleClass="stat-card stat-card-pending" alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Chưa Xử Lý" styleClass="stat-label"/>
+                        <Label fx:id="lblPending" text="0" styleClass="stat-value stat-value-amber"/>
+                    </VBox>
+                    <Label text="⏳" styleClass="stat-icon stat-icon-pending"/>
+                </HBox>
+
+                <HBox styleClass="stat-card stat-card-accepted" alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Đã Xử Lý" styleClass="stat-label"/>
+                        <Label fx:id="lblAccepted" text="0" styleClass="stat-value stat-value-green"/>
+                    </VBox>
+                    <Label text="✓" styleClass="stat-icon stat-icon-accepted"/>
+                </HBox>
+
+                <HBox styleClass="stat-card stat-card-refused" alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Bị Hủy" styleClass="stat-label"/>
+                        <Label fx:id="lblRefused" text="0" styleClass="stat-value stat-value-red"/>
+                    </VBox>
+                    <Label text="✕" styleClass="stat-icon stat-icon-refused"/>
+                </HBox>
+            </HBox>
+
+            <VBox styleClass="panel" spacing="14">
+                <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🔎" styleClass="search-icon"/>
+                    <TextField fx:id="searchField"
+                               styleClass="search-input"
+                               promptText="Tìm kiếm theo mã đơn, người đặt..."
+                               HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="tab-bar" spacing="8" alignment="CENTER_LEFT">
+                    <fx:define>
+                        <ToggleGroup fx:id="statusToggleGroup"/>
+                    </fx:define>
+                    <ToggleButton fx:id="tabAll" text="Tất cả"
+                                  styleClass="tab-btn" selected="true"
+                                  toggleGroup="$statusToggleGroup"/>
+                    <ToggleButton fx:id="tabPending" text="Chưa xử lý"
+                                  styleClass="tab-btn"
+                                  toggleGroup="$statusToggleGroup"/>
+                    <ToggleButton fx:id="tabAccepted" text="Đã xử lý"
+                                  styleClass="tab-btn"
+                                  toggleGroup="$statusToggleGroup"/>
+                    <ToggleButton fx:id="tabRefused" text="Bị hủy"
+                                  styleClass="tab-btn tab-btn-danger"
+                                  toggleGroup="$statusToggleGroup"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="panel panel-table" VBox.vgrow="ALWAYS" spacing="0">
+                <TableView fx:id="orderTable"
+                           styleClass="data-table"
+                           VBox.vgrow="ALWAYS"
+                           minHeight="340">
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="colOrderId" text="MÃ ĐƠN" prefWidth="90" minWidth="72"/>
+                        <TableColumn fx:id="colOrderer" text="NGƯỜI ĐẶT" prefWidth="130" minWidth="100"/>
+                        <TableColumn fx:id="colItemCount" text="SỐ MẶT HÀNG" prefWidth="100" minWidth="80"/>
+                        <TableColumn fx:id="colSiteName" text="MÃ SITE / TÊN SITE" prefWidth="200" minWidth="150"/>
+                        <TableColumn fx:id="colCreatedAt" text="NGÀY TẠO" prefWidth="100" minWidth="80"/>
+                        <TableColumn fx:id="colStatus" text="TRẠNG THÁI" prefWidth="110" minWidth="90"/>
+                        <TableColumn fx:id="colAction" text="HÀNH ĐỘNG" prefWidth="190" minWidth="160"/>
+                    </columns>
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="8" styleClass="empty-state">
+                            <Label text="Không có dữ liệu" styleClass="empty-title"/>
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+</VBox>

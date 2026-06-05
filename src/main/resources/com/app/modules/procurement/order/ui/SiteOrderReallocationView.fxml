@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.app.modules.procurement.order.ui.SiteOrderReallocationController"
+            stylesheets="@site-order-reallocation.css"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="top-stack" spacing="0">
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
+                <Button fx:id="btnBack" text="← Quay lại"
+                        styleClass="btn-back-nav"
+                        onAction="#handleBack"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnPreviewTop"
+                        text="📋 Xem trước &amp; Xác nhận"
+                        styleClass="btn-action btn-primary"
+                        visible="false" managed="false"
+                        onAction="#handleOpenConfirmDialogTop"/>
+            </HBox>
+
+            <VBox styleClass="header-panel" spacing="16">
+                <VBox spacing="6">
+                    <Label fx:id="lblTitle" text="Phân bổ lại Đơn"
+                           styleClass="page-title"/>
+                    <Label text="Tìm Site mới để phân bổ lại đơn hàng bị hủy"
+                           styleClass="page-subtitle" wrapText="true"/>
+                    <Label fx:id="lblDesiredDate" text=""
+                           styleClass="desired-date-label"/>
+                </VBox>
+
+                <HBox styleClass="alert-cancelled" spacing="12" alignment="CENTER_LEFT">
+                    <Label text="!" styleClass="alert-icon-badge"/>
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblCancelledSite" text=""
+                               styleClass="alert-title" wrapText="true"/>
+                        <Label fx:id="lblCancelReason" text=""
+                               styleClass="alert-body" wrapText="true"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="12" fillHeight="true">
+                    <VBox styleClass="stat-mini stat-mini-blue" HBox.hgrow="ALWAYS">
+                        <Label text="📦 TỔNG MẶT HÀNG" styleClass="stat-mini-label"/>
+                        <Label fx:id="lblTotalItems" text="0" styleClass="stat-mini-value"/>
+                    </VBox>
+                    <VBox styleClass="stat-mini stat-mini-green stat-mini-highlight" HBox.hgrow="ALWAYS">
+                        <Label text="✓ ĐÃ PHÂN BỔ" styleClass="stat-mini-label"/>
+                        <Label fx:id="lblAllocated" text="0 / 0" styleClass="stat-mini-value"/>
+                    </VBox>
+                    <VBox styleClass="stat-mini stat-mini-purple" HBox.hgrow="ALWAYS">
+                        <Label text="👤 NGƯỜI ĐẶT" styleClass="stat-mini-label"/>
+                        <Label fx:id="lblOrderer" text="—" styleClass="stat-mini-value stat-mini-text"/>
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label fx:id="lblProgress" text="Tiến độ 0%"
+                           styleClass="progress-label"/>
+                    <ProgressBar fx:id="progressBar" progress="0.0"
+                                 prefWidth="200" prefHeight="8"
+                                 styleClass="main-progress" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="0" styleClass="center-wrap">
+            <HBox styleClass="list-header" alignment="CENTER_LEFT">
+                <Label text="Danh sách mặt hàng cần phân bổ" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <Label fx:id="lblEmptyState" text="Không có mặt hàng để phân bổ lại."
+                   styleClass="empty-hint" wrapText="true"
+                   visible="false" managed="false"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="items-scroll">
+                <VBox fx:id="itemCardsContainer"
+                      styleClass="items-container"
+                      spacing="12"/>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox fx:id="footerBar" styleClass="footer-bar"
+              alignment="CENTER_RIGHT" spacing="12"
+              visible="false" managed="false">
+            <Button fx:id="btnCancel" text="Quay lại"
+                    styleClass="btn-ghost"
+                    onAction="#handleCancel"/>
+            <Button fx:id="btnPreview"
+                    text="📋 Xem trước &amp; Xác nhận"
+                    styleClass="btn-action btn-primary"
+                    onAction="#handleOpenConfirmDialog"/>
+        </HBox>
+    </bottom>
+</BorderPane>

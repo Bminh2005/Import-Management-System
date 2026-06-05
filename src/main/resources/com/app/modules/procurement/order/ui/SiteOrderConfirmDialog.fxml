@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.modules.procurement.order.ui.SiteOrderConfirmDialogController"
+      stylesheets="@site-order-confirm-dialog.css"
+      styleClass="dialog-root"
+      prefWidth="720"
+      minHeight="560"
+      spacing="0">
+
+    <VBox styleClass="dialog-header" spacing="14">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblDialogTitle" text="Xác nhận đơn đặt hàng mới"
+                       styleClass="dialog-title"/>
+                <Label fx:id="lblDialogSubtitle"
+                       text="Kiểm tra các đơn thay thế trước khi lưu vào danh sách đơn đặt hàng."
+                       styleClass="dialog-subtitle" wrapText="true"/>
+            </VBox>
+            <Button text="X" styleClass="btn-close"
+                    onAction="#handleClose"/>
+        </HBox>
+
+        <HBox styleClass="summary-bar" spacing="10" fillHeight="true">
+            <VBox styleClass="header-stat" HBox.hgrow="ALWAYS">
+                <Label text="ĐƠN BỊ HỦY" styleClass="header-stat-label"/>
+                <Label fx:id="lblStatValue1" text="-" styleClass="header-stat-value"/>
+            </VBox>
+            <VBox styleClass="header-stat" HBox.hgrow="ALWAYS">
+                <Label text="SỐ ĐƠN MỚI" styleClass="header-stat-label"/>
+                <Label fx:id="lblOrderCount" text="0 đơn" styleClass="header-stat-value"/>
+            </VBox>
+            <VBox styleClass="header-stat" HBox.hgrow="ALWAYS">
+                <Label text="TỔNG GIÁ TRỊ" styleClass="header-stat-label"/>
+                <Label fx:id="lblTotalValue" text="0 đ"
+                       styleClass="header-stat-value header-stat-money"/>
+            </VBox>
+        </HBox>
+        <Label fx:id="lblSiteExplain" text="" styleClass="site-explain" wrapText="true"/>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                styleClass="dialog-scroll" prefHeight="400">
+        <VBox fx:id="orderCardsContainer"
+              styleClass="orders-container"
+              spacing="12"/>
+    </ScrollPane>
+
+    <HBox styleClass="dialog-footer" spacing="12" alignment="CENTER_RIGHT">
+        <Button fx:id="btnBack" text="Quay lại chỉnh sửa"
+                styleClass="btn-ghost"
+                onAction="#handleBack"/>
+        <Button fx:id="btnConfirm"
+                text="Xác nhận và tạo đơn mới"
+                styleClass="btn-action btn-primary btn-confirm"
+                onAction="#handleConfirm"/>
+    </HBox>
+</VBox>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.modules.procurement.order.ui.SiteOrderSuccessController"
+      stylesheets="@site-order-success.css"
+      styleClass="page-root"
+      alignment="CENTER"
+      spacing="0">
+
+    <VBox styleClass="success-container" alignment="CENTER" spacing="24" VBox.vgrow="ALWAYS">
+        <VBox alignment="CENTER" spacing="12" styleClass="success-header">
+            <Label text="✓" styleClass="success-icon"/>
+            <Label fx:id="lblHeadline" text="Đã tạo đơn hàng thay thế thành công"
+                   styleClass="success-title"/>
+            <Label fx:id="lblSubtext"
+                   text="Các đơn mới đã được lưu vào cơ sở dữ liệu và hiển thị trong danh sách đơn đặt hàng."
+                   styleClass="success-subtitle" wrapText="true"/>
+        </VBox>
+
+        <VBox styleClass="summary-card" spacing="16">
+            <HBox spacing="0" alignment="CENTER">
+                <VBox styleClass="summary-item" HBox.hgrow="ALWAYS" alignment="CENTER">
+                    <Label text="SỐ ĐƠN MỚI" styleClass="summary-label"/>
+                    <Label fx:id="lblNewOrderCount" text="0" styleClass="summary-value summary-value-blue"/>
+                </VBox>
+                <VBox styleClass="summary-item" HBox.hgrow="ALWAYS" alignment="CENTER">
+                    <Label text="NGÀY XỬ LÝ" styleClass="summary-label"/>
+                    <Label fx:id="lblProcessDate" text="-" styleClass="summary-value summary-value-purple"/>
+                </VBox>
+                <VBox styleClass="summary-item" HBox.hgrow="ALWAYS" alignment="CENTER">
+                    <Label text="TRẠNG THÁI" styleClass="summary-label"/>
+                    <Label fx:id="lblStatus" text="Chưa xử lý" styleClass="summary-value summary-value-green"/>
+                </VBox>
+            </HBox>
+
+            <Separator styleClass="summary-separator"/>
+
+            <VBox spacing="8" styleClass="order-ids-section">
+                <Label text="Danh sách đơn mới:" styleClass="order-ids-title"/>
+                <Label fx:id="lblOrderIds" text="" styleClass="order-ids-list" wrapText="true"/>
+                <Label fx:id="lblRemovedOrder" text="" styleClass="removed-order-note" wrapText="true"/>
+            </VBox>
+        </VBox>
+
+        <HBox spacing="12" alignment="CENTER" styleClass="success-actions">
+            <Button fx:id="btnHome" text="Quay về danh sách"
+                    styleClass="btn-action btn-primary"
+                    onAction="#handleHome"/>
+            <Button fx:id="btnList" text="Xem danh sách đơn hàng"
+                    styleClass="btn-action btn-primary"
+                    onAction="#handleList"/>
+        </HBox>
+    </VBox>
+</VBox>

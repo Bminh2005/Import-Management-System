@@ -1,10 +1,10 @@
 package com.app.database.connection;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class PostgreSQLProvider implements IDBProvider {
     private HikariDataSource dataSource;

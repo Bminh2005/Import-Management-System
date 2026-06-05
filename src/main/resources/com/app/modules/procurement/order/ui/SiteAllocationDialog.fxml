@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.modules.procurement.order.ui.SiteAllocationDialogController"
+      stylesheets="@site-allocation-dialog.css"
+      styleClass="dialog-root"
+      prefWidth="640"
+      minHeight="540"
+      spacing="0">
+
+    <VBox styleClass="dialog-header" spacing="14">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblDialogTitle" text="Phân bổ Site"
+                       styleClass="dialog-title"/>
+                <Label fx:id="lblMerchandiseName" text=""
+                       styleClass="dialog-subtitle"/>
+            </VBox>
+            <Button text="✕" styleClass="btn-close"
+                    onAction="#handleClose"/>
+        </HBox>
+
+        <HBox spacing="10" fillHeight="true">
+            <VBox styleClass="dialog-stat dialog-stat-neutral" HBox.hgrow="ALWAYS">
+                <Label text="YÊU CẦU" styleClass="dialog-stat-label"/>
+                <Label fx:id="lblRequired" text="0"
+                       styleClass="dialog-stat-value" wrapText="true"/>
+            </VBox>
+            <VBox styleClass="dialog-stat dialog-stat-warn" HBox.hgrow="ALWAYS">
+                <Label text="ĐÃ PHÂN BỔ" styleClass="dialog-stat-label"/>
+                <Label fx:id="lblAllocated" text="0"
+                       styleClass="dialog-stat-value"/>
+            </VBox>
+            <VBox styleClass="dialog-stat dialog-stat-danger" HBox.hgrow="ALWAYS">
+                <Label text="CÒN LẠI" styleClass="dialog-stat-label"/>
+                <Label fx:id="lblRemaining" text="0"
+                       styleClass="dialog-stat-value"/>
+            </VBox>
+        </HBox>
+
+        <ProgressBar fx:id="progressBar" progress="0"
+                     prefHeight="6" styleClass="alloc-progress"
+                     maxWidth="Infinity"/>
+
+        <Label fx:id="lblSiteCount" text="Tìm thấy 0 Site có sẵn"
+               styleClass="dialog-hint"/>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                styleClass="dialog-scroll" prefHeight="360">
+        <VBox fx:id="siteCardsContainer"
+              styleClass="sites-container"
+              spacing="10"/>
+    </ScrollPane>
+
+    <HBox styleClass="dialog-footer" spacing="12" alignment="CENTER_RIGHT">
+        <Button fx:id="btnCancel" text="Đóng"
+                styleClass="btn-ghost"
+                onAction="#handleClose"/>
+        <Button fx:id="btnSave" text="Lưu phân bổ"
+                styleClass="btn-action btn-primary"
+                onAction="#handleSave"/>
+    </HBox>
+</VBox>
