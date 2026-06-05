@@ -1,7 +1,12 @@
 package com.app.modules.sales.apptest;
 
 import com.app.common.ui.MainLayoutUI;
+import com.app.modules.sales.dashboard.ui.SalesDashboardUI;
 import com.app.modules.sales.dashboard.ui.SalesShell;
+import com.app.modules.sales.dashboard.ui.SalesSidebar;
+import com.app.modules.sales.request.createrequest.controller.CreateRequestController;
+import com.app.modules.sales.request.createrequest.ui.CreateImportRequestUI;
+import com.app.modules.sales.request.requestlist.ui.RequestListUI;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -17,9 +22,13 @@ public class salesApp extends Application {
         MainLayoutUI root = new MainLayoutUI();
         SalesShell shell = new SalesShell(root);
         shell.showDashboard();
-        Scene scene = new Scene(root, 1280, 860);
-        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/components/common.css").toExternalForm());
+//        root.setLeft(new SalesSidebar());
+//        CreateRequestController controller = new CreateRequestController();
+//        root.setPage(controller.getView());
+        Scene scene = new Scene(root, 1280, 720);
+
+//        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/theme.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("/com/app/common/ui/components/common.css").toExternalForm());
         stage.setTitle("Hệ thống Quản lý Nhập khẩu - Sales");
         stage.setMinWidth(1100);
         stage.setMinHeight(720);
