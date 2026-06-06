@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.app.common.exception.BusinessException;
 import com.app.modules.procurement.order.dao.ImportRequestDAO;
 import com.app.modules.procurement.order.dao.SiteInventoryDAO;
 import com.app.modules.procurement.order.dao.SiteOrderDAO;
@@ -122,9 +123,14 @@ public class SiteOrderService {
     public ReallocationResult finalizeReallocation(SiteOrder sourceOrder,
                                                    ImportRequestInfo requestContext,
                                                    Map<Long, List<SiteAllocationEntry>> allocationMap) {
-        if (sourceOrder == null || allocationMap == null || allocationMap.isEmpty()) {
+        if (sourceOrder == null) {
             return new ReallocationResult(List.of());
         }
+        long requiredQuantity = sourceOrder.getItems().stream()
+                .mapToLong(SiteOrderItem::getQuantity)
+                .sum();
+        validateReallocationInput(allocationMap, sourceOrder.getId(), requiredQuantity);
+
         long requestId = sourceOrder.hasLinkedRequest()
                 ? sourceOrder.getRequestId()
                 : requestContext != null ? requestContext.getRequestId() : 0;
@@ -174,6 +180,40 @@ public class SiteOrderService {
 
         List<Long> createdIds = orderDAO.replaceRefusedOrder(sourceOrder.getId(), replacementOrders);
         return new ReallocationResult(createdIds, siteNames);
+    }
+
+    public boolean validateReallocationInput(Map<Long, List<SiteAllocationEntry>> allocationMap,
+                                             Long oldId,
+                                             long requiredQuantity) {
+        if (allocationMap == null || allocationMap.isEmpty()) {
+            throw new BusinessException("Dữ liệu phân bổ mặt hàng không được để trống");
+        }
+        if (oldId == null || oldId <= 0) {
+            throw new BusinessException("Mã đơn hàng gốc không hợp lệ");
+        }
+
+        long totalAllocated = 0;
+        boolean hasAllocationEntry = false;
+        for (List<SiteAllocationEntry> allocations : allocationMap.values()) {
+            if (allocations == null || allocations.isEmpty()) {
+                continue;
+            }
+            for (SiteAllocationEntry allocation : allocations) {
+                hasAllocationEntry = true;
+                if (allocation == null || allocation.getQuantity() <= 0) {
+                    throw new BusinessException("Số lượng vật tư phân bổ tại mỗi kho phải lớn hơn 0");
+                }
+                totalAllocated += allocation.getQuantity();
+            }
+        }
+
+        if (!hasAllocationEntry) {
+            throw new BusinessException("Dữ liệu phân bổ mặt hàng không được để trống");
+        }
+        if (totalAllocated != requiredQuantity) {
+            throw new BusinessException("Tổng số lượng phân bổ không khớp với tổng số lượng yêu cầu ban đầu");
+        }
+        return true;
     }
 
     public static String formatOrderCode(long orderId) {
