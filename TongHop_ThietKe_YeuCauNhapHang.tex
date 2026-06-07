@@ -1,0 +1,345 @@
+% =====================================================================
+%  TONG HOP THIET KE - USECASE: CHINH SUA YEU CAU NHAP HANG
+% ---------------------------------------------------------------------
+%  HUONG DAN BIEN DICH (QUAN TRONG):
+%   - Bien dich bang XeLaTeX (KHONG dung pdfLaTeX vi co tieng Viet Unicode).
+%   - Local (MiKTeX/TeX Live):   xelatex TongHop_ThietKe_YeuCauNhapHang.tex
+%                                 (chay 2 lan de cap nhat Muc luc)
+%   - Overleaf:  Menu -> Compiler -> chon "XeLaTeX".
+%  Font "TeX Gyre Termes" (giong Times New Roman) co san glyph tieng Viet.
+%  => Giu nguyen preamble nay de DONG BO style voi ban SRS goc.
+% =====================================================================
+\documentclass[12pt,a4paper]{article}
+
+% ----- Font & Unicode (XeLaTeX) -----
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}      % Times-like, ho tro tieng Viet
+\setsansfont{TeX Gyre Heros}
+
+% ----- Trang & bo cuc -----
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{pdflscape}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{unicode=true, colorlinks=true, linkcolor=blue!60!black,
+            urlcolor=blue!60!black, citecolor=blue!60!black}
+
+% ----- Ten nhan tieng Viet -----
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\XeTeXlinebreaklocale "vi"
+\XeTeXlinebreakskip = 0pt plus 0.1pt
+
+% ----- Kieu cot bang -----
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% ----- Header / Footer -----
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Tổng hợp thiết kế: Chỉnh sửa yêu cầu nhập hàng}
+\rhead{\small Nhóm 4}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ----- Kieu code Java -----
+\definecolor{codekw}{rgb}{0.13,0.13,0.7}
+\definecolor{codecm}{rgb}{0.0,0.45,0.0}
+\definecolor{codestr}{rgb}{0.6,0.1,0.1}
+\definecolor{codebg}{rgb}{0.97,0.97,0.97}
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekw}\bfseries,
+  commentstyle=\color{codecm}\itshape,
+  stringstyle=\color{codestr},
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{gray!50},
+  breaklines=true, showstringspaces=false, tabsize=2,
+  captionpos=b, xleftmargin=14pt, framexleftmargin=14pt
+}
+
+% ----- Thong tin sinh vien -----
+\newcommand{\svName}{Đỗ Phú Hưng}
+\newcommand{\svMSSV}{20235738}
+\newcommand{\svGVHD}{Trịnh Tuấn Đạt}
+\newcommand{\svHP}{IT4549}
+\newcommand{\svNhom}{Nhóm 4}
+
+\begin{document}
+
+% =====================================================================
+%  TRANG BIA
+% =====================================================================
+\begin{titlepage}
+\centering
+\thispagestyle{empty}
+
+{\large \textbf{ĐẠI HỌC BÁCH KHOA HÀ NỘI}}\\[2pt]
+{\large \textbf{TRƯỜNG CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG}}\\[6pt]
+\rule{\textwidth}{0.8pt}
+
+\vspace{1.2cm}
+
+\vspace{0.8cm}
+{\Huge \textbf{TỔNG HỢP THIẾT KẾ}}\\[10pt]
+{\LARGE \textbf{HỆ THỐNG ĐẶT HÀNG NHẬP KHẨU}}\\[18pt]
+{\Large Usecase: \textbf{Chỉnh sửa yêu cầu nhập hàng}}\\[6pt]
+{\large (Áp dụng nguyên lý SOLID \& các mẫu thiết kế hướng đối tượng)}
+
+\vspace{1.6cm}
+\begin{flushleft}\large
+\hspace{1.5cm}
+\begin{tabular}{@{}ll@{}}
+\textbf{Giảng viên hướng dẫn:} & \svGVHD \\[8pt]
+\textbf{Sinh viên thực hiện:}  & \svName \\[8pt]
+\textbf{MSSV:}                 & \svMSSV \\[8pt]
+\textbf{Mã số lớp học phần:}   & \svHP \\[8pt]
+\textbf{Nhóm:}                 & \svNhom \\
+\end{tabular}
+\end{flushleft}
+
+\vfill
+{\large Hà Nội, 2026}
+\end{titlepage}
+
+% =====================================================================
+%  MUC LUC
+% =====================================================================
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+
+% =====================================================================
+\section{Mục tiêu tái thiết kế}
+
+Phần này tổng hợp quá trình \textbf{tái cấu trúc (refactoring)} mã nguồn của
+chức năng \emph{Chỉnh sửa yêu cầu nhập hàng}, nhằm áp dụng các nguyên lý thiết
+kế (SOLID) và các mẫu thiết kế hướng đối tượng đã học. Mục tiêu cụ thể:
+
+\begin{itemize}[leftmargin=*]
+  \item Tách bạch trách nhiệm giữa giao diện, điều khiển, nghiệp vụ và truy
+        xuất dữ liệu để mã dễ đọc, dễ bảo trì.
+  \item Cô lập phần nghiệp vụ cốt lõi (\texttt{updateRequest}) khỏi giao diện
+        và cơ sở dữ liệu để có thể \textbf{kiểm thử đơn vị} mà không cần DB thật.
+  \item Loại bỏ trùng lặp, tăng khả năng tái sử dụng các thành phần giao diện.
+\end{itemize}
+
+Phạm vi tổng hợp giới hạn trong gói (package):
+\begin{center}
+\texttt{com.app.modules.sales.request.editrequest}
+\end{center}
+
+% =====================================================================
+\section{Hiện trạng trước khi tái thiết kế}
+
+Ở phiên bản đầu, toàn bộ chức năng được dồn vào \textbf{một lớp giao diện duy
+nhất} \texttt{EditRequestUI} (khoảng 440 dòng). Lớp này cùng lúc gánh nhiều
+trách nhiệm:
+
+\begin{itemize}[leftmargin=*]
+  \item Hiển thị giao diện (render nhãn, bảng mặt hàng).
+  \item Tự cấu hình từng cột và ô chỉnh sửa của bảng (\texttt{setupItemsTable},
+        cùng các lớp lồng \texttt{QuantityCell}, \texttt{DeliveryDateCell}).
+  \item Tự vẽ icon SVG bằng tay (\texttt{createIconButton}, \texttt{trashPath}).
+  \item Tự bật các hộp thoại \texttt{Alert} xác nhận xóa, lưu, quay lại.
+  \item Gọi thẳng tầng nghiệp vụ và chứa logic đồng bộ dữ liệu.
+\end{itemize}
+
+\noindent\textbf{Hệ quả:} vi phạm nghiêm trọng nguyên lý Đơn nhiệm (SRP) --- một
+lớp có quá nhiều lý do để thay đổi; logic nghiệp vụ dính chặt với JavaFX nên
+\emph{gần như không thể kiểm thử đơn vị}; các ô bảng viết riêng cho lớp này nên
+không tái sử dụng được; mã icon SVG bị lặp lại.
+
+% =====================================================================
+\section{Kiến trúc sau khi tái thiết kế}
+
+Một lớp khổng lồ được tách thành chuỗi lớp có trách nhiệm đơn nhất, tổ chức theo
+mô hình \textbf{MVC} kết hợp \textbf{kiến trúc phân tầng} (Layered
+Architecture). Luồng phụ thuộc một chiều: View $\rightarrow$ Controller
+$\rightarrow$ Service $\rightarrow$ Repository $\rightarrow$ CSDL.
+
+\begin{table}[H]
+\centering
+\caption{Phân rã trách nhiệm sau tái thiết kế}
+\begin{tabularx}{\textwidth}{>{\ttfamily}l Y}
+\hline
+\rowcolor{gray!15}
+\normalfont\textbf{Lớp / Thành phần} & \textbf{Trách nhiệm (một lý do thay đổi)} \\
+\hline
+EditRequestUI               & View thuần: giữ tham chiếu \texttt{@FXML}, hiển thị dữ liệu, phát sự kiện qua các hook. \\
+EditRequestController       & Điều phối: bắt sự kiện, gọi Service, cập nhật View, gọi Alert. \\
+EditRequestTableController  & Cấu hình cột và ô chỉnh sửa (cell factory) của bảng mặt hàng. \\
+EditRequestAlertController  & Gom mọi hộp thoại cảnh báo / thông báo / xác nhận. \\
+RequestService              & Nghiệp vụ: kiểm tra trạng thái \texttt{pending}, đồng bộ (upsert) mặt hàng. \\
+RequestRepository           & Truy xuất CSDL: đọc/ghi bảng ImportRequest, RequestDetail. \\
+UpdateRequestDTO, RequestResponse & DTO truyền dữ liệu qua ranh giới tầng. \\
+IntegerEditCell, DatePickerCell, SvgButton & Thành phần giao diện dùng chung (\texttt{common/ui/components}). \\
+\hline
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Áp dụng nguyên lý SOLID}
+
+\begin{longtable}{>{\bfseries}p{2.6cm} p{12.4cm}}
+\hline
+\rowcolor{gray!15}
+\normalfont\textbf{Nguyên lý} & \textbf{Cách áp dụng trong mã nguồn} \\
+\hline
+\endhead
+S --- Single Responsibility &
+Mỗi lớp một lý do thay đổi: đổi giao diện sửa \texttt{EditRequestUI}; đổi cách
+hiển thị bảng sửa \texttt{EditRequestTableController}; đổi quy tắc nghiệp vụ sửa
+\texttt{RequestService}; đổi câu SQL sửa \texttt{RequestRepository}. \\
+\hline
+O --- Open/Closed &
+\texttt{IntegerEditCell<S>}, \texttt{DatePickerCell<S>} là lớp generic nhận
+hàm \texttt{getter}/\texttt{setter} qua lambda. Muốn dùng cho model khác chỉ cần
+\emph{truyền tham số mới}, không sửa lớp ô --- mở để mở rộng, đóng với sửa đổi. \\
+\hline
+L --- Liskov Substitution &
+Trong kiểm thử, \texttt{FakeRequestRepository extends RequestRepository} thay
+thế hoàn toàn bản thật mà \texttt{RequestService} không cần biết, hành vi không
+bị phá vỡ. \\
+\hline
+I --- Interface Segregation &
+View không phụ thuộc một ``giao diện thần thánh''. Controller chỉ tương tác qua
+các hook nhỏ: \texttt{Runnable saveAction}, \texttt{Consumer<RequestItem>
+onDeleteItem} --- mỗi bên chỉ thấy đúng phần nó cần. \\
+\hline
+D --- Dependency Inversion &
+\texttt{RequestRepository} phụ thuộc trừu tượng \texttt{IDBProvider} (không phụ
+thuộc trực tiếp \texttt{PostgreSQLProvider}); \texttt{RequestService} nhận
+\texttt{RequestRepository} qua constructor (Dependency Injection). \\
+\hline
+\end{longtable}
+
+\noindent Minh họa nguyên lý Open/Closed và Dependency Injection:
+
+\begin{lstlisting}[caption={Ô chỉnh sửa số nguyên dùng chung (generic, theo OCP)}]
+public class IntegerEditCell<S> extends TableCell<S, S> {
+    private final Function<S, Integer> getter;
+    private final BiConsumer<S, Integer> setter;
+    private final boolean editable;
+
+    public IntegerEditCell(Function<S, Integer> getter,
+                           BiConsumer<S, Integer> setter, boolean editable) {
+        this.getter = getter; this.setter = setter; this.editable = editable;
+        // ... lang nghe su kien commit gia tri
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Tiêm phụ thuộc qua constructor (DIP)}]
+// Repository phu thuoc truu tuong IDBProvider, khong phu thuoc lop cu the
+public RequestRepository() { this(new PostgreSQLProvider()); }
+public RequestRepository(IDBProvider dbProvider) { this.dbProvider = dbProvider; }
+
+// Service nhan Repository tu ben ngoai -> test bom duoc repo gia
+public RequestService() { this(new RequestRepository()); }
+public RequestService(RequestRepository repository) { this.repository = repository; }
+\end{lstlisting}
+
+% =====================================================================
+\section{Các mẫu thiết kế đã áp dụng}
+
+\begin{longtable}{>{\bfseries}p{3.0cm} p{4.0cm} p{7.8cm}}
+\hline
+\rowcolor{gray!15}
+\normalfont\textbf{Mẫu thiết kế} & \textbf{Nơi áp dụng} & \textbf{Ý nghĩa} \\
+\hline
+\endhead
+MVC & View / Controller / Model & Tách hiển thị -- điều khiển -- dữ liệu. \\
+\hline
+Layered (3 tầng) & UI $\to$ Service $\to$ Repository & UI không bao giờ chạm thẳng Repository. \\
+\hline
+DTO & \texttt{UpdateRequestDTO}, \texttt{RequestResponse} & Gói dữ liệu đi qua ranh giới tầng, tách entity nội bộ khỏi dữ liệu UI. \\
+\hline
+Repository & \texttt{RequestRepository} & Trừu tượng hóa truy xuất dữ liệu, ẩn SQL khỏi nghiệp vụ. \\
+\hline
+Dependency Injection & constructor \texttt{RequestService}, \texttt{RequestRepository} & Đảo ngược khởi tạo, phục vụ kiểm thử và mở rộng. \\
+\hline
+Factory + Singleton & \texttt{IDBProvider} / \texttt{PostgreSQLProvider} & Tập trung tạo kết nối, dùng chung một thể hiện. \\
+\hline
+Strategy (qua lambda) & getter/setter truyền vào \texttt{IntegerEditCell}, \texttt{DatePickerCell} & ``Cách lấy/ghi giá trị'' trở thành chiến lược thay thế được. \\
+\hline
+Command / Callback & \texttt{setActionForSaveButton(Runnable)}, \texttt{onSaved}, \texttt{onBack} & View phát sự kiện, không tự xử lý $\Rightarrow$ đảo phụ thuộc. \\
+\hline
+Observer & \texttt{ListChangeListener} cập nhật số mặt hàng & Giao diện tự đồng bộ khi dữ liệu đổi. \\
+\hline
+\end{longtable}
+
+% =====================================================================
+\section{So sánh trước / sau tái thiết kế}
+
+\begin{table}[H]
+\centering
+\caption{Đối chiếu trạng thái mã nguồn}
+\begin{tabularx}{\textwidth}{p{3.2cm} Y Y}
+\hline
+\rowcolor{gray!15}
+\textbf{Tiêu chí} & \textbf{TRƯỚC} & \textbf{SAU} \\
+\hline
+Cấu trúc & 1 lớp \texttt{EditRequestUI} (~440 dòng) & View + 3 Controller + Service + Repository + DTO \\
+\hline
+Cấu hình ô bảng & lớp lồng viết cứng & \texttt{IntegerEditCell<S>}, \texttt{DatePickerCell<S>} generic, tái dùng \\
+\hline
+Hộp thoại & \texttt{Alert} rải khắp View & gom trong \texttt{EditRequestAlertController} \\
+\hline
+Truy xuất CSDL & trộn trong nghiệp vụ & tách \texttt{RequestRepository} + \texttt{IDBProvider} \\
+\hline
+Khả năng kiểm thử & gần như không & \texttt{RequestServiceTest} (Hộp đen + Hộp trắng C1) với repo giả \\
+\hline
+Khởi tạo phụ thuộc & \texttt{new} trực tiếp & Dependency Injection qua constructor \\
+\hline
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Ý nghĩa và lợi ích đem lại}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Kiểm thử được (quan trọng nhất).} Nhờ DI và mẫu Repository, lớp
+        \texttt{RequestServiceTest} kiểm thử trọn vẹn nghiệp vụ (upsert, chặn sửa
+        khi \texttt{processing}/\texttt{completed}, xóa sạch mặt hàng) mà
+        \emph{không cần CSDL thật}, dùng \texttt{FakeRequestRepository}. Bộ test
+        phủ cả Hộp đen lẫn Hộp trắng (độ đo nhánh C1).
+  \item \textbf{Dễ bảo trì.} Lỗi giao diện, lỗi nghiệp vụ và lỗi SQL nằm ở các
+        lớp tách biệt; sửa một chỗ không gây vỡ chỗ khác.
+  \item \textbf{Tái sử dụng.} \texttt{IntegerEditCell}, \texttt{DatePickerCell},
+        \texttt{SvgButton} chuyển sang \texttt{common/ui/components} để các màn
+        khác (tạo yêu cầu, xem chi tiết) dùng lại, xóa trùng lặp.
+  \item \textbf{Dễ mở rộng.} Đổi nguồn dữ liệu chỉ cần một \texttt{IDBProvider}
+        mới; thêm loại ô chỉnh sửa chỉ cần truyền lambda khác --- đúng tinh thần
+        Open/Closed.
+  \item \textbf{Giảm độ phức tạp nhận thức.} Từ một file dài ``làm tất cả''
+        thành nhiều lớp nhỏ, mỗi lớp đọc hiểu trong vài phút.
+\end{enumerate}
+
+% =====================================================================
+\section{Kết luận}
+
+Việc tái thiết kế chức năng \emph{Chỉnh sửa yêu cầu nhập hàng} đã chuyển một lớp
+giao diện đơn khối thành một kiến trúc phân tầng rõ ràng, tuân thủ đầy đủ năm
+nguyên lý SOLID và vận dụng nhiều mẫu thiết kế kinh điển (MVC, Layered,
+Repository, DTO, DI, Factory/Singleton, Strategy, Callback, Observer). Kết quả
+là mã nguồn dễ đọc, dễ bảo trì, có khả năng tái sử dụng và --- quan trọng nhất
+đối với mục tiêu kiểm thử --- cô lập được tầng nghiệp vụ để kiểm thử đơn vị đạt
+độ phủ nhánh 100\% mà không phụ thuộc cơ sở dữ liệu.
+
+\end{document}

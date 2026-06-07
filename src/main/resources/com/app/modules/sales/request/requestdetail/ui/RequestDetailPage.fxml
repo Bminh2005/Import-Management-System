@@ -109,23 +109,6 @@
             </TableView>
         </VBox>
 
-        <!-- Mặt hàng bị từ chối / hủy -->
-        <VBox fx:id="rejectedCard" styleClass="card-danger" spacing="16">
-            <padding>
-                <Insets top="20" right="24" bottom="20" left="24"/>
-            </padding>
-            <HBox spacing="12" alignment="CENTER_LEFT">
-                <Label text="Mặt hàng Bị từ chối / Hủy"
-                       styleClass="section-title-danger"/>
-                <Label fx:id="rejectedCountLabel" text="(0 mặt hàng)"
-                       styleClass="info-label"/>
-            </HBox>
-            <VBox fx:id="rejectedList" spacing="12"/>
-            <Label fx:id="rejectedEmptyLabel"
-                   text="Không có mặt hàng nào bị từ chối hoặc hủy"
-                   styleClass="empty-state" managed="false" visible="false"/>
-        </VBox>
-
         <!-- Đơn hàng liên quan -->
         <VBox styleClass="card" spacing="16">
             <padding>

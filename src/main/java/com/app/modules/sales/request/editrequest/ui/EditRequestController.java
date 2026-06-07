@@ -88,7 +88,31 @@ public class EditRequestController {
                 view.getOnSaved().accept(updated.getCode());
             }
         } catch (IllegalStateException ex) {
-            alertController.showWarning(view.getSceneWindow(), "Lỗi khi lưu", ex.getMessage());
+            // Yêu cầu không còn ở trạng thái PENDING (đã bị xử lý dưới DB):
+            // làm mới view để khoá form về chế độ chỉ-xem và báo rõ cho người dùng.
+            reloadAsReadOnly();
+        } catch (Exception ex) {
+            // Mọi lỗi khác (vd lỗi ghi DB) cũng phải hiển thị, tránh "ấn lưu không hiện gì".
+            String message = ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName();
+            alertController.showWarning(view.getSceneWindow(), "Lỗi khi lưu", message);
+        }
+    }
+
+    /**
+     * Tải lại yêu cầu sau khi phát hiện trạng thái đã đổi (không còn PENDING):
+     * chuyển form sang chỉ-xem và hiện thông báo "Không thể chỉnh sửa".
+     */
+    private void reloadAsReadOnly() {
+        try {
+            RequestResponse fresh = service.getRequestDetail(view.getRequestCode());
+            view.renderRequest(fresh);
+            tableController.setupTables(view.isEditable());
+            view.setDirty(false);
+            alertController.showCompletedAlert(view.getSceneWindow(), fresh.getCode(), fresh.getStatus());
+        } catch (Exception ex) {
+            alertController.showWarning(view.getSceneWindow(), "Không thể chỉnh sửa",
+                    "Yêu cầu " + view.getRequestCode()
+                            + " không còn ở trạng thái chờ xử lý nên không thể lưu thay đổi.");
         }
     }
 

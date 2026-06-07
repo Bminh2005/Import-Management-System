@@ -89,18 +89,6 @@ public class RequestDetailUI extends ScrollPane {
         FxmlUiHelper.loadSelf(this, "RequestDetailPage.fxml");
         setupItemsTable();
         setupOrdersTable();
-        wireBackButtons();
-    }
-
-    public void setOnBack(Runnable callback) {
-        this.backAction = callback;
-        wireBackButtons();
-    }
-
-    private void wireBackButtons() {
-        if (backButton != null) {
-            backButton.setOnAction(e -> handleBackClick());
-        }
     }
 
     public void setOnBack(Runnable callback) { this.onBack = callback; }

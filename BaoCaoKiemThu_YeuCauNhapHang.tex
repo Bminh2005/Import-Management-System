@@ -1,0 +1,465 @@
+% =====================================================================
+%  BÁO CÁO KIỂM THỬ - USECASE: CHỈNH SỬA YÊU CẦU NHẬP HÀNG
+% ---------------------------------------------------------------------
+%  HƯỚNG DẪN BIÊN DỊCH (QUAN TRỌNG):
+%   - Biên dịch bằng XeLaTeX (KHÔNG dùng pdfLaTeX vì có tiếng Việt Unicode).
+%   - Local (MiKTeX/TeX Live):   xelatex BaoCaoKiemThu_YeuCauNhapHang.tex
+%                                 (chạy 2 lần để cập nhật Mục lục)
+%   - Overleaf:  Menu -> Compiler -> chọn "XeLaTeX".
+%  Font dùng "TeX Gyre Termes" (giống Times New Roman, có sẵn glyph
+%  tiếng Việt, đi kèm mọi bản TeX) nên không cần cài thêm.
+% =====================================================================
+\documentclass[12pt,a4paper]{article}
+
+% ----- Font & Unicode (XeLaTeX) -----
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}      % Times-like, hỗ trợ tiếng Việt
+\setsansfont{TeX Gyre Heros}
+% \setmonofont{...}  % để mặc định Latin Modern Mono cho phần code (ASCII)
+
+% ----- Trang & bố cục -----
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{pdflscape}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{unicode=true, colorlinks=true, linkcolor=blue!60!black,
+            urlcolor=blue!60!black, citecolor=blue!60!black}
+
+% ----- Tên nhãn tiếng Việt (thay cho babel để giảm phụ thuộc) -----
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\refname}{Tài liệu tham khảo}
+% Ngắt dòng tiếng Việt tại khoảng trắng (mặc định đã ổn, thêm cho chắc)
+\XeTeXlinebreaklocale "vi"
+\XeTeXlinebreakskip = 0pt plus 0.1pt
+
+% ----- Kiểu cột bảng -----
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% ----- Header / Footer -----
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Kiểm thử: Chỉnh sửa yêu cầu nhập hàng}
+\rhead{\small Nhóm 4}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ----- Kiểu code Java -----
+\definecolor{codekw}{rgb}{0.13,0.13,0.7}
+\definecolor{codecm}{rgb}{0.0,0.45,0.0}
+\definecolor{codestr}{rgb}{0.6,0.1,0.1}
+\definecolor{codebg}{rgb}{0.97,0.97,0.97}
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekw}\bfseries,
+  commentstyle=\color{codecm}\itshape,
+  stringstyle=\color{codestr},
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{gray!50},
+  breaklines=true, showstringspaces=false, tabsize=2,
+  captionpos=b, xleftmargin=14pt, framexleftmargin=14pt
+}
+
+% ----- Thông tin sinh viên (CHỈNH SỬA TẠI ĐÂY NẾU CẦN) -----
+\newcommand{\svName}{Phú Hưng}          % TODO: kiểm tra lại họ tên đầy đủ
+\newcommand{\svMSSV}{20235738}
+\newcommand{\svGVHD}{Trịnh Tuấn Đạt}
+\newcommand{\svHP}{IT4549}
+\newcommand{\svNhom}{Nhóm 4}
+
+\begin{document}
+
+% =====================================================================
+%  TRANG BÌA
+% =====================================================================
+\begin{titlepage}
+\centering
+\thispagestyle{empty}
+
+{\large \textbf{ĐẠI HỌC BÁCH KHOA HÀ NỘI}}\\[2pt]
+{\large \textbf{TRƯỜNG CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG}}\\[6pt]
+\rule{\textwidth}{0.8pt}
+
+\vspace{1.2cm}
+% Nếu có logo, bỏ ghi chú dòng dưới và đặt file logo.png cùng thư mục:
+% \includegraphics[width=3.5cm]{logo.png}\\[1cm]
+
+\vspace{0.8cm}
+{\Huge \textbf{BÁO CÁO KIỂM THỬ}}\\[10pt]
+{\LARGE \textbf{HỆ THỐNG ĐẶT HÀNG NHẬP KHẨU}}\\[18pt]
+{\Large Usecase: \textbf{Chỉnh sửa yêu cầu nhập hàng}}\\[6pt]
+{\large (Thiết kế \& thực thi kiểm thử: Hộp đen -- Hộp trắng C1 -- Use Case)}
+
+\vspace{1.6cm}
+\begin{flushleft}\large
+\hspace{1.5cm}
+\begin{tabular}{@{}ll@{}}
+\textbf{Giảng viên hướng dẫn:} & \svGVHD \\[8pt]
+\textbf{Sinh viên thực hiện:}  & \svName \\[8pt]
+\textbf{MSSV:}                 & \svMSSV \\[8pt]
+\textbf{Mã số lớp học phần:}   & \svHP \\[8pt]
+\textbf{Nhóm:}                 & \svNhom \\
+\end{tabular}
+\end{flushleft}
+
+\vfill
+{\large Hà Nội, 2026}
+\end{titlepage}
+
+% =====================================================================
+%  MỤC LỤC
+% =====================================================================
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+
+% =====================================================================
+\section{Mô tả phương thức/lớp cần kiểm thử}
+
+\subsection{Thông tin lớp và phương thức kiểm thử đơn vị}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tên lớp kiểm thử đơn vị:} \texttt{com.app.modules.sales.request.editrequest.service.RequestService}
+  \item \textbf{Tên phương thức kiểm thử đơn vị:} \texttt{updateRequest(UpdateRequestDTO dto)}
+  \item \textbf{Chức năng nghiệp vụ:} Phương thức chịu trách nhiệm cập nhật các thông tin thay đổi của một yêu cầu nhập hàng từ giao diện UI gửi xuống CSDL. Quy trình xử lý gồm:
+  \begin{enumerate}[leftmargin=*]
+    \item Kiểm tra sự tồn tại của yêu cầu nhập hàng bằng mã yêu cầu (\texttt{dto.getCode()}).
+    \item Kiểm tra trạng thái: chỉ cho phép chỉnh sửa nếu yêu cầu đang ở trạng thái \texttt{pending}. Nếu ở trạng thái khác (\texttt{processing} hoặc \texttt{completed}), phương thức ném ngoại lệ \texttt{IllegalStateException}.
+    \item Đồng bộ hóa danh sách mặt hàng (upsert): duyệt danh sách mặt hàng mới từ DTO, gọi repository để thêm mới hoặc cập nhật số lượng/ngày nhận của từng mặt hàng.
+    \item Xóa bỏ các mặt hàng cũ trong yêu cầu mà không còn xuất hiện trong danh sách mới của DTO.
+    \item Tải lại thông tin yêu cầu mới nhất từ CSDL và trả về đối tượng \texttt{RequestResponse}.
+  \end{enumerate}
+\end{itemize}
+
+\subsection{Chữ ký phương thức (Method Signature)}
+\begin{lstlisting}
+public RequestResponse updateRequest(UpdateRequestDTO dto)
+\end{lstlisting}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tham số đầu vào:} \texttt{UpdateRequestDTO dto} -- chứa mã yêu cầu cần chỉnh sửa (\texttt{code}) và danh sách mặt hàng (\texttt{List<RequestItem> items}) biểu diễn trạng thái mới mà người dùng mong muốn.
+  \item \textbf{Giá trị trả về:} \texttt{RequestResponse} -- DTO chứa thông tin chi tiết yêu cầu và danh sách mặt hàng đã được lưu thành công trong CSDL.
+  \item \textbf{Ngoại lệ:}
+  \begin{itemize}
+    \item \texttt{NoSuchElementException}: khi mã yêu cầu trong DTO không tìm thấy trong CSDL.
+    \item \texttt{IllegalStateException}: khi yêu cầu không ở trạng thái \texttt{pending}.
+  \end{itemize}
+\end{itemize}
+
+% =====================================================================
+\section{Thiết kế test case Hộp đen (Black-box Testing)}
+
+Kỹ thuật kiểm thử hộp đen được áp dụng là \textbf{Phân vùng tương đương (Equivalence Partitioning)} kết hợp \textbf{Phân tích giá trị biên (Boundary Value Analysis)} đối với các tham số đầu vào và trạng thái nghiệp vụ.
+
+\subsection{Phân hoạch các lớp tương đương}
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{|p{3.4cm}|Y|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Tham số / Trạng thái} & \textbf{Lớp tương đương hợp lệ} & \textbf{Lớp tương đương không hợp lệ}\\ \hline
+Mã yêu cầu (Request Code) & Mã yêu cầu tồn tại trong hệ thống (H1) & Mã yêu cầu không tồn tại (KH1)\\ \hline
+Trạng thái yêu cầu (Status) & Trạng thái là \texttt{pending} (H2) & Trạng thái \texttt{processing} (KH2); Trạng thái \texttt{completed} (KH3)\\ \hline
+Số lượng mặt hàng trong DTO & Số mặt hàng $\geq 1$ (H3); Số mặt hàng $= 0$ -- xóa sạch (H4) & (không có) \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Danh sách các Test Case Hộp đen}
+\noindent{\footnotesize
+\begin{longtable}{|p{1.5cm}|p{4.0cm}|p{4.5cm}|p{4.6cm}|}
+\hline
+\rowcolor{gray!20}
+\textbf{Mã TC} & \textbf{Mục tiêu kiểm thử} & \textbf{Đầu vào / Trạng thái hệ thống} & \textbf{Kết quả mong đợi}\\ \hline
+\endfirsthead
+\hline
+\rowcolor{gray!20}
+\textbf{Mã TC} & \textbf{Mục tiêu kiểm thử} & \textbf{Đầu vào / Trạng thái hệ thống} & \textbf{Kết quả mong đợi}\\ \hline
+\endhead
+\textbf{TC\_BB\_01} & Cập nhật thành công yêu cầu \texttt{pending} với danh sách hợp lệ (thêm mới, giữ lại/cập nhật, xóa bớt). & RQ001 (\texttt{pending}, 2 mặt hàng cũ I01, I02); DTO: RQ001 với I01 (đổi SL/ngày) và I03 (mới). & Lưu thành công; trả về \texttt{RequestResponse} chứa 2 mặt hàng I01, I03; I02 bị xóa khỏi hệ thống.\\ \hline
+\textbf{TC\_BB\_02} & Báo lỗi khi mã yêu cầu trong DTO không tồn tại. & Không tồn tại RQ999; DTO: RQ999, danh sách rỗng. & Ném \texttt{NoSuchElementException} với thông báo ``Không tìm thấy yêu cầu RQ999''.\\ \hline
+\textbf{TC\_BB\_03} & Ngăn chỉnh sửa khi yêu cầu đang \texttt{processing}. & RQ002 (\texttt{processing}); DTO: RQ002. & Ném \texttt{IllegalStateException}: ``Yêu cầu RQ002 đang ở trạng thái processing, không thể chỉnh sửa.''\\ \hline
+\textbf{TC\_BB\_04} & Ngăn chỉnh sửa khi yêu cầu đã \texttt{completed}. & RQ003 (\texttt{completed}); DTO: RQ003. & Ném \texttt{IllegalStateException}: ``Yêu cầu RQ003 đang ở trạng thái completed, không thể chỉnh sửa.''\\ \hline
+\textbf{TC\_BB\_05} & Cho phép xóa sạch toàn bộ mặt hàng (giá trị biên: danh sách rỗng). & RQ004 (\texttt{pending}, 1 mặt hàng cũ I01); DTO: RQ004, danh sách rỗng. & Cập nhật thành công; trả về \texttt{RequestResponse} có số mặt hàng $= 0$; I01 bị xóa khỏi DB.\\ \hline
+\end{longtable}
+}
+
+% =====================================================================
+\section{Thiết kế test case Hộp trắng (White-box -- Độ đo C1)}
+
+Kỹ thuật kiểm thử hộp trắng được áp dụng nhằm đảm bảo \textbf{Độ đo bao phủ nhánh (C1 -- Branch Coverage)} đạt mức tối đa 100\%.
+
+\subsection{Mã nguồn và Đồ thị dòng kiểm soát (CFG)}
+Phương thức \texttt{updateRequest} (đã lược bỏ chú thích) được kiểm thử:
+
+\begin{lstlisting}
+public RequestResponse updateRequest(UpdateRequestDTO dto) {
+    Request request = findRequestOrThrow(dto.getCode());          // Dinh 1
+    if (!"pending".equals(request.getStatus())) {                 // Quyet dinh 1
+        throw new IllegalStateException("...");                   // Dinh 3
+    }
+    Set<String> keep = new HashSet<>();                           // Dinh 4
+    int pos = 0;
+    for (RequestItem item : dto.getItems()) {                     // Quyet dinh 2
+        repository.insertItem(dto.getCode(), item, pos++);        // Dinh 6
+        repository.updateItemDeliveryDate(dto.getCode(),
+                item.getCode(), item.getDeliveryDate());
+        keep.add(item.getCode());
+    }
+    for (RequestItem old : request.getItems()) {                  // Quyet dinh 3
+        if (!keep.contains(old.getCode())) {                      // Quyet dinh 4
+            repository.deleteItem(dto.getCode(), old.getCode());  // Dinh 9
+        }
+    }
+    return new RequestResponse(findRequestOrThrow(dto.getCode()));// Dinh 11
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance = 9mm and 16mm,
+  start/.style   = {ellipse, draw, fill=gray!12, align=center, font=\footnotesize, minimum width=24mm},
+  block/.style   = {rectangle, draw, fill=blue!6, align=center, font=\scriptsize, text width=42mm, inner sep=4pt},
+  dec/.style     = {diamond, draw, fill=orange!14, aspect=2.4, align=center, font=\scriptsize, inner sep=0pt},
+  fl/.style      = {-{Latex[length=2mm]}, semithick}
+]
+\node[start] (st) {Bắt đầu};
+\node[block, below=of st]  (n1) {Đỉnh 1: tìm yêu cầu\\ \texttt{findRequestOrThrow}};
+\node[dec,   below=of n1]  (n2) {Đỉnh 2:\\ status $\neq$ pending?};
+\node[block, right=22mm of n2] (n3) {Đỉnh 3: ném\\ \texttt{IllegalStateException}};
+\node[start, below=of n3]  (e1) {Kết thúc (ngoại lệ)};
+\node[block, below=12mm of n2] (n4) {Đỉnh 4: khởi tạo\\ \texttt{keep}, \texttt{pos=0}};
+\node[dec,   below=of n4]  (n5) {Đỉnh 5:\\ còn item DTO?};
+\node[block, right=20mm of n5] (n6) {Đỉnh 6: \texttt{insertItem} +\\ cập nhật ngày + \texttt{keep.add}};
+\node[dec,   below=14mm of n5] (n7) {Đỉnh 7:\\ còn item cũ?};
+\node[dec,   below=13mm of n7] (n8) {Đỉnh 8:\\ \texttt{!keep.contains}?};
+\node[block, right=20mm of n8] (n9) {Đỉnh 9:\\ \texttt{deleteItem}};
+\node[block, below=16mm of n8] (n11){Đỉnh 11: trả về\\ \texttt{RequestResponse}};
+\node[start, below=of n11] (fn) {Kết thúc (thành công)};
+
+\draw[fl] (st) -- (n1);
+\draw[fl] (n1) -- (n2);
+\draw[fl] (n2) -- node[above,font=\scriptsize]{Đúng (1.A)} (n3);
+\draw[fl] (n3) -- (e1);
+\draw[fl] (n2) -- node[right,font=\scriptsize]{Sai (1.B)} (n4);
+\draw[fl] (n4) -- (n5);
+\draw[fl] (n5) -- node[above,font=\scriptsize]{Có (2.A)} (n6);
+\draw[fl] (n6) to[bend left=55] (n5);
+\draw[fl] (n5) -- node[right,font=\scriptsize]{Hết (2.B)} (n7);
+\draw[fl] (n7) -- node[right,font=\scriptsize]{Có (3.A)} (n8);
+\draw[fl] (n8) -- node[above,font=\scriptsize]{Đúng (4.A)} (n9);
+\draw[fl] (n9) to[bend left=55] (n7);
+\draw[fl] (n8) to[bend right=70] node[left,font=\scriptsize]{Sai (4.B)} (n7);
+\draw[fl] (n7) -- node[right,font=\scriptsize]{Hết (3.B)} (n11);
+\draw[fl] (n11) -- (fn);
+\end{tikzpicture}
+\caption{Đồ thị dòng kiểm soát (CFG) của phương thức \texttt{updateRequest}.}
+\end{figure}
+
+\subsection{Các quyết định và nhánh điều hướng}
+Có 4 điểm quyết định tương đương 8 nhánh điều hướng cần bao phủ:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Quyết định 1} (\texttt{!"pending".equals(status)}): Nhánh \textbf{1.A} (True -- trạng thái khác \texttt{pending}); Nhánh \textbf{1.B} (False -- bằng \texttt{pending}).
+  \item \textbf{Quyết định 2} (duyệt vòng lặp DTO): Nhánh \textbf{2.A} (còn phần tử); Nhánh \textbf{2.B} (hết/không có phần tử).
+  \item \textbf{Quyết định 3} (duyệt danh sách mặt hàng cũ): Nhánh \textbf{3.A} (còn phần tử); Nhánh \textbf{3.B} (hết/không có phần tử).
+  \item \textbf{Quyết định 4} (\texttt{!keep.contains(old.getCode())}): Nhánh \textbf{4.A} (True -- mặt hàng cũ bị xóa); Nhánh \textbf{4.B} (False -- mặt hàng cũ được giữ lại).
+\end{enumerate}
+
+\subsection{Thiết kế Test Case và Bảng phủ nhánh (C1 Coverage Matrix)}
+Để phủ 100\% các nhánh, thiết kế 4 test case hộp trắng:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{TC\_WB\_01:} phủ nhánh ngoại lệ trạng thái (1.A).
+  \item \textbf{TC\_WB\_02:} phủ các nhánh lặp trống (1.B, 2.B, 3.B).
+  \item \textbf{TC\_WB\_03:} phủ toàn bộ nhánh lặp và điều kiện bên trong (1.B, 2.A, 2.B, 3.A, 3.B, 4.A, 4.B).
+  \item \textbf{TC\_WB\_04:} trường hợp đặc biệt không tìm thấy yêu cầu (ném \texttt{NoSuchElementException}).
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{|Y|c|c|c|c|}
+\hline
+\rowcolor{gray!20}
+\textbf{Nhánh điều hướng} & \textbf{TC\_WB\_01} & \textbf{TC\_WB\_02} & \textbf{TC\_WB\_03} & \textbf{TC\_WB\_04}\\ \hline
+Nhánh 1.A (trạng thái khác pending) & \textbf{x} & & & \\ \hline
+Nhánh 1.B (trạng thái pending) & & \textbf{x} & \textbf{x} & \\ \hline
+Nhánh 2.A (DTO có phần tử) & & & \textbf{x} & \\ \hline
+Nhánh 2.B (DTO không còn phần tử) & & \textbf{x} & \textbf{x} & \\ \hline
+Nhánh 3.A (hàng cũ có phần tử) & & & \textbf{x} & \\ \hline
+Nhánh 3.B (hàng cũ không còn phần tử) & & \textbf{x} & \textbf{x} & \\ \hline
+Nhánh 4.A (hàng cũ bị xóa) & & & \textbf{x} & \\ \hline
+Nhánh 4.B (hàng cũ được giữ lại) & & & \textbf{x} & \\ \hline
+Ngoại lệ NoSuchElement & & & & \textbf{x}\\ \hline
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Cài đặt chương trình kiểm thử tự động}
+
+Các test case trên được lập trình tự động bằng Java, sử dụng \textbf{JUnit 5 (Jupiter)}.
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tên đầy đủ của Class kiểm thử (Full Name):}\\ \texttt{com.app.modules.sales.request.editrequest.service.RequestServiceTest}
+  \item \textbf{Mã nguồn lớp kiểm thử:} \texttt{src/test/java/com/app/modules/sales/request/editrequest/service/RequestServiceTest.java}
+  \item \textbf{Phương pháp Stubbing:} dùng lớp nội bộ tĩnh \texttt{FakeRequestRepository} kế thừa \texttt{RequestRepository} để ghi nhận tương tác và cung cấp dữ liệu giả lập trong bộ nhớ, không phụ thuộc CSDL PostgreSQL, tránh phản tác dụng và đảm bảo tốc độ chạy nhanh.
+  \item \textbf{Kết quả thực thi (đã chạy thực tế bằng \texttt{mvn test}):}
+\end{itemize}
+\begin{lstlisting}[language=bash, numbers=none]
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0  -- 9/9 PASS
+\end{lstlisting}
+
+% =====================================================================
+\section{Kiểm thử Use Case (Use Case Testing)}
+
+Khác với kiểm thử đơn vị (kiểm thử riêng phương thức \texttt{updateRequest}), phần này kiểm thử ở \textbf{mức hệ thống (system/acceptance level)} cho toàn bộ use case ``Chỉnh sửa yêu cầu nhập hàng'' trên giao diện. Quy trình áp dụng template gồm 4 bước: \emph{(1) Đặc tả Use Case $\to$ (2) Xác định kịch bản (Scenarios) $\to$ (3) Thiết kế Test Case từ kịch bản $\to$ (4) Thực thi và ghi nhận kết quả.}
+
+\subsection{Đặc tả Use Case (Use Case Specification)}
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{4.2cm}|Y|}
+\hline
+\rowcolor{gray!20}\normalfont\textbf{Mục} & \textbf{Nội dung}\\ \hline
+Mã Use Case & UC-SALES-EDIT-01\\ \hline
+Tên Use Case & Chỉnh sửa yêu cầu nhập hàng\\ \hline
+Tác nhân chính (Actor) & Nhân viên kinh doanh / Bộ phận bán hàng\\ \hline
+Mô tả ngắn & Cho phép nhân viên kinh doanh cập nhật danh sách mặt hàng (số lượng, ngày nhận, thêm/xóa mặt hàng) của một yêu cầu nhập hàng đang ở trạng thái chờ duyệt và lưu thay đổi xuống CSDL.\\ \hline
+Điều kiện kích hoạt (Trigger) & Người dùng chọn một yêu cầu và mở màn hình ``Chỉnh sửa yêu cầu''.\\ \hline
+Tiền điều kiện & Đã đăng nhập với quyền bộ phận bán hàng; yêu cầu cần sửa đã tồn tại trong hệ thống.\\ \hline
+Hậu điều kiện thành công & Bảng \texttt{RequestDetail} được cập nhật đúng trong CSDL; cờ thay đổi (dirty) được đặt lại $=$ false.\\ \hline
+Hậu điều kiện thất bại & Không có dữ liệu nào bị thay đổi trong CSDL.\\ \hline
+\end{tabularx}
+\end{table}
+
+\noindent\textbf{Luồng sự kiện chính (Main Flow -- MF):}
+\begin{enumerate}[leftmargin=*]
+  \item Hệ thống tải chi tiết yêu cầu và hiển thị thông tin chung + bảng mặt hàng.
+  \item Yêu cầu ở trạng thái \texttt{pending} $\Rightarrow$ hệ thống bật nút ``Thêm mặt hàng'', ``Lưu thay đổi'' và cho phép sửa ô Số lượng, Ngày nhận, hiển thị nút Xóa.
+  \item Người dùng sửa Số lượng của một mặt hàng; hệ thống đánh dấu ``có thay đổi'' (dirty = true).
+  \item Người dùng sửa Ngày nhận của một mặt hàng (dirty = true).
+  \item Người dùng bấm ``Thêm mặt hàng'' $\to$ chọn sản phẩm $\to$ nhập số lượng ($> 0$) và ngày nhận hợp lệ $\to$ mặt hàng mới được thêm vào bảng (dirty = true).
+  \item Người dùng bấm nút Xóa ở một mặt hàng $\to$ xác nhận ``OK'' $\to$ mặt hàng bị gỡ khỏi bảng (dirty = true).
+  \item Người dùng bấm ``Lưu thay đổi''.
+  \item Hệ thống gọi service đồng bộ dữ liệu xuống CSDL, hiển thị ``Đã lưu thay đổi yêu cầu [mã]'', đặt dirty = false. \textbf{Use case kết thúc thành công.}
+\end{enumerate}
+
+\noindent\textbf{Luồng thay thế (Alternative Flows -- AF):}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{AF1 -- Hủy xác nhận xóa:} ở bước 6, người dùng chọn ``Cancel'' $\Rightarrow$ mặt hàng KHÔNG bị xóa, quay lại bước 6.
+  \item \textbf{AF2 -- Quay lại \& chấp nhận hủy thay đổi:} khi đang có thay đổi chưa lưu, bấm ``Quay lại'' $\Rightarrow$ hộp thoại ``Thoát mà không lưu'' $\Rightarrow$ chọn ``OK'' $\Rightarrow$ rời màn hình, mọi thay đổi bị hủy.
+  \item \textbf{AF3 -- Quay lại \& ở lại:} như AF2 nhưng chọn ``Cancel'' $\Rightarrow$ đóng hộp thoại, ở lại màn hình, giữ nguyên thay đổi.
+  \item \textbf{AF4 -- Quay lại khi không có thay đổi:} dirty = false $\Rightarrow$ không hỏi, rời màn hình ngay.
+\end{itemize}
+
+\noindent\textbf{Luồng ngoại lệ (Exception Flows -- EF):}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{EF1 -- Yêu cầu không ở trạng thái pending:} nếu trạng thái là \texttt{processing}/\texttt{completed} (editable = false) $\Rightarrow$ thông báo ``Không thể chỉnh sửa'', ẩn nút ``Thêm mặt hàng'', vô hiệu hóa nút ``Lưu'', các ô Số lượng/Ngày nhận chỉ đọc, ẩn nút Xóa.
+  \item \textbf{EF2 -- Cố lưu khi không được phép sửa:} nếu hành động Lưu bị kích hoạt khi editable = false $\Rightarrow$ cảnh báo ``Yêu cầu [mã] không còn ở trạng thái PENDING, không thể lưu thay đổi.'', không ghi CSDL.
+  \item \textbf{EF3 -- Số lượng không hợp lệ khi sửa trực tiếp trên bảng:} nhập số âm $\Rightarrow$ tự kẹp về 0; nhập ký tự không phải số $\Rightarrow$ khôi phục giá trị cũ. Không bao giờ ghi nhận giá trị không hợp lệ.
+  \item \textbf{EF4 -- Dữ liệu không hợp lệ ở hộp thoại ``Thêm mặt hàng'':} số lượng $\leq 0$ $\Rightarrow$ ``Số lượng phải là số nguyên dương.''; chưa chọn ngày $\Rightarrow$ ``Vui lòng chọn ngày nhận mong muốn.''; không thêm được mặt hàng.
+  \item \textbf{EF5 -- Không tải được yêu cầu:} nếu service ném lỗi (vd mã không tồn tại) $\Rightarrow$ cảnh báo ``Không thể tải yêu cầu'' kèm ``Không tìm thấy yêu cầu [mã]''.
+\end{itemize}
+
+\subsection{Xác định các kịch bản kiểm thử (Test Scenarios)}
+Mỗi kịch bản (scenario) là một đường đi (path) xuyên qua use case, kết hợp luồng chính với một luồng thay thế/ngoại lệ. Từ đặc tả trên, xác định được \textbf{13 kịch bản}:
+
+\noindent{\small
+\begin{longtable}{|p{1.6cm}|p{7.0cm}|p{3.6cm}|p{1.9cm}|}
+\hline
+\rowcolor{gray!20}
+\textbf{Mã KB} & \textbf{Mô tả đường đi} & \textbf{Luồng kết hợp} & \textbf{Loại}\\ \hline
+\endfirsthead
+\hline\rowcolor{gray!20}
+\textbf{Mã KB} & \textbf{Mô tả đường đi} & \textbf{Luồng kết hợp} & \textbf{Loại}\\ \hline
+\endhead
+SC-01 & Sửa SL/ngày, thêm 1 mặt hàng, xóa 1 mặt hàng rồi lưu thành công & MF (1$\to$8) & Chính\\ \hline
+SC-02 & Bấm xóa mặt hàng nhưng hủy xác nhận & MF(1-5) + AF1 & Thay thế\\ \hline
+SC-03 & Có thay đổi, bấm Quay lại, đồng ý hủy thay đổi & MF(1-3) + AF2 & Thay thế\\ \hline
+SC-04 & Có thay đổi, bấm Quay lại, chọn ở lại & MF(1-3) + AF3 & Thay thế\\ \hline
+SC-05 & Không thay đổi gì, bấm Quay lại & AF4 & Thay thế\\ \hline
+SC-06 & Mở yêu cầu trạng thái \texttt{processing} (chỉ xem) & EF1 & Ngoại lệ\\ \hline
+SC-07 & Mở yêu cầu trạng thái \texttt{completed} (chỉ xem) & EF1 & Ngoại lệ\\ \hline
+SC-08 & Cố lưu khi yêu cầu không còn pending & EF2 & Ngoại lệ\\ \hline
+SC-09 & Sửa số lượng $=$ số âm trên bảng & EF3 & Ngoại lệ\\ \hline
+SC-10 & Sửa số lượng $=$ chữ trên bảng & EF3 & Ngoại lệ\\ \hline
+SC-11 & Thêm mặt hàng với số lượng $\leq 0$ & EF4 & Ngoại lệ\\ \hline
+SC-12 & Thêm mặt hàng nhưng chưa chọn ngày nhận & EF4 & Ngoại lệ\\ \hline
+SC-13 & Mở yêu cầu có mã không tồn tại & EF5 & Ngoại lệ\\ \hline
+\end{longtable}
+}
+
+\noindent$\Rightarrow$ \textbf{Số lượng test case cần thiết kế: 13} (mỗi kịch bản tối thiểu 1 test case; hai luồng ngoại lệ EF3 và EF4 được tách thành 2 test case theo từng loại dữ liệu lỗi để kiểm chứng riêng từng nhánh xử lý).
+
+\subsection{Thiết kế Test Case cho Use Case}
+\textit{Ghi chú: trong hệ thống thật, mã yêu cầu là ID dạng số trong CSDL nên các test case dưới đây dùng mã mẫu dạng số (ví dụ 1001).}
+
+\begin{landscape}
+\thispagestyle{empty}
+\noindent{\footnotesize
+\begin{longtable}{|p{1.4cm}|p{1.2cm}|p{3.4cm}|p{7.2cm}|p{5.4cm}|p{2.6cm}|p{1.4cm}|}
+\hline
+\rowcolor{gray!20}
+\textbf{Mã TC} & \textbf{Kịch bản} & \textbf{Tiền điều kiện} & \textbf{Các bước thực hiện (kèm dữ liệu)} & \textbf{Kết quả mong đợi} & \textbf{Kết quả thực tế} & \textbf{Trạng thái}\\ \hline
+\endfirsthead
+\hline\rowcolor{gray!20}
+\textbf{Mã TC} & \textbf{Kịch bản} & \textbf{Tiền điều kiện} & \textbf{Các bước thực hiện (kèm dữ liệu)} & \textbf{Kết quả mong đợi} & \textbf{Kết quả thực tế} & \textbf{Trạng thái}\\ \hline
+\endhead
+\textbf{UC-TC-01} & SC-01 & Yêu cầu 1001 ở trạng thái \texttt{pending}, có $\geq 2$ mặt hàng & (1) Mở màn chỉnh sửa 1001. (2) Sửa SL mặt hàng đầu $\to$ 120, Enter. (3) Đổi ngày nhận. (4) ``Thêm mặt hàng'', chọn 1 SP, nhập SL=30 + ngày hợp lệ, Xác nhận. (5) Xóa 1 mặt hàng cũ, chọn OK. (6) ``Lưu thay đổi''. & Thông báo ``Đã lưu thay đổi yêu cầu 1001''; bảng phản ánh đúng (mặt hàng sửa có SL/ngày mới, có mặt hàng mới, mặt hàng bị xóa biến mất); dirty=false; CSDL đúng. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-02} & SC-02 & Yêu cầu 1001 \texttt{pending}, có $\geq 1$ mặt hàng & (1) Bấm nút Xóa ở 1 mặt hàng. (2) Hộp thoại ``Xác nhận xóa mặt hàng'' $\to$ chọn ``Cancel''. & Hộp thoại đóng; mặt hàng vẫn còn trong bảng; số lượng mặt hàng không đổi. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-03} & SC-03 & Đang ở màn chỉnh sửa, đã sửa $\geq 1$ giá trị (dirty=true) & (1) Bấm ``Quay lại''. (2) Hộp thoại ``Thoát mà không lưu'' $\to$ chọn ``OK''. & Rời màn hình về danh sách; các thay đổi chưa lưu bị hủy (CSDL không đổi). & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-04} & SC-04 & Đang ở màn chỉnh sửa, đã sửa $\geq 1$ giá trị (dirty=true) & (1) Bấm ``Quay lại''. (2) Hộp thoại ``Thoát mà không lưu'' $\to$ chọn ``Cancel''. & Đóng hộp thoại; ở lại màn chỉnh sửa; mọi giá trị đã nhập được giữ nguyên. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-05} & SC-05 & Mở màn chỉnh sửa, KHÔNG sửa gì (dirty=false) & (1) Bấm ``Quay lại''. & KHÔNG hiện hộp thoại xác nhận; rời màn hình ngay về danh sách. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-06} & SC-06 & Yêu cầu 2002 ở trạng thái \texttt{processing} & (1) Mở màn chỉnh sửa 2002. & Thông báo ``Không thể chỉnh sửa'' (``...đang được xử lý nên không thể chỉnh sửa. Bạn chỉ có thể xem thông tin.''); nút ``Thêm mặt hàng'' ẩn; nút ``Lưu'' vô hiệu; ô SL \& ngày chỉ đọc; không có nút Xóa. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-07} & SC-07 & Yêu cầu 3003 ở trạng thái \texttt{completed} & (1) Mở màn chỉnh sửa 3003. & Thông báo ``...đã hoàn tất nên không thể chỉnh sửa. Bạn chỉ có thể xem thông tin.''; giao diện chỉ đọc giống UC-TC-06. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-08} & SC-08 & Màn hình ở chế độ không sửa được (editable=false) & (1) Kích hoạt hành động ``Lưu thay đổi'' (kiểm thử phòng vệ tầng controller). & Cảnh báo ``Yêu cầu [mã] không còn ở trạng thái PENDING, không thể lưu thay đổi.''; không ghi CSDL. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-09} & SC-09 & Yêu cầu pending, ô Số lượng đang sửa được & (1) Kích ô Số lượng, nhập \texttt{-5}. (2) Nhấn Enter / rời ô. & Giá trị tự động chuyển về 0 (kẹp biên); không có giá trị âm nào được ghi nhận. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-10} & SC-10 & Yêu cầu pending, ô Số lượng đang có giá trị 100 & (1) Nhập \texttt{abc} vào ô Số lượng. (2) Rời ô. & Ô tự khôi phục về giá trị số cũ (100); không thay đổi dữ liệu. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-11} & SC-11 & Yêu cầu pending, đang mở hộp thoại ``Thêm mặt hàng'' & (1) Chọn 1 sản phẩm. (2) Gõ số lượng \texttt{0} (hoặc số âm \texttt{-3}). (3) Bấm ``Xác nhận''. & Hiện lỗi ``Số lượng phải là số nguyên dương.''; mặt hàng KHÔNG được thêm; hộp thoại vẫn mở. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-12} & SC-12 & Yêu cầu pending, đang mở hộp thoại ``Thêm mặt hàng'' & (1) Chọn 1 sản phẩm. (2) Nhập SL hợp lệ (vd 10). (3) Xóa trống ô Ngày nhận. (4) Bấm ``Xác nhận''. & Hiện lỗi ``Vui lòng chọn ngày nhận mong muốn.''; mặt hàng KHÔNG được thêm. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\textbf{UC-TC-13} & SC-13 & Không tồn tại yêu cầu mã 9999 trong CSDL & (1) Yêu cầu hệ thống mở màn chỉnh sửa mã 9999. & Cảnh báo ``Không thể tải yêu cầu'' kèm ``Không tìm thấy yêu cầu 9999''; không vào được màn chỉnh sửa với dữ liệu. & Đúng như mong đợi & \textbf{PASS}\\ \hline
+\end{longtable}
+}
+\end{landscape}
+
+\subsection{Tổng hợp kết quả kiểm thử Use Case}
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{5.2cm}|Y|}
+\hline
+\rowcolor{gray!20}\normalfont\textbf{Chỉ số} & \textbf{Giá trị}\\ \hline
+Tổng số kịch bản (scenarios) & 13 (1 chính + 4 thay thế + 8 ngoại lệ)\\ \hline
+Tổng số test case use case & 13\\ \hline
+Số test case PASS & \textbf{13 / 13}\\ \hline
+Số test case FAIL & 0\\ \hline
+Độ phủ luồng & Phủ 100\% các luồng đã đặc tả (Main Flow + 4 Alternative Flow + 5 Exception Flow)\\ \hline
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Kết luận}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Số lượng Test Case đơn vị:} 9 (5 Hộp đen, 4 Hộp trắng). Đã chạy thực tế bằng JUnit 5: \textbf{9/9 PASS} (\texttt{Tests run: 9, Failures: 0, Errors: 0}).
+  \item \textbf{Độ bao phủ nhánh (C1 coverage):} đạt \textbf{100\%} đối với phương thức \texttt{updateRequest}.
+  \item \textbf{Số lượng Test Case Use Case:} 13 (1 kịch bản chính, 4 kịch bản thay thế, 8 kịch bản ngoại lệ). Kết quả: \textbf{13/13 PASS}.
+  \item Hệ thống xử lý nghiệp vụ chỉnh sửa yêu cầu nhập hàng hoạt động ổn định, bắt đúng các ràng buộc nghiệp vụ (chỉ cho sửa khi \texttt{pending}), kiểm soát chặt dữ liệu nhập (số lượng, ngày nhận) và đồng bộ chính xác dữ liệu giữa UI, Service và CSDL.
+\end{itemize}
+
+\end{document}

@@ -65,6 +65,7 @@ public class SalesShell {
         sidebar.selectMenu(sidebar.getImportRequestItem());
         RequestDetailUI detail = new RequestDetailUI();
         detail.setOnBack(this::showRequestList);
+        detail.setOnEdit(this::showRequestEdit);
         layout.setPage(detail);
         if (!detail.loadRequest(code)) {
             showRequestList();

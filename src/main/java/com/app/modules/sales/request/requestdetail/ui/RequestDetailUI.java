@@ -3,7 +3,6 @@ package com.app.modules.sales.request.requestdetail.ui;
 import com.app.common.util.FxmlUiHelper;
 import com.app.common.util.StatusStyle;
 import com.app.modules.sales.request.requestdetail.dto.RequestResponse;
-import com.app.modules.sales.request.entity.RejectedItem;
 import com.app.modules.sales.request.entity.RelatedOrder;
 import com.app.modules.sales.request.entity.RequestItem;
 import com.app.modules.sales.request.requestdetail.service.RequestService;
@@ -16,14 +15,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
+
+import java.util.function.Consumer;
 
 /**
  * UI Class cho màn "Xem chi tiết Yêu cầu Nhập hàng".
@@ -33,7 +34,7 @@ import javafx.scene.shape.SVGPath;
  *
  * Theo quy ước README: UI chỉ gọi service, không truy cập repository.
  */
-public class RequestDetailUI extends BorderPane {
+public class RequestDetailUI extends ScrollPane {
 
     // --- Header ---
     @FXML private Button backButton;
@@ -56,11 +57,6 @@ public class RequestDetailUI extends BorderPane {
     @FXML private TableColumn<RequestItem, String> deliveryDateColumn;
     @FXML private TableColumn<RequestItem, String> statusColumn;
 
-    // --- Rejected panel ---
-    @FXML private VBox rejectedList;
-    @FXML private Label rejectedCountLabel;
-    @FXML private Label rejectedEmptyLabel;
-
     // --- Related orders ---
     @FXML private TableView<RelatedOrder> ordersTable;
     @FXML private TableColumn<RelatedOrder, String> orderCodeColumn;
@@ -76,6 +72,7 @@ public class RequestDetailUI extends BorderPane {
     private RequestResponse current;
 
     private Runnable backAction;
+    private Consumer<String> onEdit;
 
     public RequestDetailUI() {
         this(new RequestService());
@@ -86,18 +83,14 @@ public class RequestDetailUI extends BorderPane {
         FxmlUiHelper.loadSelf(this, "RequestDetailPage.fxml");
         setupItemsTable();
         setupOrdersTable();
-        wireBackButtons();
     }
 
     public void setOnBack(Runnable callback) {
         this.backAction = callback;
-        wireBackButtons();
     }
 
-    private void wireBackButtons() {
-        if (backButton != null) {
-            backButton.setOnAction(e -> handleBackClick());
-        }
+    public void setOnEdit(Consumer<String> callback) {
+        this.onEdit = callback;
     }
 
     private void setupItemsTable() {
@@ -208,68 +201,7 @@ public class RequestDetailUI extends BorderPane {
 
         itemsTable.setItems(current.getItems());
 
-        renderRejected(current.getRejectedItems());
         renderOrders(current.getOrders());
-    }
-
-    private void renderRejected(ObservableList<RejectedItem> items) {
-        rejectedList.getChildren().clear();
-        int size = items == null ? 0 : items.size();
-        rejectedCountLabel.setText("(" + size + " mặt hàng)");
-
-        boolean hasItems = size > 0;
-        rejectedList.setVisible(hasItems);
-        rejectedList.setManaged(hasItems);
-        rejectedEmptyLabel.setVisible(!hasItems);
-        rejectedEmptyLabel.setManaged(!hasItems);
-        if (!hasItems) return;
-
-        for (RejectedItem item : items) {
-            rejectedList.getChildren().add(buildRejectedRow(item));
-        }
-    }
-
-    private VBox buildRejectedRow(RejectedItem item) {
-        Label codeChip = new Label(item.getCode());
-        codeChip.getStyleClass().add("code-chip");
-
-        Label name = new Label(item.getName());
-        name.getStyleClass().add("rejected-name");
-
-        HBox header = new HBox(10, name, codeChip);
-        header.setAlignment(Pos.CENTER_LEFT);
-
-        Label qty = new Label("Số lượng: " + item.getQuantity() + " " + item.getUnit());
-        qty.getStyleClass().add("rejected-sub");
-
-        boolean isOverseas = "overseas".equals(item.getRejectedBy());
-        Label rejectedByBadge = new Label(
-                isOverseas ? "Từ chối bởi Đặt hàng Quốc tế" : "Hủy bởi người dùng");
-        rejectedByBadge.getStyleClass().add(
-                isOverseas ? "rejected-badge-overseas" : "rejected-badge-user");
-
-        Label dateLabel = new Label(item.getRejectedDate());
-        dateLabel.getStyleClass().add("rejected-sub");
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        VBox rightBox = new VBox(4, rejectedByBadge, dateLabel);
-        rightBox.setAlignment(Pos.CENTER_RIGHT);
-
-        HBox topRow = new HBox(12, header, spacer, rightBox);
-        topRow.setAlignment(Pos.CENTER_LEFT);
-
-        Label reasonTitle = new Label("Lý do:");
-        reasonTitle.getStyleClass().add("rejected-reason-title");
-        Label reason = new Label(item.getReason());
-        reason.getStyleClass().add("rejected-sub");
-        reason.setWrapText(true);
-
-        VBox row = new VBox(8, topRow, qty, reasonTitle, reason);
-        row.getStyleClass().add("rejected-row");
-        row.setPadding(new Insets(14, 16, 14, 16));
-        return row;
     }
 
     private void renderOrders(ObservableList<RelatedOrder> orders) {
@@ -285,13 +217,23 @@ public class RequestDetailUI extends BorderPane {
     }
 
     @FXML
-    private void handleBackClick() {
+    private void onBack() {
         if (backAction != null) {
             backAction.run();
             return;
         }
         System.out.println("Nội dung chức năng: Quay lại danh sách yêu cầu "
                 + (current != null ? current.getCode() : ""));
+    }
+
+    @FXML
+    private void onEdit() {
+        if (current == null) return;
+        if (onEdit != null) {
+            onEdit.accept(current.getCode());
+            return;
+        }
+        System.out.println("Nội dung chức năng: Chỉnh sửa yêu cầu " + current.getCode());
     }
 
 }
